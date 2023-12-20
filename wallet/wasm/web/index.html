@@ -1,10 +1,10 @@
 <html>
     <head>
         <script type="module">
-            import * as kaspa from './kaspa-wallet/kaspa-wallet.js';
+            import * as kash from './kash-wallet/kash-wallet.js';
             (async () => {
-                const wasm = await kaspa.default('./kaspa-wallet/kaspa-wallet_bg.wasm');
-                await wasm.load_kaspa_wallet_cli();
+                const wasm = await kash.default('./kash-wallet/kash-wallet_bg.wasm');
+                await wasm.load_kash_wallet_cli();
             })();
         </script>
         <style>

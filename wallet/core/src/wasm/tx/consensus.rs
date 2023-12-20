@@ -1,6 +1,6 @@
 use crate::tx::consensus as core;
-use kaspa_addresses::Address;
-use kaspa_consensus_core::{config::params::Params, network::NetworkType};
+use kash_addresses::Address;
+use kash_consensus_core::{config::params::Params, network::NetworkType};
 use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]

@@ -1,10 +1,10 @@
 use std::sync::Arc;
 
-pub use kaspa_rpc_core::api::ctl::RpcCtl;
-pub type DynRpcApi = dyn kaspa_rpc_core::api::rpc::RpcApi;
-pub type NotificationChannel = kaspa_utils::channel::Channel<kaspa_rpc_core::Notification>;
-pub use kaspa_rpc_core::notify::mode::NotificationMode;
-pub use kaspa_wrpc_client::WrpcEncoding;
+pub use kash_rpc_core::api::ctl::RpcCtl;
+pub type DynRpcApi = dyn kash_rpc_core::api::rpc::RpcApi;
+pub type NotificationChannel = kash_utils::channel::Channel<kash_rpc_core::Notification>;
+pub use kash_rpc_core::notify::mode::NotificationMode;
+pub use kash_wrpc_client::WrpcEncoding;
 
 /// RPC adaptor class that holds the [`RpcApi`](crate::api::RpcApi)
 /// and [`RpcCtl`](crate::api::RpcCtl) instances.

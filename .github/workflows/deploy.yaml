@@ -49,14 +49,14 @@ jobs:
         # We're using musl to make the binaries statically linked and portable
         run: |
           cargo install cargo-zigbuild
-          cargo --verbose zigbuild --bin kaspad --bin simpa --bin rothschild --bin kaspa-wallet --release --target x86_64-unknown-linux-gnu.2.27 # Use an older glibc version
+          cargo --verbose zigbuild --bin kashd --bin simpa --bin rothschild --bin kash-wallet --release --target x86_64-unknown-linux-gnu.2.27 # Use an older glibc version
           mkdir bin || true
-          cp target/x86_64-unknown-linux-gnu/release/kaspad bin/
+          cp target/x86_64-unknown-linux-gnu/release/kashd bin/
           cp target/x86_64-unknown-linux-gnu/release/simpa bin/
           cp target/x86_64-unknown-linux-gnu/release/rothschild bin/
-          cp target/x86_64-unknown-linux-gnu/release/kaspa-wallet bin/
-          archive="bin/rusty-kaspa-${{ github.event.release.tag_name }}-linux-gnu-amd64.zip"
-          asset_name="rusty-kaspa-${{ github.event.release.tag_name }}-linux-gnu-amd64.zip"
+          cp target/x86_64-unknown-linux-gnu/release/kash-wallet bin/
+          archive="bin/rusty-kash-${{ github.event.release.tag_name }}-linux-gnu-amd64.zip"
+          asset_name="rusty-kash-${{ github.event.release.tag_name }}-linux-gnu-amd64.zip"
           zip -r "${archive}" ./bin/*
           echo "archive=${archive}" >> $GITHUB_ENV
           echo "asset_name=${asset_name}" >> $GITHUB_ENV
@@ -65,17 +65,17 @@ jobs:
         if: runner.os == 'Windows'
         shell: bash
         run: |
-          cargo build --bin kaspad --release
+          cargo build --bin kashd --release
           cargo build --bin simpa --release
           cargo build --bin rothschild --release
-          cargo build --bin kaspa-wallet --release
+          cargo build --bin kash-wallet --release
           mkdir bin || true
-          cp target/release/kaspad.exe bin/
+          cp target/release/kashd.exe bin/
           cp target/release/simpa.exe bin/
           cp target/release/rothschild.exe bin/
-          cp target/release/kaspa-wallet.exe bin/
-          archive="bin/rusty-kaspa-${{ github.event.release.tag_name }}-win64.zip"
-          asset_name="rusty-kaspa-${{ github.event.release.tag_name }}-win64.zip"
+          cp target/release/kash-wallet.exe bin/
+          archive="bin/rusty-kash-${{ github.event.release.tag_name }}-win64.zip"
+          asset_name="rusty-kash-${{ github.event.release.tag_name }}-win64.zip"
           powershell "Compress-Archive bin/* \"${archive}\""
           echo "archive=${archive}" >> $GITHUB_ENV
           echo "asset_name=${asset_name}" >> $GITHUB_ENV
@@ -83,17 +83,17 @@ jobs:
       - name: Build on MacOS
         if: runner.os == 'macOS'
         run: |
-          cargo build --bin kaspad --release
+          cargo build --bin kashd --release
           cargo build --bin simpa --release
           cargo build --bin rothschild --release
-          cargo build --bin kaspa-wallet --release
+          cargo build --bin kash-wallet --release
           mkdir bin || true
-          cp target/release/kaspad bin/
+          cp target/release/kashd bin/
           cp target/release/simpa bin/
           cp target/release/rothschild bin/
-          cp target/release/kaspa-wallet bin/
-          archive="bin/rusty-kaspa-${{ github.event.release.tag_name }}-osx.zip"
-          asset_name="rusty-kaspa-${{ github.event.release.tag_name }}-osx.zip"
+          cp target/release/kash-wallet bin/
+          archive="bin/rusty-kash-${{ github.event.release.tag_name }}-osx.zip"
+          asset_name="rusty-kash-${{ github.event.release.tag_name }}-osx.zip"
           zip -r "${archive}" ./bin/*
           echo "archive=${archive}" >> $GITHUB_ENV
           echo "asset_name=${asset_name}" >> $GITHUB_ENV
@@ -167,14 +167,14 @@ jobs:
       - name: Build WASM32 SDK
         run: |
           cd wasm
-          wasm-pack build --target nodejs --out-dir wasm32-nodejs-sdk/kaspa
-          wasm-pack build --target web --out-dir wasm32-web-sdk/kaspa
+          wasm-pack build --target nodejs --out-dir wasm32-nodejs-sdk/kash
+          wasm-pack build --target web --out-dir wasm32-web-sdk/kash
           cd ..
           mkdir release || true
-          archive_nodejs="release/rusty-kaspa-wasm32-sdk-${{ github.event.release.tag_name }}-nodejs.zip"
-          archive_web="release/rusty-kaspa-wasm32-sdk-${{ github.event.release.tag_name }}-web.zip"
-          asset_name_nodejs="rusty-kaspa-wasm32-sdk-${{ github.event.release.tag_name }}-nodejs.zip"
-          asset_name_web="rusty-kaspa-wasm32-sdk-${{ github.event.release.tag_name }}-web.zip"
+          archive_nodejs="release/rusty-kash-wasm32-sdk-${{ github.event.release.tag_name }}-nodejs.zip"
+          archive_web="release/rusty-kash-wasm32-sdk-${{ github.event.release.tag_name }}-web.zip"
+          asset_name_nodejs="rusty-kash-wasm32-sdk-${{ github.event.release.tag_name }}-nodejs.zip"
+          asset_name_web="rusty-kash-wasm32-sdk-${{ github.event.release.tag_name }}-web.zip"
           zip -jr "${archive_nodejs}" ./wasm/wasm32-nodejs-sdk/*
           zip -jr "${archive_web}" ./wasm/wasm32-web-sdk/*
           echo "archive_nodejs=${archive_nodejs}" >> $GITHUB_ENV

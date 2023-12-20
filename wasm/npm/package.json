@@ -1,29 +1,29 @@
 {
-  "name": "kaspa",
+  "name": "kash",
   "version": "0.1.2",
-  "description": "Kaspa SDK",
+  "description": "Kash SDK",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/kaspanet/rusty-kaspa.git"
+    "url": "git+https://github.com/Kash-Protocol/rusty-kash.git"
   },
   "keywords": [
-    "kaspa",
+    "kash",
     "wasm",
     "sdk"
   ],
-  "author": "Kaspa developers",
+  "author": "Kash developers",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/kaspanet/rusty-kaspa/issues"
+    "url": "https://github.com/Kash-Protocol/rusty-kash/issues"
   },
-  "homepage": "https://github.com/kaspanet/rusty-kaspa#readme",
+  "homepage": "https://github.com/Kash-Protocol/rusty-kash#readme",
   "dependencies": {
     "isomorphic-ws": "5.0.0",
     "ws": "8.13.0",
-    "kaspa-wasm": "0.1.2"
+    "kash-wasm": "0.1.2"
   }
 }

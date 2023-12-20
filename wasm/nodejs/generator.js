@@ -5,9 +5,9 @@ const {
     PrivateKey,
     RpcClient,
     Generator,
-    kaspaToSompi,
+    kashToSompi,
     initConsolePanicHook
-} = require('./kaspa/kaspa_wasm');
+} = require('./kash/kash_wasm');
 
 initConsolePanicHook();
 
@@ -61,7 +61,7 @@ const { encoding, networkId, destinationAddress: destinationAddressArg } = requi
         // is reached. The remaining amount will be sent 
         // to the change address.
         //
-        // If the requested amount is greater than the Kaspa
+        // If the requested amount is greater than the Kash
         // transactoin mass, the Generator will create multiple
         // transactions where each transaction will forward
         // UTXOs to the change address, until the requested
@@ -69,7 +69,7 @@ const { encoding, networkId, destinationAddress: destinationAddressArg } = requi
         // transaction according to the supplied outputs.
         let generator = new Generator({
             entries,
-            outputs: [[destinationAddress, kaspaToSompi(0.2)]],
+            outputs: [[destinationAddress, kashToSompi(0.2)]],
             priorityFee: 0,
             changeAddress: sourceAddress,
         });

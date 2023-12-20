@@ -2,7 +2,7 @@ use crate::error::Error;
 use crate::imports::*;
 use crate::result::Result;
 use crate::utxo as native;
-use kaspa_wrpc_client::wasm::RpcClient;
+use kash_wrpc_client::wasm::RpcClient;
 use workflow_wasm::channel::EventDispatcher;
 
 #[derive(Clone)]

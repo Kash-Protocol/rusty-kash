@@ -1,10 +1,10 @@
 use futures_util::future::try_join_all;
-use kaspa_consensus::{
+use kash_consensus::{
     config::ConfigBuilder, consensus::test_consensus::TestConsensus, params::MAINNET_PARAMS,
     processes::reachability::tests::StoreValidationExtensions,
 };
-use kaspa_consensus_core::{api::ConsensusApi, blockhash};
-use kaspa_hashes::Hash;
+use kash_consensus_core::{api::ConsensusApi, blockhash};
+use kash_hashes::Hash;
 use rand_distr::{Distribution, Poisson};
 use std::cmp::min;
 use tokio::join;

@@ -1,4 +1,4 @@
-use kaspa_wallet_core::settings::{application_folder, ensure_application_folder};
+use kash_wallet_core::settings::{application_folder, ensure_application_folder};
 
 use crate::imports::*;
 
@@ -58,7 +58,7 @@ pub struct Core {
     pub ipc: Arc<Ipc<CoreOps>>,
     terminal: Arc<Mutex<Option<Arc<Terminal>>>>,
     metrics: Arc<Mutex<Option<Arc<Metrics>>>>,
-    pub kaspad: Arc<Kaspad>,
+    pub kashd: Arc<Kashd>,
     pub cpu_miner: Arc<CpuMiner>,
     pub task_ctl: DuplexChannel,
     pub terminal_ready_ctl: Channel<()>,
@@ -89,7 +89,7 @@ impl Core {
             ipc: Ipc::try_new_global_binding(Modules::Core)?,
             terminal: Arc::new(Mutex::new(Option::None)),
             metrics: Arc::new(Mutex::new(Option::None)),
-            kaspad: Arc::new(Kaspad::default()),
+            kashd: Arc::new(Kashd::default()),
             cpu_miner: Arc::new(CpuMiner::default()),
             task_ctl: DuplexChannel::oneshot(),
             terminal_ready_ctl: Channel::oneshot(),
@@ -197,7 +197,7 @@ impl Core {
             .build()?;
 
         let metrics_item = MenuItemBuilder::new().label("Metrics").submenus(vec![toggle_metrics]).build()?;
-        MenubarBuilder::new("Kaspa OS", is_macos())
+        MenubarBuilder::new("Kash OS", is_macos())
             .mac_hide_edit(true)
             .mac_hide_window(true)
             .append(terminal_item)
@@ -284,35 +284,35 @@ impl Core {
     fn register_ipc_handlers(self: &Arc<Self>) -> Result<()> {
         let this = self.clone();
         self.ipc.method(
-            CoreOps::KaspadCtl,
-            Method::new(move |op: KaspadOps| {
+            CoreOps::KashdCtl,
+            Method::new(move |op: KashdOps| {
                 let this = this.clone();
                 Box::pin(async move {
                     match op {
-                        KaspadOps::Configure(config) => {
-                            this.kaspad.configure(config)?;
+                        KashdOps::Configure(config) => {
+                            this.kashd.configure(config)?;
                         }
-                        KaspadOps::DaemonCtl(ctl) => match ctl {
+                        KashdOps::DaemonCtl(ctl) => match ctl {
                             DaemonCtl::Start => {
-                                this.kaspad.start()?;
+                                this.kashd.start()?;
                             }
                             DaemonCtl::Stop => {
-                                this.kaspad.stop()?;
+                                this.kashd.stop()?;
                             }
                             DaemonCtl::Join => {
-                                this.kaspad.join().await?;
+                                this.kashd.join().await?;
                             }
                             DaemonCtl::Restart => {
-                                this.kaspad.restart()?;
+                                this.kashd.restart()?;
                             }
                             DaemonCtl::Kill => {
-                                this.kaspad.kill()?;
+                                this.kashd.kill()?;
                             }
                             DaemonCtl::Mute(mute) => {
-                                this.kaspad.mute(mute).await?;
+                                this.kashd.mute(mute).await?;
                             }
                             DaemonCtl::ToggleMute => {
-                                this.kaspad.toggle_mute().await?;
+                                this.kashd.toggle_mute().await?;
                             }
                         },
                     }
@@ -324,11 +324,11 @@ impl Core {
 
         let this = self.clone();
         self.ipc.method(
-            CoreOps::KaspadStatus,
+            CoreOps::KashdStatus,
             Method::new(move |_op: ()| {
                 let this = this.clone();
                 Box::pin(async move {
-                    let uptime = this.kaspad.uptime().map(|u| u.as_secs());
+                    let uptime = this.kashd.uptime().map(|u| u.as_secs());
                     Ok(DaemonStatus { uptime })
                 })
             }),
@@ -336,11 +336,11 @@ impl Core {
 
         let this = self.clone();
         self.ipc.method(
-            CoreOps::KaspadVersion,
+            CoreOps::KashdVersion,
             Method::new(move |_op: ()| {
                 let this = this.clone();
                 Box::pin(async move {
-                    let version = this.kaspad.version().await?;
+                    let version = this.kashd.version().await?;
                     Ok(version)
                 })
             }),
@@ -497,7 +497,7 @@ impl Core {
         let this = self.clone();
         let task_ctl_receiver = self.task_ctl.request.receiver.clone();
         let task_ctl_sender = self.task_ctl.response.sender.clone();
-        let kaspad_events_receiver = self.kaspad.events().receiver.clone();
+        let kashd_events_receiver = self.kashd.events().receiver.clone();
         let cpu_miner_events_receiver = self.cpu_miner.events().receiver.clone();
 
         spawn(async move {
@@ -506,10 +506,10 @@ impl Core {
                     _ = task_ctl_receiver.recv().fuse() => {
                         break;
                     },
-                    event = kaspad_events_receiver.recv().fuse() => {
+                    event = kashd_events_receiver.recv().fuse() => {
                         if let Ok(event) = event {
-                            this.handle_event(DaemonEvent::new(DaemonKind::Kaspad, event)).await.unwrap_or_else(|err| {
-                                log_error!("error while handling kaspad stdout: {err}");
+                            this.handle_event(DaemonEvent::new(DaemonKind::Kashd, event)).await.unwrap_or_else(|err| {
+                                log_error!("error while handling kashd stdout: {err}");
                             });
                         }
                     },
@@ -637,7 +637,7 @@ impl Core {
 #[wasm_bindgen]
 pub async fn init_core() -> Result<()> {
     workflow_wasm::panic::init_console_panic_hook();
-    kaspa_core::log::set_log_level(LevelFilter::Info);
+    kash_core::log::set_log_level(LevelFilter::Info);
 
     if let Err(e) = ensure_application_folder().await {
         let home_dir = application_folder().map(|f| f.display().to_string()).unwrap_or("???".to_string());

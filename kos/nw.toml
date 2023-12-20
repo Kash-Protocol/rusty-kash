@@ -1,13 +1,13 @@
 [application]
-name = "kaspa-os"
+name = "kash-os"
 version = "Cargo.toml::package.version"
-title = "Kaspa OS"
-organization = "Kaspa Contributors"
+title = "Kash OS"
+organization = "Kash Contributors"
 
 [description]
-short = "Kaspa Desktop OS"
+short = "Kash Desktop OS"
 long = """
-Kaspa Desktop OS
+Kash Desktop OS
 """"
 
 [package]
@@ -18,7 +18,7 @@ exclude = [{ glob = ["{src/*,target/*,test/*,resources/setup/*,*.lock,*.toml,.gi
 output = "../setup"
 use-app-nw = true
 update-package-json = true
-build = [{ WASM = { name = "kaspa", outdir = "app/wasm" }}]
+build = [{ WASM = { name = "kash", outdir = "app/wasm" }}]
 
 [nwjs]
 version = "0.77.0"
@@ -35,7 +35,7 @@ system_applications_folder_position = [385,178]
 
 [windows]
 uuid = "9464f462-db23-4f78-a027-c864db698121"
-group = "Kaspa"
+group = "Kash"
 # run_on_startup = "everyone"
 run_after_setup = true
 
@@ -45,21 +45,21 @@ run_after_setup = true
 [firewall]
 application = { direction = "in+out" }
 rules = [
-    { name = "Kaspad", program = "bin\\kaspad.exe", direction="in+out" }
+    { name = "Kashd", program = "bin\\kashd.exe", direction="in+out" }
 ]
 
 [[action]]
 stage = "build"
-name = "building rusty kaspa daemon (bin/kaspad)"
+name = "building rusty kash daemon (bin/kashd)"
 items = [
-    { run = { cmd = "cargo build --release --bin kaspad", cwd = ".." } },
-    { copy = { file = "../target/release/kaspad$EXE", to = "$TARGET/bin/" } },
+    { run = { cmd = "cargo build --release --bin kashd", cwd = ".." } },
+    { copy = { file = "../target/release/kashd$EXE", to = "$TARGET/bin/" } },
 ]
 
 [[action]]
 stage = "build"
-name = "building kaspa CPU miner (bin/kaspa-cpu-miner)"
+name = "building kash CPU miner (bin/kash-cpu-miner)"
 items = [
-    { run = { cmd = "cargo build --release", cwd = "../../kaspa-cpu-miner" } },
-    { copy = { file = "../../kaspa-cpu-miner/target/release/kaspa-miner$EXE", to = "$TARGET/bin/kaspa-cpu-miner$EXE" } },
+    { run = { cmd = "cargo build --release", cwd = "../../kash-cpu-miner" } },
+    { copy = { file = "../../kash-cpu-miner/target/release/kash-miner$EXE", to = "$TARGET/bin/kash-cpu-miner$EXE" } },
 ]

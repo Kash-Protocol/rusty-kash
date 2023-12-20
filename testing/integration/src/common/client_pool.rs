@@ -1,8 +1,8 @@
 use async_channel::{SendError, Sender};
 use futures_util::Future;
-use kaspa_core::trace;
-use kaspa_grpc_client::GrpcClient;
-use kaspa_utils::{any::type_name_short, channel::Channel};
+use kash_core::trace;
+use kash_grpc_client::GrpcClient;
+use kash_utils::{any::type_name_short, channel::Channel};
 use std::sync::Arc;
 use tokio::task::JoinHandle;
 

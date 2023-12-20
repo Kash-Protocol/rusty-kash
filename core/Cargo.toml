@@ -1,6 +1,6 @@
 [package]
-name = "kaspa-core"
-description = "Kaspa core"
+name = "kash-core"
+description = "Kash core"
 version.workspace = true
 edition.workspace = true
 authors.workspace = true

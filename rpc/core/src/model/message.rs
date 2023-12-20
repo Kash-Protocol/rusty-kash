@@ -1,8 +1,8 @@
 use crate::model::*;
 use borsh::{BorshDeserialize, BorshSchema, BorshSerialize};
-use kaspa_consensus_core::block_count::BlockCount;
-use kaspa_core::debug;
-use kaspa_notify::subscription::{single::UtxosChangedSubscription, Command};
+use kash_consensus_core::block_count::BlockCount;
+use kash_core::debug;
+use kash_notify::subscription::{single::UtxosChangedSubscription, Command};
 use serde::{Deserialize, Serialize};
 use std::{
     fmt::{Display, Formatter},
@@ -76,7 +76,7 @@ pub struct SubmitBlockResponse {
 #[derive(Debug, Serialize, Deserialize, BorshSerialize, BorshDeserialize, BorshSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct GetBlockTemplateRequest {
-    /// Which kaspa address should the coinbase block reward transaction pay into
+    /// Which kash address should the coinbase block reward transaction pay into
     pub pay_address: RpcAddress,
     pub extra_data: RpcExtraData,
 }
@@ -91,9 +91,9 @@ impl GetBlockTemplateRequest {
 pub struct GetBlockTemplateResponse {
     pub block: RpcBlock,
 
-    /// Whether kaspad thinks that it's synced.
-    /// Callers are discouraged (but not forbidden) from solving blocks when kaspad is not synced.
-    /// That is because when kaspad isn't in sync with the rest of the network there's a high
+    /// Whether kashd thinks that it's synced.
+    /// Callers are discouraged (but not forbidden) from solving blocks when kashd is not synced.
+    /// That is because when kashd isn't in sync with the rest of the network there's a high
     /// chance the block will never be accepted, thus the solving effort would have been wasted.
     pub is_synced: bool,
 }
@@ -914,7 +914,7 @@ pub struct FinalityConflictResolvedNotification {
 //
 // If `addresses` is empty, the notifications will start or stop for all addresses.
 //
-// This call is only available when this kaspad was started with `--utxoindex`
+// This call is only available when this kashd was started with `--utxoindex`
 //
 // See: UtxosChangedNotification
 #[derive(Clone, Debug, Serialize, Deserialize, BorshSerialize, BorshDeserialize, BorshSchema)]

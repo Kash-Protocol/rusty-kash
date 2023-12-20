@@ -1,6 +1,6 @@
 [package]
-name = "kaspa-bip32"
-description = "BIP32 for Kaspa"
+name = "kash-bip32"
+description = "BIP32 for Kash"
 version.workspace = true
 edition.workspace = true
 authors.workspace = true
@@ -14,7 +14,7 @@ bs58.workspace = true
 getrandom = { workspace = true, features = ["js"] }
 hmac.workspace = true
 js-sys.workspace = true
-kaspa-utils.workspace = true
+kash-utils.workspace = true
 once_cell.workspace = true
 pbkdf2.workspace = true
 rand_core.workspace = true

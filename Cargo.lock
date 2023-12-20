@@ -1961,7 +1961,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "kaspa-addresses"
+name = "kash-addresses"
 version = "0.13.1"
 dependencies = [
  "borsh",
@@ -1977,16 +1977,16 @@ dependencies = [
 ]
 
 [[package]]
-name = "kaspa-addressmanager"
+name = "kash-addressmanager"
 version = "0.13.1"
 dependencies = [
  "borsh",
  "igd-next",
  "itertools 0.11.0",
- "kaspa-consensus-core",
- "kaspa-core",
- "kaspa-database",
- "kaspa-utils",
+ "kash-consensus-core",
+ "kash-core",
+ "kash-database",
+ "kash-utils",
  "local-ip-address",
  "log",
  "parking_lot",
@@ -2000,7 +2000,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "kaspa-bip32"
+name = "kash-bip32"
 version = "0.13.1"
 dependencies = [
  "bs58",
@@ -2008,7 +2008,7 @@ dependencies = [
  "getrandom 0.2.10",
  "hmac",
  "js-sys",
- "kaspa-utils",
+ "kash-utils",
  "once_cell",
  "pbkdf2",
  "rand 0.8.5",
@@ -2024,7 +2024,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "kaspa-cli"
+name = "kash-cli"
 version = "0.13.1"
 dependencies = [
  "async-trait",
@@ -2036,15 +2036,15 @@ dependencies = [
  "faster-hex 0.6.1",
  "futures",
  "js-sys",
- "kaspa-addresses",
- "kaspa-bip32",
- "kaspa-consensus-core",
- "kaspa-core",
- "kaspa-daemon",
- "kaspa-rpc-core",
- "kaspa-utils",
- "kaspa-wallet-core",
- "kaspa-wrpc-client",
+ "kash-addresses",
+ "kash-bip32",
+ "kash-consensus-core",
+ "kash-core",
+ "kash-daemon",
+ "kash-rpc-core",
+ "kash-utils",
+ "kash-wallet-core",
+ "kash-wrpc-client",
  "nw-sys",
  "pad",
  "regex",
@@ -2067,16 +2067,16 @@ dependencies = [
 ]
 
 [[package]]
-name = "kaspa-connectionmanager"
+name = "kash-connectionmanager"
 version = "0.13.1"
 dependencies = [
  "duration-string",
  "futures-util",
  "itertools 0.11.0",
- "kaspa-addressmanager",
- "kaspa-core",
- "kaspa-p2p-lib",
- "kaspa-utils",
+ "kash-addressmanager",
+ "kash-core",
+ "kash-p2p-lib",
+ "kash-utils",
  "log",
  "parking_lot",
  "rand 0.8.5",
@@ -2084,7 +2084,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "kaspa-consensus"
+name = "kash-consensus"
 version = "0.13.1"
 dependencies = [
  "async-channel 2.0.0",
@@ -2096,20 +2096,20 @@ dependencies = [
  "futures-util",
  "indexmap 2.1.0",
  "itertools 0.11.0",
- "kaspa-consensus-core",
- "kaspa-consensus-notify",
- "kaspa-consensusmanager",
- "kaspa-core",
- "kaspa-database",
- "kaspa-hashes",
- "kaspa-math",
- "kaspa-merkle",
- "kaspa-muhash",
- "kaspa-notify",
- "kaspa-pow",
- "kaspa-txscript",
- "kaspa-txscript-errors",
- "kaspa-utils",
+ "kash-consensus-core",
+ "kash-consensus-notify",
+ "kash-consensusmanager",
+ "kash-core",
+ "kash-database",
+ "kash-hashes",
+ "kash-math",
+ "kash-merkle",
+ "kash-muhash",
+ "kash-notify",
+ "kash-pow",
+ "kash-txscript",
+ "kash-txscript-errors",
+ "kash-utils",
  "log",
  "once_cell",
  "parking_lot",
@@ -2126,7 +2126,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "kaspa-consensus-core"
+name = "kash-consensus-core"
 version = "0.13.1"
 dependencies = [
  "async-trait",
@@ -2139,14 +2139,14 @@ dependencies = [
  "getrandom 0.2.10",
  "itertools 0.11.0",
  "js-sys",
- "kaspa-addresses",
- "kaspa-core",
- "kaspa-hashes",
- "kaspa-math",
- "kaspa-merkle",
- "kaspa-muhash",
- "kaspa-txscript-errors",
- "kaspa-utils",
+ "kash-addresses",
+ "kash-core",
+ "kash-hashes",
+ "kash-math",
+ "kash-merkle",
+ "kash-muhash",
+ "kash-txscript-errors",
+ "kash-utils",
  "rand 0.8.5",
  "secp256k1",
  "serde",
@@ -2163,18 +2163,18 @@ dependencies = [
 ]
 
 [[package]]
-name = "kaspa-consensus-notify"
+name = "kash-consensus-notify"
 version = "0.13.1"
 dependencies = [
  "async-channel 2.0.0",
  "cfg-if 1.0.0",
  "derive_more",
  "futures",
- "kaspa-consensus-core",
- "kaspa-core",
- "kaspa-hashes",
- "kaspa-notify",
- "kaspa-utils",
+ "kash-consensus-core",
+ "kash-core",
+ "kash-hashes",
+ "kash-notify",
+ "kash-utils",
  "log",
  "paste",
  "thiserror",
@@ -2182,16 +2182,16 @@ dependencies = [
 ]
 
 [[package]]
-name = "kaspa-consensus-wasm"
+name = "kash-consensus-wasm"
 version = "0.13.1"
 dependencies = [
  "faster-hex 0.6.1",
  "js-sys",
- "kaspa-addresses",
- "kaspa-consensus-core",
- "kaspa-hashes",
- "kaspa-txscript",
- "kaspa-utils",
+ "kash-addresses",
+ "kash-consensus-core",
+ "kash-hashes",
+ "kash-txscript",
+ "kash-utils",
  "rand 0.8.5",
  "secp256k1",
  "serde",
@@ -2204,17 +2204,17 @@ dependencies = [
 ]
 
 [[package]]
-name = "kaspa-consensusmanager"
+name = "kash-consensusmanager"
 version = "0.13.1"
 dependencies = [
  "duration-string",
  "futures",
  "futures-util",
  "itertools 0.11.0",
- "kaspa-consensus-core",
- "kaspa-consensus-notify",
- "kaspa-core",
- "kaspa-utils",
+ "kash-consensus-core",
+ "kash-consensus-notify",
+ "kash-core",
+ "kash-utils",
  "log",
  "parking_lot",
  "rand 0.8.5",
@@ -2222,7 +2222,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "kaspa-core"
+name = "kash-core"
 version = "0.13.1"
 dependencies = [
  "cfg-if 1.0.0",
@@ -2240,7 +2240,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "kaspa-daemon"
+name = "kash-daemon"
 version = "0.13.1"
 dependencies = [
  "async-trait",
@@ -2248,9 +2248,9 @@ dependencies = [
  "cfg-if 1.0.0",
  "downcast-rs",
  "futures",
- "kaspa-addresses",
- "kaspa-consensus-core",
- "kaspa-wallet-core",
+ "kash-addresses",
+ "kash-consensus-core",
+ "kash-wallet-core",
  "nw-sys",
  "serde",
  "thiserror",
@@ -2262,7 +2262,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "kaspa-database"
+name = "kash-database"
 version = "0.13.1"
 dependencies = [
  "bincode",
@@ -2270,8 +2270,8 @@ dependencies = [
  "faster-hex 0.6.1",
  "indexmap 2.1.0",
  "itertools 0.11.0",
- "kaspa-hashes",
- "kaspa-utils",
+ "kash-hashes",
+ "kash-utils",
  "num-traits",
  "num_cpus",
  "parking_lot",
@@ -2284,7 +2284,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "kaspa-grpc-client"
+name = "kash-grpc-client"
 version = "0.13.1"
 dependencies = [
  "async-channel 2.0.0",
@@ -2293,12 +2293,12 @@ dependencies = [
  "faster-hex 0.6.1",
  "futures",
  "h2",
- "kaspa-core",
- "kaspa-grpc-core",
- "kaspa-notify",
- "kaspa-rpc-core",
- "kaspa-utils",
- "kaspa-utils-tower",
+ "kash-core",
+ "kash-grpc-core",
+ "kash-notify",
+ "kash-rpc-core",
+ "kash-utils",
+ "kash-utils-tower",
  "log",
  "paste",
  "prost",
@@ -2312,7 +2312,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "kaspa-grpc-core"
+name = "kash-grpc-core"
 version = "0.13.1"
 dependencies = [
  "async-channel 2.0.0",
@@ -2321,11 +2321,11 @@ dependencies = [
  "faster-hex 0.6.1",
  "futures",
  "h2",
- "kaspa-consensus-core",
- "kaspa-core",
- "kaspa-notify",
- "kaspa-rpc-core",
- "kaspa-utils",
+ "kash-consensus-core",
+ "kash-core",
+ "kash-notify",
+ "kash-rpc-core",
+ "kash-utils",
  "log",
  "paste",
  "prost",
@@ -2341,7 +2341,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "kaspa-grpc-server"
+name = "kash-grpc-server"
 version = "0.13.1"
 dependencies = [
  "async-channel 2.0.0",
@@ -2351,16 +2351,16 @@ dependencies = [
  "futures",
  "h2",
  "itertools 0.11.0",
- "kaspa-consensus-core",
- "kaspa-core",
- "kaspa-grpc-client",
- "kaspa-grpc-core",
- "kaspa-notify",
- "kaspa-rpc-core",
- "kaspa-rpc-macros",
- "kaspa-rpc-service",
- "kaspa-utils",
- "kaspa-utils-tower",
+ "kash-consensus-core",
+ "kash-core",
+ "kash-grpc-client",
+ "kash-grpc-core",
+ "kash-notify",
+ "kash-rpc-core",
+ "kash-rpc-macros",
+ "kash-rpc-service",
+ "kash-utils",
+ "kash-utils-tower",
  "log",
  "once_cell",
  "parking_lot",
@@ -2376,7 +2376,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "kaspa-hashes"
+name = "kash-hashes"
 version = "0.13.1"
 dependencies = [
  "blake2b_simd",
@@ -2385,7 +2385,7 @@ dependencies = [
  "criterion",
  "faster-hex 0.6.1",
  "js-sys",
- "kaspa-utils",
+ "kash-utils",
  "keccak",
  "once_cell",
  "rand 0.8.5",
@@ -2397,17 +2397,17 @@ dependencies = [
 ]
 
 [[package]]
-name = "kaspa-index-core"
+name = "kash-index-core"
 version = "0.13.1"
 dependencies = [
  "async-channel 2.0.0",
  "async-trait",
  "derive_more",
  "futures",
- "kaspa-consensus-core",
- "kaspa-hashes",
- "kaspa-notify",
- "kaspa-utils",
+ "kash-consensus-core",
+ "kash-hashes",
+ "kash-notify",
+ "kash-utils",
  "log",
  "paste",
  "serde",
@@ -2416,24 +2416,24 @@ dependencies = [
 ]
 
 [[package]]
-name = "kaspa-index-processor"
+name = "kash-index-processor"
 version = "0.13.1"
 dependencies = [
  "async-channel 2.0.0",
  "async-trait",
  "derive_more",
  "futures",
- "kaspa-consensus",
- "kaspa-consensus-core",
- "kaspa-consensus-notify",
- "kaspa-consensusmanager",
- "kaspa-core",
- "kaspa-database",
- "kaspa-hashes",
- "kaspa-index-core",
- "kaspa-notify",
- "kaspa-utils",
- "kaspa-utxoindex",
+ "kash-consensus",
+ "kash-consensus-core",
+ "kash-consensus-notify",
+ "kash-consensusmanager",
+ "kash-core",
+ "kash-database",
+ "kash-hashes",
+ "kash-index-core",
+ "kash-notify",
+ "kash-utils",
+ "kash-utxoindex",
  "log",
  "parking_lot",
  "paste",
@@ -2444,14 +2444,14 @@ dependencies = [
 ]
 
 [[package]]
-name = "kaspa-math"
+name = "kash-math"
 version = "0.13.1"
 dependencies = [
  "borsh",
  "criterion",
  "faster-hex 0.6.1",
  "js-sys",
- "kaspa-utils",
+ "kash-utils",
  "malachite-base",
  "malachite-nz",
  "rand_chacha 0.3.1",
@@ -2465,28 +2465,28 @@ dependencies = [
 ]
 
 [[package]]
-name = "kaspa-merkle"
+name = "kash-merkle"
 version = "0.13.1"
 dependencies = [
- "kaspa-hashes",
+ "kash-hashes",
 ]
 
 [[package]]
-name = "kaspa-mining"
+name = "kash-mining"
 version = "0.13.1"
 dependencies = [
  "criterion",
  "futures-util",
  "itertools 0.11.0",
- "kaspa-addresses",
- "kaspa-consensus-core",
- "kaspa-consensusmanager",
- "kaspa-core",
- "kaspa-hashes",
- "kaspa-mining-errors",
- "kaspa-muhash",
- "kaspa-txscript",
- "kaspa-utils",
+ "kash-addresses",
+ "kash-consensus-core",
+ "kash-consensusmanager",
+ "kash-core",
+ "kash-hashes",
+ "kash-mining-errors",
+ "kash-muhash",
+ "kash-txscript",
+ "kash-utils",
  "log",
  "parking_lot",
  "rand 0.8.5",
@@ -2498,20 +2498,20 @@ dependencies = [
 ]
 
 [[package]]
-name = "kaspa-mining-errors"
+name = "kash-mining-errors"
 version = "0.13.1"
 dependencies = [
- "kaspa-consensus-core",
+ "kash-consensus-core",
  "thiserror",
 ]
 
 [[package]]
-name = "kaspa-muhash"
+name = "kash-muhash"
 version = "0.13.1"
 dependencies = [
  "criterion",
- "kaspa-hashes",
- "kaspa-math",
+ "kash-hashes",
+ "kash-math",
  "rand 0.8.5",
  "rand_chacha 0.3.1",
  "rayon",
@@ -2519,7 +2519,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "kaspa-notify"
+name = "kash-notify"
 version = "0.13.1"
 dependencies = [
  "async-channel 2.0.0",
@@ -2529,12 +2529,12 @@ dependencies = [
  "futures",
  "futures-util",
  "itertools 0.11.0",
- "kaspa-addresses",
- "kaspa-consensus-core",
- "kaspa-core",
- "kaspa-txscript",
- "kaspa-txscript-errors",
- "kaspa-utils",
+ "kash-addresses",
+ "kash-consensus-core",
+ "kash-core",
+ "kash-txscript",
+ "kash-txscript-errors",
+ "kash-utils",
  "log",
  "parking_lot",
  "paste",
@@ -2548,7 +2548,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "kaspa-os"
+name = "kash-os"
 version = "0.0.2"
 dependencies = [
  "async-trait",
@@ -2557,12 +2557,12 @@ dependencies = [
  "downcast",
  "futures",
  "js-sys",
- "kaspa-cli",
- "kaspa-consensus-core",
- "kaspa-core",
- "kaspa-daemon",
- "kaspa-rpc-core",
- "kaspa-wallet-core",
+ "kash-cli",
+ "kash-consensus-core",
+ "kash-core",
+ "kash-daemon",
+ "kash-rpc-core",
+ "kash-wallet-core",
  "nw-sys",
  "regex",
  "serde",
@@ -2581,26 +2581,26 @@ dependencies = [
 ]
 
 [[package]]
-name = "kaspa-p2p-flows"
+name = "kash-p2p-flows"
 version = "0.13.1"
 dependencies = [
  "async-trait",
  "futures",
  "indexmap 2.1.0",
  "itertools 0.11.0",
- "kaspa-addressmanager",
- "kaspa-connectionmanager",
- "kaspa-consensus-core",
- "kaspa-consensus-notify",
- "kaspa-consensusmanager",
- "kaspa-core",
- "kaspa-hashes",
- "kaspa-mining",
- "kaspa-muhash",
- "kaspa-notify",
- "kaspa-p2p-lib",
- "kaspa-utils",
- "kaspa-utils-tower",
+ "kash-addressmanager",
+ "kash-connectionmanager",
+ "kash-consensus-core",
+ "kash-consensus-notify",
+ "kash-consensusmanager",
+ "kash-core",
+ "kash-hashes",
+ "kash-mining",
+ "kash-muhash",
+ "kash-notify",
+ "kash-p2p-lib",
+ "kash-utils",
+ "kash-utils-tower",
  "log",
  "parking_lot",
  "rand 0.8.5",
@@ -2611,7 +2611,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "kaspa-p2p-lib"
+name = "kash-p2p-lib"
 version = "0.13.1"
 dependencies = [
  "borsh",
@@ -2620,13 +2620,13 @@ dependencies = [
  "h2",
  "hex",
  "itertools 0.11.0",
- "kaspa-consensus-core",
- "kaspa-core",
- "kaspa-hashes",
- "kaspa-math",
- "kaspa-mining-errors",
- "kaspa-utils",
- "kaspa-utils-tower",
+ "kash-consensus-core",
+ "kash-core",
+ "kash-hashes",
+ "kash-math",
+ "kash-mining-errors",
+ "kash-utils",
+ "kash-utils-tower",
  "log",
  "parking_lot",
  "prost",
@@ -2641,10 +2641,10 @@ dependencies = [
 ]
 
 [[package]]
-name = "kaspa-perf-monitor"
+name = "kash-perf-monitor"
 version = "0.13.1"
 dependencies = [
- "kaspa-core",
+ "kash-core",
  "log",
  "portable-atomic",
  "thiserror",
@@ -2653,21 +2653,21 @@ dependencies = [
 ]
 
 [[package]]
-name = "kaspa-pow"
+name = "kash-pow"
 version = "0.13.1"
 dependencies = [
  "criterion",
  "js-sys",
- "kaspa-consensus-core",
- "kaspa-hashes",
- "kaspa-math",
- "kaspa-utils",
+ "kash-consensus-core",
+ "kash-hashes",
+ "kash-math",
+ "kash-utils",
  "wasm-bindgen",
  "workflow-wasm",
 ]
 
 [[package]]
-name = "kaspa-rpc-core"
+name = "kash-rpc-core"
 version = "0.13.1"
 dependencies = [
  "async-channel 2.0.0",
@@ -2676,18 +2676,18 @@ dependencies = [
  "derive_more",
  "downcast",
  "faster-hex 0.6.1",
- "kaspa-addresses",
- "kaspa-consensus-core",
- "kaspa-consensus-notify",
- "kaspa-consensus-wasm",
- "kaspa-core",
- "kaspa-hashes",
- "kaspa-index-core",
- "kaspa-math",
- "kaspa-mining-errors",
- "kaspa-notify",
- "kaspa-txscript",
- "kaspa-utils",
+ "kash-addresses",
+ "kash-consensus-core",
+ "kash-consensus-notify",
+ "kash-consensus-wasm",
+ "kash-core",
+ "kash-hashes",
+ "kash-index-core",
+ "kash-math",
+ "kash-mining-errors",
+ "kash-notify",
+ "kash-txscript",
+ "kash-utils",
  "log",
  "paste",
  "serde",
@@ -2702,7 +2702,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "kaspa-rpc-macros"
+name = "kash-rpc-macros"
 version = "0.13.1"
 dependencies = [
  "convert_case 0.6.0",
@@ -2714,36 +2714,36 @@ dependencies = [
 ]
 
 [[package]]
-name = "kaspa-rpc-service"
+name = "kash-rpc-service"
 version = "0.13.1"
 dependencies = [
  "async-trait",
- "kaspa-addresses",
- "kaspa-consensus",
- "kaspa-consensus-core",
- "kaspa-consensus-notify",
- "kaspa-consensusmanager",
- "kaspa-core",
- "kaspa-hashes",
- "kaspa-index-core",
- "kaspa-math",
- "kaspa-mining",
- "kaspa-notify",
- "kaspa-p2p-flows",
- "kaspa-p2p-lib",
- "kaspa-perf-monitor",
- "kaspa-rpc-core",
- "kaspa-txscript",
- "kaspa-utils",
- "kaspa-utils-tower",
- "kaspa-utxoindex",
- "kaspa-wrpc-core",
+ "kash-addresses",
+ "kash-consensus",
+ "kash-consensus-core",
+ "kash-consensus-notify",
+ "kash-consensusmanager",
+ "kash-core",
+ "kash-hashes",
+ "kash-index-core",
+ "kash-math",
+ "kash-mining",
+ "kash-notify",
+ "kash-p2p-flows",
+ "kash-p2p-lib",
+ "kash-perf-monitor",
+ "kash-rpc-core",
+ "kash-txscript",
+ "kash-utils",
+ "kash-utils-tower",
+ "kash-utxoindex",
+ "kash-wrpc-core",
  "log",
  "tokio",
 ]
 
 [[package]]
-name = "kaspa-testing-integration"
+name = "kash-testing-integration"
 version = "0.13.1"
 dependencies = [
  "async-channel 2.0.0",
@@ -2755,30 +2755,30 @@ dependencies = [
  "futures-util",
  "indexmap 2.1.0",
  "itertools 0.11.0",
- "kaspa-addresses",
- "kaspa-bip32",
- "kaspa-consensus",
- "kaspa-consensus-core",
- "kaspa-consensus-notify",
- "kaspa-consensusmanager",
- "kaspa-core",
- "kaspa-database",
- "kaspa-grpc-client",
- "kaspa-grpc-core",
- "kaspa-hashes",
- "kaspa-index-processor",
- "kaspa-math",
- "kaspa-merkle",
- "kaspa-muhash",
- "kaspa-notify",
- "kaspa-pow",
- "kaspa-rpc-core",
- "kaspa-txscript",
- "kaspa-txscript-errors",
- "kaspa-utils",
- "kaspa-utxoindex",
- "kaspa-wrpc-server",
- "kaspad",
+ "kash-addresses",
+ "kash-bip32",
+ "kash-consensus",
+ "kash-consensus-core",
+ "kash-consensus-notify",
+ "kash-consensusmanager",
+ "kash-core",
+ "kash-database",
+ "kash-grpc-client",
+ "kash-grpc-core",
+ "kash-hashes",
+ "kash-index-processor",
+ "kash-math",
+ "kash-merkle",
+ "kash-muhash",
+ "kash-notify",
+ "kash-pow",
+ "kash-rpc-core",
+ "kash-txscript",
+ "kash-txscript-errors",
+ "kash-utils",
+ "kash-utxoindex",
+ "kash-wrpc-server",
+ "kashd",
  "log",
  "parking_lot",
  "rand 0.8.5",
@@ -2795,7 +2795,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "kaspa-txscript"
+name = "kash-txscript"
 version = "0.13.1"
 dependencies = [
  "blake2b_simd",
@@ -2804,10 +2804,10 @@ dependencies = [
  "hex",
  "indexmap 2.1.0",
  "itertools 0.11.0",
- "kaspa-addresses",
- "kaspa-consensus-core",
- "kaspa-hashes",
- "kaspa-txscript-errors",
+ "kash-addresses",
+ "kash-consensus-core",
+ "kash-hashes",
+ "kash-txscript-errors",
  "log",
  "parking_lot",
  "rand 0.8.5",
@@ -2821,7 +2821,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "kaspa-txscript-errors"
+name = "kash-txscript-errors"
 version = "0.13.1"
 dependencies = [
  "secp256k1",
@@ -2829,7 +2829,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "kaspa-utils"
+name = "kash-utils"
 version = "0.13.1"
 dependencies = [
  "async-channel 2.0.0",
@@ -2856,7 +2856,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "kaspa-utils-tower"
+name = "kash-utils-tower"
 version = "0.13.1"
 dependencies = [
  "cfg-if 1.0.0",
@@ -2870,18 +2870,18 @@ dependencies = [
 ]
 
 [[package]]
-name = "kaspa-utxoindex"
+name = "kash-utxoindex"
 version = "0.13.1"
 dependencies = [
  "futures",
- "kaspa-consensus",
- "kaspa-consensus-core",
- "kaspa-consensusmanager",
- "kaspa-core",
- "kaspa-database",
- "kaspa-hashes",
- "kaspa-index-core",
- "kaspa-utils",
+ "kash-consensus",
+ "kash-consensus-core",
+ "kash-consensusmanager",
+ "kash-core",
+ "kash-database",
+ "kash-hashes",
+ "kash-index-core",
+ "kash-utils",
  "log",
  "parking_lot",
  "rand 0.8.5",
@@ -2891,24 +2891,24 @@ dependencies = [
 ]
 
 [[package]]
-name = "kaspa-wallet"
+name = "kash-wallet"
 version = "0.13.1"
 dependencies = [
  "async-std",
  "async-trait",
- "kaspa-cli",
+ "kash-cli",
  "tokio",
  "workflow-log",
  "workflow-terminal",
 ]
 
 [[package]]
-name = "kaspa-wallet-cli-wasm"
+name = "kash-wallet-cli-wasm"
 version = "0.13.1"
 dependencies = [
  "async-trait",
  "js-sys",
- "kaspa-cli",
+ "kash-cli",
  "wasm-bindgen",
  "wasm-bindgen-futures",
  "workflow-log",
@@ -2917,7 +2917,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "kaspa-wallet-core"
+name = "kash-wallet-core"
 version = "0.13.1"
 dependencies = [
  "aes",
@@ -2940,18 +2940,18 @@ dependencies = [
  "home",
  "itertools 0.11.0",
  "js-sys",
- "kaspa-addresses",
- "kaspa-bip32",
- "kaspa-consensus-core",
- "kaspa-consensus-wasm",
- "kaspa-core",
- "kaspa-hashes",
- "kaspa-notify",
- "kaspa-rpc-core",
- "kaspa-txscript",
- "kaspa-txscript-errors",
- "kaspa-utils",
- "kaspa-wrpc-client",
+ "kash-addresses",
+ "kash-bip32",
+ "kash-consensus-core",
+ "kash-consensus-wasm",
+ "kash-core",
+ "kash-hashes",
+ "kash-notify",
+ "kash-rpc-core",
+ "kash-txscript",
+ "kash-txscript-errors",
+ "kash-utils",
+ "kash-wrpc-client",
  "md-5",
  "pad",
  "pbkdf2",
@@ -2983,27 +2983,27 @@ dependencies = [
 ]
 
 [[package]]
-name = "kaspa-wasm"
+name = "kash-wasm"
 version = "0.13.1"
 dependencies = [
  "js-sys",
- "kaspa-addresses",
- "kaspa-consensus-core",
- "kaspa-consensus-wasm",
- "kaspa-core",
- "kaspa-math",
- "kaspa-pow",
- "kaspa-rpc-core",
- "kaspa-utils",
- "kaspa-wallet-core",
- "kaspa-wrpc-client",
+ "kash-addresses",
+ "kash-consensus-core",
+ "kash-consensus-wasm",
+ "kash-core",
+ "kash-math",
+ "kash-pow",
+ "kash-rpc-core",
+ "kash-utils",
+ "kash-wallet-core",
+ "kash-wrpc-client",
  "num",
  "wasm-bindgen",
  "workflow-log",
 ]
 
 [[package]]
-name = "kaspa-wrpc-client"
+name = "kash-wrpc-client"
 version = "0.13.1"
 dependencies = [
  "async-std",
@@ -3011,12 +3011,12 @@ dependencies = [
  "borsh",
  "futures",
  "js-sys",
- "kaspa-addresses",
- "kaspa-consensus-core",
- "kaspa-consensus-wasm",
- "kaspa-notify",
- "kaspa-rpc-core",
- "kaspa-rpc-macros",
+ "kash-addresses",
+ "kash-consensus-core",
+ "kash-consensus-wasm",
+ "kash-notify",
+ "kash-rpc-core",
+ "kash-rpc-macros",
  "paste",
  "regex",
  "serde",
@@ -3033,21 +3033,21 @@ dependencies = [
 ]
 
 [[package]]
-name = "kaspa-wrpc-core"
+name = "kash-wrpc-core"
 version = "0.13.1"
 
 [[package]]
-name = "kaspa-wrpc-proxy"
+name = "kash-wrpc-proxy"
 version = "0.13.1"
 dependencies = [
  "async-trait",
  "clap 4.4.7",
- "kaspa-consensus-core",
- "kaspa-grpc-client",
- "kaspa-rpc-core",
- "kaspa-rpc-macros",
- "kaspa-wrpc-core",
- "kaspa-wrpc-server",
+ "kash-consensus-core",
+ "kash-grpc-client",
+ "kash-rpc-core",
+ "kash-rpc-macros",
+ "kash-wrpc-core",
+ "kash-wrpc-server",
  "num_cpus",
  "thiserror",
  "tokio",
@@ -3057,21 +3057,21 @@ dependencies = [
 ]
 
 [[package]]
-name = "kaspa-wrpc-server"
+name = "kash-wrpc-server"
 version = "0.13.1"
 dependencies = [
  "async-trait",
  "borsh",
  "futures",
- "kaspa-consensus-core",
- "kaspa-core",
- "kaspa-grpc-client",
- "kaspa-notify",
- "kaspa-rpc-core",
- "kaspa-rpc-macros",
- "kaspa-rpc-service",
- "kaspa-utils",
- "kaspa-wrpc-core",
+ "kash-consensus-core",
+ "kash-core",
+ "kash-grpc-client",
+ "kash-notify",
+ "kash-rpc-core",
+ "kash-rpc-macros",
+ "kash-rpc-service",
+ "kash-utils",
+ "kash-wrpc-core",
  "log",
  "num_cpus",
  "openssl",
@@ -3085,14 +3085,14 @@ dependencies = [
 ]
 
 [[package]]
-name = "kaspa-wrpc-wasm"
+name = "kash-wrpc-wasm"
 version = "0.13.1"
 dependencies = [
- "kaspa-wrpc-client",
+ "kash-wrpc-client",
 ]
 
 [[package]]
-name = "kaspad"
+name = "kashd"
 version = "0.13.1"
 dependencies = [
  "async-channel 2.0.0",
@@ -3100,27 +3100,27 @@ dependencies = [
  "dhat",
  "dirs",
  "futures-util",
- "kaspa-addresses",
- "kaspa-addressmanager",
- "kaspa-consensus",
- "kaspa-consensus-core",
- "kaspa-consensus-notify",
- "kaspa-consensusmanager",
- "kaspa-core",
- "kaspa-database",
- "kaspa-grpc-server",
- "kaspa-hashes",
- "kaspa-index-processor",
- "kaspa-mining",
- "kaspa-p2p-flows",
- "kaspa-perf-monitor",
- "kaspa-rpc-core",
- "kaspa-rpc-service",
- "kaspa-txscript",
- "kaspa-utils",
- "kaspa-utils-tower",
- "kaspa-utxoindex",
- "kaspa-wrpc-server",
+ "kash-addresses",
+ "kash-addressmanager",
+ "kash-consensus",
+ "kash-consensus-core",
+ "kash-consensus-notify",
+ "kash-consensusmanager",
+ "kash-core",
+ "kash-database",
+ "kash-grpc-server",
+ "kash-hashes",
+ "kash-index-processor",
+ "kash-mining",
+ "kash-p2p-flows",
+ "kash-perf-monitor",
+ "kash-rpc-core",
+ "kash-rpc-service",
+ "kash-txscript",
+ "kash-utils",
+ "kash-utils-tower",
+ "kash-utxoindex",
+ "kash-wrpc-server",
  "log",
  "num_cpus",
  "rand 0.8.5",
@@ -4323,13 +4323,13 @@ dependencies = [
  "clap 4.4.7",
  "faster-hex 0.6.1",
  "itertools 0.11.0",
- "kaspa-addresses",
- "kaspa-consensus-core",
- "kaspa-core",
- "kaspa-grpc-client",
- "kaspa-rpc-core",
- "kaspa-txscript",
- "kaspa-utils",
+ "kash-addresses",
+ "kash-consensus-core",
+ "kash-core",
+ "kash-grpc-client",
+ "kash-rpc-core",
+ "kash-txscript",
+ "kash-utils",
  "log",
  "secp256k1",
  "tokio",
@@ -4673,14 +4673,14 @@ dependencies = [
  "futures-util",
  "indexmap 2.1.0",
  "itertools 0.11.0",
- "kaspa-consensus",
- "kaspa-consensus-core",
- "kaspa-consensus-notify",
- "kaspa-core",
- "kaspa-database",
- "kaspa-hashes",
- "kaspa-perf-monitor",
- "kaspa-utils",
+ "kash-consensus",
+ "kash-consensus-core",
+ "kash-consensus-notify",
+ "kash-core",
+ "kash-database",
+ "kash-hashes",
+ "kash-perf-monitor",
+ "kash-utils",
  "log",
  "num_cpus",
  "rand 0.8.5",

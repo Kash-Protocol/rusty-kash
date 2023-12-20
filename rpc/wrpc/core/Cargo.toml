@@ -1,6 +1,6 @@
 [package]
-name = "kaspa-wrpc-core"
-description = "Kaspa wRPC core"
+name = "kash-wrpc-core"
+description = "Kash wRPC core"
 version.workspace = true
 edition.workspace = true
 authors.workspace = true

@@ -1,6 +1,6 @@
 [package]
-name = "kaspa-p2p-lib"
-description = "Kaspa p2p library"
+name = "kash-p2p-lib"
+description = "Kash p2p library"
 version.workspace = true
 edition.workspace = true
 authors.workspace = true
@@ -11,21 +11,21 @@ license.workspace = true
 path = "./src/lib.rs"
 
 [[bin]]
-name = "kaspa_p2p_client"
+name = "kash_p2p_client"
 path = "./src/bin/client.rs"
 
 [[bin]]
-name = "kaspa_p2p_server"
+name = "kash_p2p_server"
 path = "./src/bin/server.rs"
 
 [dependencies]
-kaspa-core.workspace = true
-kaspa-consensus-core.workspace = true
-kaspa-mining-errors.workspace = true
-kaspa-hashes.workspace = true
-kaspa-math.workspace = true
-kaspa-utils.workspace = true
-kaspa-utils-tower.workspace = true
+kash-core.workspace = true
+kash-consensus-core.workspace = true
+kash-mining-errors.workspace = true
+kash-hashes.workspace = true
+kash-math.workspace = true
+kash-utils.workspace = true
+kash-utils-tower.workspace = true
 
 borsh.workspace = true
 ctrlc.workspace = true

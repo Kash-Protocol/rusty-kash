@@ -4,8 +4,8 @@ use super::collector::{CollectorFromConsensus, CollectorFromIndex};
 use crate::converter::{consensus::ConsensusConverter, index::IndexConverter, protocol::ProtocolConverter};
 use crate::service::NetworkType::{Mainnet, Testnet};
 use async_trait::async_trait;
-use kaspa_consensus::pipeline::ProcessingCounters;
-use kaspa_consensus_core::{
+use kash_consensus::pipeline::ProcessingCounters;
+use kash_consensus_core::{
     block::Block,
     coinbase::MinerData,
     config::Config,
@@ -13,29 +13,29 @@ use kaspa_consensus_core::{
     network::NetworkType,
     tx::{Transaction, COINBASE_TRANSACTION_INDEX},
 };
-use kaspa_consensus_notify::{
+use kash_consensus_notify::{
     notifier::ConsensusNotifier,
     {connection::ConsensusChannelConnection, notification::Notification as ConsensusNotification},
 };
-use kaspa_consensusmanager::ConsensusManager;
-use kaspa_core::time::unix_now;
-use kaspa_core::{
+use kash_consensusmanager::ConsensusManager;
+use kash_core::time::unix_now;
+use kash_core::{
     core::Core,
     debug,
-    kaspad_env::version,
+    kashd_env::version,
     signals::Shutdown,
     task::service::{AsyncService, AsyncServiceError, AsyncServiceFuture},
     task::tick::TickService,
     trace, warn,
 };
-use kaspa_index_core::indexed_utxos::BalanceByScriptPublicKey;
-use kaspa_index_core::{
+use kash_index_core::indexed_utxos::BalanceByScriptPublicKey;
+use kash_index_core::{
     connection::IndexChannelConnection, indexed_utxos::UtxoSetByScriptPublicKey, notification::Notification as IndexNotification,
     notifier::IndexNotifier,
 };
-use kaspa_mining::model::tx_query::TransactionQuery;
-use kaspa_mining::{manager::MiningManagerProxy, mempool::tx::Orphan};
-use kaspa_notify::{
+use kash_mining::model::tx_query::TransactionQuery;
+use kash_mining::{manager::MiningManagerProxy, mempool::tx::Orphan};
+use kash_notify::{
     collector::DynCollector,
     connection::ChannelType,
     events::{EventSwitches, EventType, EVENT_TYPE_ARRAY},
@@ -44,9 +44,9 @@ use kaspa_notify::{
     scope::Scope,
     subscriber::{Subscriber, SubscriptionManager},
 };
-use kaspa_p2p_flows::flow_context::FlowContext;
-use kaspa_perf_monitor::{counters::CountersSnapshot, Monitor as PerfMonitor};
-use kaspa_rpc_core::{
+use kash_p2p_flows::flow_context::FlowContext;
+use kash_perf_monitor::{counters::CountersSnapshot, Monitor as PerfMonitor};
+use kash_rpc_core::{
     api::{
         ops::RPC_API_VERSION,
         rpc::{RpcApi, MAX_SAFE_WINDOW_SIZE},
@@ -55,11 +55,11 @@ use kaspa_rpc_core::{
     notify::connection::ChannelConnection,
     Notification, RpcError, RpcResult,
 };
-use kaspa_txscript::{extract_script_pub_key_address, pay_to_address_script};
-use kaspa_utils::{channel::Channel, triggers::SingleTrigger};
-use kaspa_utils_tower::counters::TowerConnectionCounters;
-use kaspa_utxoindex::api::UtxoIndexProxy;
-use kaspa_wrpc_core::ServerCounters as WrpcServerCounters;
+use kash_txscript::{extract_script_pub_key_address, pay_to_address_script};
+use kash_utils::{channel::Channel, triggers::SingleTrigger};
+use kash_utils_tower::counters::TowerConnectionCounters;
+use kash_utxoindex::api::UtxoIndexProxy;
+use kash_wrpc_core::ServerCounters as WrpcServerCounters;
 use std::{
     collections::HashMap,
     iter::once,
@@ -67,7 +67,7 @@ use std::{
     vec,
 };
 
-/// A service implementing the Rpc API at kaspa_rpc_core level.
+/// A service implementing the Rpc API at kash_rpc_core level.
 ///
 /// Collects notifications from the consensus and forwards them to
 /// actual protocol-featured services. Thanks to the subscription pattern,
@@ -304,11 +304,11 @@ impl RpcApi for RpcCoreService {
 
         // Make sure the pay address prefix matches the config network type
         if request.pay_address.prefix != self.config.prefix() {
-            return Err(kaspa_addresses::AddressError::InvalidPrefix(request.pay_address.prefix.to_string()))?;
+            return Err(kash_addresses::AddressError::InvalidPrefix(request.pay_address.prefix.to_string()))?;
         }
 
         // Build block template
-        let script_public_key = kaspa_txscript::pay_to_address_script(&request.pay_address);
+        let script_public_key = kash_txscript::pay_to_address_script(&request.pay_address);
         let extra_data = version().as_bytes().iter().chain(once(&(b'/'))).chain(&request.extra_data).cloned().collect::<Vec<_>>();
         let miner_data: MinerData = MinerData::new(script_public_key, extra_data);
         let session = self.consensus_manager.consensus().unguarded_session();
@@ -647,7 +647,7 @@ impl RpcApi for RpcCoreService {
 
         // In the previous golang implementation the convention for virtual was the following const.
         // In the current implementation, consensus behaves the same when it gets a None instead.
-        const LEGACY_VIRTUAL: kaspa_hashes::Hash = kaspa_hashes::Hash::from_bytes([0xff; kaspa_hashes::HASH_SIZE]);
+        const LEGACY_VIRTUAL: kash_hashes::Hash = kash_hashes::Hash::from_bytes([0xff; kash_hashes::HASH_SIZE]);
         let mut start_hash = request.start_hash;
         if let Some(start) = start_hash {
             if start == LEGACY_VIRTUAL {

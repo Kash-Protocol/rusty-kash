@@ -7,10 +7,10 @@ const {
     RpcClient,
     UtxoProcessor,
     UtxoContext,
-    kaspaToSompi,
+    kashToSompi,
     createTransactions,
     initConsolePanicHook
-} = require('./kaspa/kaspa_wasm');
+} = require('./kash/kash_wasm');
 
 initConsolePanicHook();
 

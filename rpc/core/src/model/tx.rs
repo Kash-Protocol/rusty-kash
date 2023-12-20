@@ -1,23 +1,23 @@
 use borsh::{BorshDeserialize, BorshSchema, BorshSerialize};
-use kaspa_addresses::Address;
-use kaspa_consensus_core::tx::{
+use kash_addresses::Address;
+use kash_consensus_core::tx::{
     ScriptPublicKey, ScriptVec, TransactionId, TransactionInput, TransactionOutpoint, TransactionOutput, UtxoEntry,
 };
 use serde::{Deserialize, Serialize};
 
 use crate::prelude::{RpcHash, RpcScriptClass, RpcSubnetworkId};
 
-/// Represents the ID of a Kaspa transaction
+/// Represents the ID of a Kash transaction
 pub type RpcTransactionId = TransactionId;
 
 pub type RpcScriptVec = ScriptVec;
 pub type RpcScriptPublicKey = ScriptPublicKey;
 pub type RpcUtxoEntry = UtxoEntry;
 
-/// Represents a Kaspa transaction outpoint
+/// Represents a Kash transaction outpoint
 pub type RpcTransactionOutpoint = TransactionOutpoint;
 
-/// Represents a Kaspa transaction input
+/// Represents a Kash transaction input
 #[derive(Clone, Debug, Serialize, Deserialize, BorshSerialize, BorshDeserialize, BorshSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct RpcTransactionInput {
@@ -46,12 +46,12 @@ impl RpcTransactionInput {
     }
 }
 
-/// Represent Kaspa transaction input verbose data
+/// Represent Kash transaction input verbose data
 #[derive(Clone, Debug, Serialize, Deserialize, BorshSerialize, BorshDeserialize, BorshSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct RpcTransactionInputVerboseData {}
 
-/// Represents a Kaspad transaction output
+/// Represents a Kashd transaction output
 #[derive(Clone, Debug, Serialize, Deserialize, BorshSerialize, BorshDeserialize, BorshSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct RpcTransactionOutput {
@@ -72,7 +72,7 @@ impl From<TransactionOutput> for RpcTransactionOutput {
     }
 }
 
-/// Represent Kaspa transaction output verbose data
+/// Represent Kash transaction output verbose data
 #[derive(Clone, Debug, Serialize, Deserialize, BorshSerialize, BorshDeserialize, BorshSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct RpcTransactionOutputVerboseData {
@@ -80,7 +80,7 @@ pub struct RpcTransactionOutputVerboseData {
     pub script_public_key_address: Address,
 }
 
-/// Represents a Kaspa transaction
+/// Represents a Kash transaction
 #[derive(Clone, Debug, Serialize, Deserialize, BorshSerialize, BorshDeserialize, BorshSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct RpcTransaction {
@@ -94,7 +94,7 @@ pub struct RpcTransaction {
     pub verbose_data: Option<RpcTransactionVerboseData>,
 }
 
-/// Represent Kaspa transaction verbose data
+/// Represent Kash transaction verbose data
 #[derive(Clone, Debug, Serialize, Deserialize, BorshSerialize, BorshDeserialize, BorshSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct RpcTransactionVerboseData {

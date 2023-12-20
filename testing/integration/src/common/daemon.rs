@@ -1,10 +1,10 @@
 use futures_util::Future;
-use kaspa_consensus_core::network::NetworkId;
-use kaspa_core::{core::Core, signals::Shutdown};
-use kaspa_database::utils::get_kaspa_tempdir;
-use kaspa_grpc_client::GrpcClient;
-use kaspa_rpc_core::notify::mode::NotificationMode;
-use kaspad_lib::{args::Args, daemon::create_core_with_runtime};
+use kash_consensus_core::network::NetworkId;
+use kash_core::{core::Core, signals::Shutdown};
+use kash_database::utils::get_kash_tempdir;
+use kash_grpc_client::GrpcClient;
+use kash_rpc_core::notify::mode::NotificationMode;
+use kashd_lib::{args::Args, daemon::create_core_with_runtime};
 use std::{sync::Arc, time::Duration};
 use tempfile::TempDir;
 
@@ -54,7 +54,7 @@ impl Daemon {
         args.listen = Some(format!("0.0.0.0:{p2p_port}").try_into().unwrap());
         args.rpclisten_json = Some(format!("0.0.0.0:{rpc_json_port}").parse().unwrap());
         args.rpclisten_borsh = Some(format!("0.0.0.0:{rpc_borsh_port}").parse().unwrap());
-        let appdir_tempdir = get_kaspa_tempdir();
+        let appdir_tempdir = get_kash_tempdir();
         args.appdir = Some(appdir_tempdir.path().to_str().unwrap().to_owned());
 
         let network = args.network();

@@ -3,12 +3,12 @@ use crate::keypair::PrivateKey;
 use crate::result::Result;
 use crate::signable::*;
 use js_sys::Array;
-use kaspa_consensus_core::{
+use kash_consensus_core::{
     hashing::sighash_type::SIG_HASH_ALL,
     sign::{sign_with_multiple_v2, verify},
     tx,
 };
-use kaspa_hashes::Hash;
+use kash_hashes::Hash;
 use serde_wasm_bindgen::from_value;
 
 #[wasm_bindgen]

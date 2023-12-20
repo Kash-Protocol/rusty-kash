@@ -1,5 +1,5 @@
 use crate::imports::*;
-use kaspa_wallet_core::runtime::balance::*;
+use kash_wallet_core::runtime::balance::*;
 use workflow_core::channel::*;
 use workflow_terminal::clear::*;
 use workflow_terminal::cursor::*;
@@ -33,13 +33,13 @@ impl Handler for Monitor {
     }
 
     async fn handle(self: Arc<Self>, ctx: &Arc<dyn Context>, argv: Vec<String>, cmd: &str) -> cli::Result<()> {
-        let ctx = ctx.clone().downcast_arc::<KaspaCli>()?;
+        let ctx = ctx.clone().downcast_arc::<KashCli>()?;
         self.main(&ctx, argv, cmd).await.map_err(|e| e.into())
     }
 }
 
 impl Monitor {
-    async fn main(self: Arc<Self>, ctx: &Arc<KaspaCli>, _argv: Vec<String>, _cmd: &str) -> Result<()> {
+    async fn main(self: Arc<Self>, ctx: &Arc<KashCli>, _argv: Vec<String>, _cmd: &str) -> Result<()> {
         let max_events = 16;
         let events = Arc::new(Mutex::new(VecDeque::new()));
         let events_rx = ctx.wallet().multiplexer().channel();
@@ -91,7 +91,7 @@ impl Monitor {
         Ok(())
     }
 
-    async fn redraw(self: &Arc<Self>, ctx: &Arc<KaspaCli>, events: &Arc<Mutex<VecDeque<Box<Events>>>>) -> Result<()> {
+    async fn redraw(self: &Arc<Self>, ctx: &Arc<KashCli>, events: &Arc<Mutex<VecDeque<Box<Events>>>>) -> Result<()> {
         tprint!(ctx, "{}", ClearScreen);
         tprint!(ctx, "{}", Goto(1, 1));
 
@@ -101,7 +101,7 @@ impl Monitor {
             tprintln!(ctx, "{}", style("Wallet is not connected to the network").magenta());
             tprintln!(ctx);
         } else if !wallet.is_synced() {
-            tprintln!(ctx, "{}", style("Kaspa node is currently syncing").magenta());
+            tprintln!(ctx, "{}", style("Kash node is currently syncing").magenta());
             tprintln!(ctx);
         }
 

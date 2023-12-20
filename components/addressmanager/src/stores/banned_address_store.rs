@@ -1,4 +1,4 @@
-use kaspa_database::{
+use kash_database::{
     prelude::{CachedDbAccess, DirectDbWriter, DB},
     prelude::{StoreError, StoreResult},
     registry::DatabaseStorePrefixes,

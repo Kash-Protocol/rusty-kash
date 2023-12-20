@@ -7,12 +7,12 @@ use crate::mempool::{
     tx::{Orphan, Priority},
     Mempool,
 };
-use kaspa_consensus_core::{
+use kash_consensus_core::{
     api::ConsensusApi,
-    constants::{SOMPI_PER_KASPA, UNACCEPTED_DAA_SCORE},
+    constants::{SOMPI_PER_KASH, UNACCEPTED_DAA_SCORE},
     tx::{MutableTransaction, Transaction, TransactionId, TransactionOutpoint, UtxoEntry},
 };
-use kaspa_core::{debug, info};
+use kash_core::{debug, info};
 use std::sync::Arc;
 
 impl Mempool {
@@ -104,16 +104,16 @@ impl Mempool {
 
     fn validate_transaction_in_context(&self, transaction: &MutableTransaction) -> RuleResult<()> {
         if self.config.block_spam_txs {
-            // TEMP: apply go-kaspad mempool dust prevention patch
+            // TEMP: apply go-kashd mempool dust prevention patch
             // Note: we do not apply the part of the patch which modifies BBT since
             // we do not support BBT on mainnet yet
             let has_coinbase_input = transaction.entries.iter().any(|e| e.as_ref().unwrap().is_coinbase);
             let num_extra_outs = transaction.tx.outputs.len() as i64 - transaction.tx.inputs.len() as i64;
             if !has_coinbase_input
                 && num_extra_outs > 2
-                && transaction.calculated_fee.unwrap() < num_extra_outs as u64 * SOMPI_PER_KASPA
+                && transaction.calculated_fee.unwrap() < num_extra_outs as u64 * SOMPI_PER_KASH
             {
-                kaspa_core::trace!("Rejected spam tx {} from mempool ({} outputs)", transaction.id(), transaction.tx.outputs.len());
+                kash_core::trace!("Rejected spam tx {} from mempool ({} outputs)", transaction.id(), transaction.tx.outputs.len());
                 return Err(RuleError::RejectSpamTransaction(transaction.id()));
             }
         }

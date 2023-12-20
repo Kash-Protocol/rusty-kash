@@ -4,10 +4,10 @@ use crate::error::Error;
 use crate::result::Result;
 use crate::tx::{is_standard_output_amount_dust, Fees, MassCalculator, PaymentDestination};
 use crate::utxo::UtxoEntryReference;
-use crate::{tx::PaymentOutputs, utils::kaspa_to_sompi};
-use kaspa_addresses::Address;
-use kaspa_consensus_core::network::NetworkType;
-use kaspa_consensus_core::tx::Transaction;
+use crate::{tx::PaymentOutputs, utils::kash_to_sompi};
+use kash_addresses::Address;
+use kash_consensus_core::network::NetworkType;
+use kash_consensus_core::tx::Transaction;
 use std::cell::RefCell;
 use std::rc::Rc;
 use workflow_log::style;
@@ -20,17 +20,17 @@ const LOGS: bool = false;
 struct Sompi(u64);
 
 #[derive(Clone)]
-struct Kaspa(f64);
+struct Kash(f64);
 
-impl From<Kaspa> for Sompi {
-    fn from(kaspa: Kaspa) -> Self {
-        Sompi(kaspa_to_sompi(kaspa.0))
+impl From<Kash> for Sompi {
+    fn from(kash: Kash) -> Self {
+        Sompi(kash_to_sompi(kash.0))
     }
 }
 
-impl From<&Kaspa> for Sompi {
-    fn from(kaspa: &Kaspa) -> Self {
-        Sompi(kaspa_to_sompi(kaspa.0))
+impl From<&Kash> for Sompi {
+    fn from(kash: &Kash) -> Self {
+        Sompi(kash_to_sompi(kash.0))
     }
 }
 
@@ -280,7 +280,7 @@ where
     let mut values = head.to_vec();
     values.extend(tail);
 
-    let utxo_entries: Vec<UtxoEntryReference> = values.into_iter().map(kaspa_to_sompi).map(UtxoEntryReference::fake).collect();
+    let utxo_entries: Vec<UtxoEntryReference> = values.into_iter().map(kash_to_sompi).map(UtxoEntryReference::fake).collect();
     let multiplexer = None;
     let sig_op_count = 0;
     let minimum_signatures = 0;
@@ -308,16 +308,16 @@ where
 
 fn change_address(network_type: NetworkType) -> Address {
     match network_type {
-        NetworkType::Mainnet => Address::try_from("kaspa:qpauqsvk7yf9unexwmxsnmg547mhyga37csh0kj53q6xxgl24ydxjsgzthw5j").unwrap(),
-        NetworkType::Testnet => Address::try_from("kaspatest:qqz22l98sf8jun72rwh5rqe2tm8lhwtdxdmynrz4ypwak427qed5juktjt7ju").unwrap(),
+        NetworkType::Mainnet => Address::try_from("kash:qpauqsvk7yf9unexwmxsnmg547mhyga37csh0kj53q6xxgl24ydxjh3y20yhf").unwrap(),
+        NetworkType::Testnet => Address::try_from("kashtest:qqz22l98sf8jun72rwh5rqe2tm8lhwtdxdmynrz4ypwak427qed5j0jung7ef").unwrap(),
         _ => unreachable!("network type not supported"),
     }
 }
 
 fn output_address(network_type: NetworkType) -> Address {
     match network_type {
-        NetworkType::Mainnet => Address::try_from("kaspa:qrd9efkvg3pg34sgp6ztwyv3r569qlc43wa5w8nfs302532dzj47knu04aftm").unwrap(),
-        NetworkType::Testnet => Address::try_from("kaspatest:qqrewmx4gpuekvk8grenkvj2hp7xt0c35rxgq383f6gy223c4ud5s58ptm6er").unwrap(),
+        NetworkType::Mainnet => Address::try_from("kash:qrd9efkvg3pg34sgp6ztwyv3r569qlc43wa5w8nfs302532dzj47k59f59rgq").unwrap(),
+        NetworkType::Testnet => Address::try_from("kashtest:qqrewmx4gpuekvk8grenkvj2hp7xt0c35rxgq383f6gy223c4ud5s8rk2c6jk").unwrap(),
         _ => unreachable!("network type not supported"),
     }
 }
@@ -350,7 +350,7 @@ fn test_generator_sweep_two_utxos() -> Result<()> {
         .fetch(&Expected {
             is_final: true,
             input_count: 2,
-            aggregate_input_value: Kaspa(20.0).into(),
+            aggregate_input_value: Kash(20.0).into(),
             output_count: 1,
             priority_fees: FeesExpected::None,
         })
@@ -365,7 +365,7 @@ fn test_generator_sweep_two_utxos_with_priority_fees_rejection() -> Result<()> {
         network_type,
         &[10.0, 10.0],
         &[],
-        Fees::sender_pays_all(Kaspa(5.0)),
+        Fees::sender_pays_all(Kash(5.0)),
         change_address,
         PaymentDestination::Change,
     );
@@ -383,17 +383,17 @@ fn test_generator_inputs_2_outputs_2_fees_exclude() -> Result<()> {
         network_type,
         &[10.0; 2],
         &[],
-        Fees::sender_pays_all(Kaspa(5.0)),
-        [(output_address, Kaspa(10.0)), (output_address, Kaspa(1.0))].as_slice(),
+        Fees::sender_pays_all(Kash(5.0)),
+        [(output_address, Kash(10.0)), (output_address, Kash(1.0))].as_slice(),
     )
     .unwrap()
     .harness()
     .fetch(&Expected {
         is_final: true,
         input_count: 2,
-        aggregate_input_value: Kaspa(20.0).into(),
+        aggregate_input_value: Kash(20.0).into(),
         output_count: 3,
-        priority_fees: FeesExpected::sender_pays(Kaspa(5.0)),
+        priority_fees: FeesExpected::sender_pays(Kash(5.0)),
     })
     .finalize();
 
@@ -403,15 +403,15 @@ fn test_generator_inputs_2_outputs_2_fees_exclude() -> Result<()> {
 #[test]
 fn test_generator_inputs_100_outputs_1_fees_exclude() -> Result<()> {
     let network_type = NetworkType::Testnet;
-    generator(network_type, &[10.0; 100], &[], Fees::sender_pays_all(Kaspa(5.0)), [(output_address, Kaspa(990.0))].as_slice())
+    generator(network_type, &[10.0; 100], &[], Fees::sender_pays_all(Kash(5.0)), [(output_address, Kash(990.0))].as_slice())
         .unwrap()
         .harness()
         .fetch(&Expected {
             is_final: true,
             input_count: 100,
-            aggregate_input_value: Kaspa(1000.0).into(),
+            aggregate_input_value: Kash(1000.0).into(),
             output_count: 2,
-            priority_fees: FeesExpected::sender_pays(Kaspa(5.0)),
+            priority_fees: FeesExpected::sender_pays(Kash(5.0)),
         });
     //    .finalize();
 
@@ -421,15 +421,15 @@ fn test_generator_inputs_100_outputs_1_fees_exclude() -> Result<()> {
 #[test]
 fn test_generator_inputs_100_outputs_1_fees_include() -> Result<()> {
     let network_type = NetworkType::Testnet;
-    generator(network_type, &[1.0; 100], &[], Fees::receiver_pays_transfer(Kaspa(5.0)), [(output_address, Kaspa(100.0))].as_slice())
+    generator(network_type, &[1.0; 100], &[], Fees::receiver_pays_transfer(Kash(5.0)), [(output_address, Kash(100.0))].as_slice())
         .unwrap()
         .harness()
         .fetch(&Expected {
             is_final: true,
             input_count: 100,
-            aggregate_input_value: Kaspa(100.0).into(),
+            aggregate_input_value: Kash(100.0).into(),
             output_count: 1,
-            priority_fees: FeesExpected::receiver_pays(Kaspa(5.0)),
+            priority_fees: FeesExpected::receiver_pays(Kash(5.0)),
         })
         .finalize();
 
@@ -439,7 +439,7 @@ fn test_generator_inputs_100_outputs_1_fees_include() -> Result<()> {
 #[test]
 fn test_generator_inputs_100_outputs_1_fees_exclude_insufficient_funds() -> Result<()> {
     let network_type = NetworkType::Testnet;
-    generator(network_type, &[10.0; 100], &[], Fees::sender_pays_all(Kaspa(5.0)), [(output_address, Kaspa(1000.0))].as_slice())
+    generator(network_type, &[10.0; 100], &[], Fees::sender_pays_all(Kash(5.0)), [(output_address, Kash(1000.0))].as_slice())
         .unwrap()
         .harness()
         .insufficient_funds();
@@ -450,20 +450,20 @@ fn test_generator_inputs_100_outputs_1_fees_exclude_insufficient_funds() -> Resu
 #[test]
 fn test_generator_inputs_903_outputs_2_fees_exclude() -> Result<()> {
     let network_type = NetworkType::Testnet;
-    generator(network_type, &[10.0; 1_000], &[], Fees::sender_pays_all(Kaspa(5.0)), [(output_address, Kaspa(9_000.0))].as_slice())
+    generator(network_type, &[10.0; 1_000], &[], Fees::sender_pays_all(Kash(5.0)), [(output_address, Kash(9_000.0))].as_slice())
         .unwrap()
         .harness()
         .fetch(&Expected {
             is_final: false,
             input_count: 843,
-            aggregate_input_value: Kaspa(8_430.0).into(),
+            aggregate_input_value: Kash(8_430.0).into(),
             output_count: 1,
             priority_fees: FeesExpected::None,
         })
         .fetch(&Expected {
             is_final: false,
             input_count: 58,
-            aggregate_input_value: Kaspa(580.0).into(),
+            aggregate_input_value: Kash(580.0).into(),
             output_count: 1,
             priority_fees: FeesExpected::None,
         })
@@ -472,7 +472,7 @@ fn test_generator_inputs_903_outputs_2_fees_exclude() -> Result<()> {
             input_count: 2,
             aggregate_input_value: Sompi(9_009_99892258),
             output_count: 2,
-            priority_fees: FeesExpected::sender_pays(Kaspa(5.0)),
+            priority_fees: FeesExpected::sender_pays(Kash(5.0)),
         })
         .finalize();
 
@@ -487,8 +487,8 @@ fn test_generator_1m_utxos_w_1kas_to_990k_sender_pays_fees() -> Result<()> {
         network_type,
         &[1.0; 1_000_000],
         &[],
-        Fees::sender_pays_all(Kaspa(5.0)),
-        [(output_address, Kaspa(990_000.0))].as_slice(),
+        Fees::sender_pays_all(Kash(5.0)),
+        [(output_address, Kash(990_000.0))].as_slice(),
     )
     .unwrap()
     .harness();
@@ -499,7 +499,7 @@ fn test_generator_1m_utxos_w_1kas_to_990k_sender_pays_fees() -> Result<()> {
             &Expected {
                 is_final: false,
                 input_count: 843,
-                aggregate_input_value: Kaspa(843.0).into(),
+                aggregate_input_value: Kash(843.0).into(),
                 output_count: 1,
                 priority_fees: FeesExpected::None,
             },
@@ -507,7 +507,7 @@ fn test_generator_1m_utxos_w_1kas_to_990k_sender_pays_fees() -> Result<()> {
         .fetch(&Expected {
             is_final: false,
             input_count: 325,
-            aggregate_input_value: Kaspa(325.0).into(),
+            aggregate_input_value: Kash(325.0).into(),
             output_count: 1,
             priority_fees: FeesExpected::None,
         })
@@ -530,7 +530,7 @@ fn test_generator_1m_utxos_w_1kas_to_990k_sender_pays_fees() -> Result<()> {
             input_count: 2,
             aggregate_input_value: Sompi(990_005_81960862),
             output_count: 2,
-            priority_fees: FeesExpected::sender_pays(Kaspa(5.0)),
+            priority_fees: FeesExpected::sender_pays(Kash(5.0)),
         })
         .finalize();
 

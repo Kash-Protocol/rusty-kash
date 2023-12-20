@@ -4,7 +4,7 @@ use crate::runtime;
 use crate::secret::Secret;
 use crate::tx::PaymentOutputs;
 use crate::wasm::utxo::UtxoContext;
-use kaspa_consensus_wasm::Keypair;
+use kash_consensus_wasm::Keypair;
 use workflow_core::abortable::Abortable;
 use workflow_wasm::abi::ref_from_abi;
 

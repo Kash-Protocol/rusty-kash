@@ -1,13 +1,13 @@
 use itertools::Itertools;
-use kaspa_consensus_core::BlockHashSet;
-use kaspa_consensus_core::{blockhash::BlockHashes, BlockHashMap, BlockHasher, BlockLevel};
-use kaspa_database::prelude::{BatchDbWriter, DbWriter};
-use kaspa_database::prelude::{CachedDbAccess, DbKey, DirectDbWriter};
-use kaspa_database::prelude::{DirectWriter, MemoryWriter};
-use kaspa_database::prelude::{ReadLock, StoreError};
-use kaspa_database::prelude::{StoreResult, DB};
-use kaspa_database::registry::{DatabaseStorePrefixes, SEPARATOR};
-use kaspa_hashes::Hash;
+use kash_consensus_core::BlockHashSet;
+use kash_consensus_core::{blockhash::BlockHashes, BlockHashMap, BlockHasher, BlockLevel};
+use kash_database::prelude::{BatchDbWriter, DbWriter};
+use kash_database::prelude::{CachedDbAccess, DbKey, DirectDbWriter};
+use kash_database::prelude::{DirectWriter, MemoryWriter};
+use kash_database::prelude::{ReadLock, StoreError};
+use kash_database::prelude::{StoreResult, DB};
+use kash_database::registry::{DatabaseStorePrefixes, SEPARATOR};
+use kash_hashes::Hash;
 use rocksdb::WriteBatch;
 use std::collections::hash_map::Entry;
 use std::collections::HashSet;
@@ -307,7 +307,7 @@ impl RelationsStoreReader for StagingRelationsStore<'_> {
             .parents_access
             .iterator()
             .map(|r| r.unwrap().0)
-            .map(|k| <[u8; kaspa_hashes::HASH_SIZE]>::try_from(&k[..]).unwrap())
+            .map(|k| <[u8; kash_hashes::HASH_SIZE]>::try_from(&k[..]).unwrap())
             .map(Hash::from_bytes)
             .chain(self.parents_overrides.keys().copied())
             .collect::<BlockHashSet>()
@@ -409,7 +409,7 @@ impl RelationsStore for MemoryRelationsStore {
 mod tests {
     use super::*;
     use crate::processes::relations::RelationsStoreExtensions;
-    use kaspa_database::create_temp_db;
+    use kash_database::create_temp_db;
 
     #[test]
     fn test_memory_relations_store() {
@@ -418,7 +418,7 @@ mod tests {
 
     #[test]
     fn test_db_relations_store() {
-        let (lt, db) = create_temp_db!(kaspa_database::prelude::ConnBuilder::default().with_files_limit(10));
+        let (lt, db) = create_temp_db!(kash_database::prelude::ConnBuilder::default().with_files_limit(10));
         test_relations_store(DbRelationsStore::new(db, 0, 2));
         drop(lt)
     }

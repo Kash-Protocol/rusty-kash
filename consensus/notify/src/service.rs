@@ -5,15 +5,15 @@ use crate::{
     root::ConsensusNotificationRoot,
 };
 use async_channel::Receiver;
-use kaspa_core::{
+use kash_core::{
     task::service::{AsyncService, AsyncServiceError, AsyncServiceFuture},
     trace, warn,
 };
-use kaspa_notify::{
+use kash_notify::{
     events::{EventSwitches, EVENT_TYPE_ARRAY},
     subscriber::Subscriber,
 };
-use kaspa_utils::triggers::SingleTrigger;
+use kash_utils::triggers::SingleTrigger;
 use std::sync::Arc;
 
 const NOTIFY_SERVICE: &str = "notify-service";

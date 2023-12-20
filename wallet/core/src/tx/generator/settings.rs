@@ -3,8 +3,8 @@ use crate::runtime::Account;
 use crate::tx::{Fees, PaymentDestination};
 use crate::utxo::{UtxoContext, UtxoEntryReference, UtxoIterator};
 use crate::Events;
-use kaspa_addresses::Address;
-use kaspa_consensus_core::network::NetworkType;
+use kash_addresses::Address;
+use kash_consensus_core::network::NetworkType;
 use std::sync::Arc;
 use workflow_core::channel::Multiplexer;
 

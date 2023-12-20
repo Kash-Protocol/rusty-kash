@@ -1,6 +1,6 @@
 use crate::utils::*;
-use kaspa_consensus_core::network::NetworkType;
-use kaspa_consensus_core::tx::TransactionId;
+use kash_consensus_core::network::NetworkType;
+use kash_consensus_core::tx::TransactionId;
 use std::fmt;
 
 #[derive(Debug, Clone)]
@@ -52,9 +52,9 @@ impl fmt::Display for GeneratorSummary {
             write!(
                 f,
                 "Amount: {}  Fees: {}  Total: {}  UTXOs: {}  {}",
-                sompi_to_kaspa_string_with_suffix(final_transaction_amount, &self.network_type),
-                sompi_to_kaspa_string_with_suffix(self.aggregated_fees, &self.network_type),
-                sompi_to_kaspa_string_with_suffix(total, &self.network_type),
+                sompi_to_kash_string_with_suffix(final_transaction_amount, &self.network_type),
+                sompi_to_kash_string_with_suffix(self.aggregated_fees, &self.network_type),
+                sompi_to_kash_string_with_suffix(total, &self.network_type),
                 self.aggregated_utxos,
                 transactions
             )?;
@@ -62,7 +62,7 @@ impl fmt::Display for GeneratorSummary {
             write!(
                 f,
                 "Fees: {}  UTXOs: {}  {}",
-                sompi_to_kaspa_string_with_suffix(self.aggregated_fees, &self.network_type),
+                sompi_to_kash_string_with_suffix(self.aggregated_fees, &self.network_type),
                 self.aggregated_utxos,
                 transactions
             )?;

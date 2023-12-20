@@ -18,7 +18,7 @@ use crate::{
 };
 
 use itertools::Itertools;
-use kaspa_txscript::caches::TxScriptCacheCounters;
+use kash_txscript::caches::TxScriptCacheCounters;
 use std::sync::Arc;
 
 pub type DbGhostdagManager =

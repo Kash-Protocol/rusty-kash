@@ -1,12 +1,12 @@
 use crate::imports::*;
 
 #[derive(Default, Handler)]
-#[help("Connect to a Kaspa network")]
+#[help("Connect to a Kash network")]
 pub struct Connect;
 
 impl Connect {
     async fn main(self: Arc<Self>, ctx: &Arc<dyn Context>, argv: Vec<String>, _cmd: &str) -> Result<()> {
-        let ctx = ctx.clone().downcast_arc::<KaspaCli>()?;
+        let ctx = ctx.clone().downcast_arc::<KashCli>()?;
         if let Some(wrpc_client) = ctx.wallet().wrpc_client().as_ref() {
             let url = argv.first().cloned().or_else(|| ctx.wallet().settings().get(WalletSettings::Server));
             let network_type = ctx.wallet().network_id()?;

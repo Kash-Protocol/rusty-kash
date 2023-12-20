@@ -1,5 +1,5 @@
 use derive_more::Display;
-use kaspa_notify::{
+use kash_notify::{
     events::EventType,
     full_featured,
     notification::Notification as NotificationTrait,

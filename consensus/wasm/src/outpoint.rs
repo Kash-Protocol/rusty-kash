@@ -54,7 +54,7 @@ impl TryFrom<&JsValue> for TransactionOutpointInner {
     }
 }
 
-/// Represents a Kaspa transaction outpoint.
+/// Represents a Kash transaction outpoint.
 /// NOTE: This struct is immutable - to create a custom outpoint
 /// use the `TransactionOutpoint::new` constructor. (in JavaScript
 /// use `new TransactionOutpoint(transactionId, index)`).
@@ -144,6 +144,6 @@ impl From<TransactionOutpoint> for cctx::TransactionOutpoint {
 
 impl TransactionOutpoint {
     pub fn fake() -> Self {
-        Self::new(TransactionId::from_slice(&[0; kaspa_hashes::HASH_SIZE]), 0)
+        Self::new(TransactionId::from_slice(&[0; kash_hashes::HASH_SIZE]), 0)
     }
 }

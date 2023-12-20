@@ -20,8 +20,8 @@
 use crate::error::Error;
 use crate::result::Result;
 use js_sys::{Array, Uint8Array};
-use kaspa_addresses::{Address, Version as AddressVersion};
-use kaspa_consensus_core::network::wasm::Network;
+use kash_addresses::{Address, Version as AddressVersion};
+use kash_consensus_core::network::wasm::Network;
 use secp256k1::{Secp256k1, XOnlyPublicKey};
 use serde_wasm_bindgen::to_value;
 use std::str::FromStr;
@@ -156,7 +156,7 @@ impl PrivateKey {
     /// Returns the [`PrivateKey`] key encoded as a hex string.
     #[wasm_bindgen(js_name = toString)]
     pub fn to_hex(&self) -> String {
-        use kaspa_utils::hex::ToHex;
+        use kash_utils::hex::ToHex;
         self.secret_bytes().to_vec().to_hex()
     }
 

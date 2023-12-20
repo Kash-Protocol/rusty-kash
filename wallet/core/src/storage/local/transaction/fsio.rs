@@ -3,7 +3,7 @@ use crate::result::Result;
 use crate::storage::interface::StorageStream;
 use crate::storage::{Binding, TransactionRecordStore};
 use crate::storage::{TransactionMetadata, TransactionRecord};
-use kaspa_utils::hex::ToHex;
+use kash_utils::hex::ToHex;
 use std::{
     collections::VecDeque,
     path::{Path, PathBuf},

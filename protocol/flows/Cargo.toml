@@ -1,6 +1,6 @@
 [package]
-name = "kaspa-p2p-flows"
-description = "Kaspa p2p flows"
+name = "kash-p2p-flows"
+description = "Kash p2p flows"
 version.workspace = true
 edition.workspace = true
 authors.workspace = true
@@ -8,19 +8,19 @@ include.workspace = true
 license.workspace = true
 
 [dependencies]
-kaspa-core.workspace = true
-kaspa-consensus-core.workspace = true
-kaspa-consensus-notify.workspace = true
-kaspa-p2p-lib.workspace = true
-kaspa-utils.workspace = true
-kaspa-utils-tower.workspace = true
-kaspa-hashes.workspace = true
-kaspa-muhash.workspace = true
-kaspa-connectionmanager.workspace = true
-kaspa-addressmanager.workspace = true
-kaspa-consensusmanager.workspace = true
-kaspa-mining.workspace = true
-kaspa-notify.workspace = true
+kash-core.workspace = true
+kash-consensus-core.workspace = true
+kash-consensus-notify.workspace = true
+kash-p2p-lib.workspace = true
+kash-utils.workspace = true
+kash-utils-tower.workspace = true
+kash-hashes.workspace = true
+kash-muhash.workspace = true
+kash-connectionmanager.workspace = true
+kash-addressmanager.workspace = true
+kash-consensusmanager.workspace = true
+kash-mining.workspace = true
+kash-notify.workspace = true
 
 async-trait.workspace = true
 futures = { workspace = true, features = ["alloc"] }

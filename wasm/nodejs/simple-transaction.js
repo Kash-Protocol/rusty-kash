@@ -5,10 +5,10 @@ const {
     PrivateKey,
     Address,
     RpcClient,
-    kaspaToSompi,
+    kashToSompi,
     createTransactions,
     initConsolePanicHook
-} = require('./kaspa/kaspa_wasm');
+} = require('./kash/kash_wasm');
 
 const { encoding, networkId, destinationAddress: destinationAddressArg } = require("./utils").parseArgs();
 
@@ -51,7 +51,7 @@ initConsolePanicHook();
 
         let { transactions, summary } = await createTransactions({
             entries,
-            outputs: [[destinationAddress, kaspaToSompi(0.00012)]],
+            outputs: [[destinationAddress, kashToSompi(0.00012)]],
             priorityFee: 0,
             changeAddress: sourceAddress,
         });

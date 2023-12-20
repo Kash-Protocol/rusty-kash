@@ -1,12 +1,12 @@
-use crate::cli::KaspaCli;
+use crate::cli::KashCli;
 use crate::imports::*;
 use crate::result::Result;
-use kaspa_wallet_core::runtime::wallet::MultisigCreateArgs;
-use kaspa_wallet_core::runtime::PrvKeyDataCreateArgs;
-use kaspa_wallet_core::storage::AccountKind;
+use kash_wallet_core::runtime::wallet::MultisigCreateArgs;
+use kash_wallet_core::runtime::PrvKeyDataCreateArgs;
+use kash_wallet_core::storage::AccountKind;
 
 pub(crate) async fn create(
-    ctx: &Arc<KaspaCli>,
+    ctx: &Arc<KashCli>,
     prv_key_data_info: Arc<PrvKeyDataInfo>,
     account_kind: AccountKind,
     name: Option<&str>,
@@ -50,7 +50,7 @@ pub(crate) async fn create(
     Ok(())
 }
 
-async fn create_multisig(ctx: &Arc<KaspaCli>, title: Option<String>, name: Option<String>) -> Result<()> {
+async fn create_multisig(ctx: &Arc<KashCli>, title: Option<String>, name: Option<String>) -> Result<()> {
     let term = ctx.term();
     let wallet = ctx.wallet();
     let (wallet_secret, _) = ctx.ask_wallet_secret(None).await?;

@@ -1,6 +1,6 @@
 [package]
-name = "kaspa-rpc-service"
-description = "Kaspa RPC service"
+name = "kash-rpc-service"
+description = "Kash RPC service"
 version.workspace = true
 edition.workspace = true
 authors.workspace = true
@@ -8,26 +8,26 @@ include.workspace = true
 license.workspace = true
 
 [dependencies]
-kaspa-addresses.workspace = true
-kaspa-consensus-core.workspace = true
-kaspa-consensus-notify.workspace = true
-kaspa-consensus.workspace = true
-kaspa-consensusmanager.workspace = true
-kaspa-core.workspace = true
-kaspa-hashes.workspace = true
-kaspa-index-core.workspace = true
-kaspa-math.workspace = true
-kaspa-mining.workspace = true
-kaspa-notify.workspace = true
-kaspa-p2p-flows.workspace = true
-kaspa-p2p-lib.workspace = true
-kaspa-perf-monitor.workspace = true
-kaspa-rpc-core.workspace = true
-kaspa-txscript.workspace = true
-kaspa-utils.workspace = true
-kaspa-utils-tower.workspace = true
-kaspa-utxoindex.workspace = true
-kaspa-wrpc-core.workspace = true
+kash-addresses.workspace = true
+kash-consensus-core.workspace = true
+kash-consensus-notify.workspace = true
+kash-consensus.workspace = true
+kash-consensusmanager.workspace = true
+kash-core.workspace = true
+kash-hashes.workspace = true
+kash-index-core.workspace = true
+kash-math.workspace = true
+kash-mining.workspace = true
+kash-notify.workspace = true
+kash-p2p-flows.workspace = true
+kash-p2p-lib.workspace = true
+kash-perf-monitor.workspace = true
+kash-rpc-core.workspace = true
+kash-txscript.workspace = true
+kash-utils.workspace = true
+kash-utils-tower.workspace = true
+kash-utxoindex.workspace = true
+kash-wrpc-core.workspace = true
 
 async-trait.workspace = true
 log.workspace = true

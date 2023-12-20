@@ -1,11 +1,11 @@
 
-<h1>Kaspa On Rust</h1>
+<h1>Kash On Rust</h1>
 
-Welcome to the Rust-based implementation of the Kaspa full-node and its ancillary libraries. This Alpha release serves as a drop-in replacement to the established <a href="https://github.com/kaspanet/kaspad">Golang node</a> (once the rust rewrite is completed), introducing developers to the possibilities of Rust in the Kaspa network's context.
+Welcome to the Rust-based implementation of the Kash full-node and its ancillary libraries. This Alpha release serves as a drop-in replacement to the established <a href="https://github.com/Kash-Protocol/kashd">Golang node</a> (once the rust rewrite is completed), introducing developers to the possibilities of Rust in the Kash network's context.
 
 We invite developers and blockchain enthusiasts to collaborate, test, and optimize our Rust implementation. Each line of code here is an opportunity to contribute to the open-source blockchain movement, shaping a platform designed for scalability and speed without compromising on decentralization.
 
-Your feedback, contributions, and issue reports will be integral to evolving this codebase from its Alpha phase into a mature and reliable node in the Kaspa network.
+Your feedback, contributions, and issue reports will be integral to evolving this codebase from its Alpha phase into a mature and reliable node in the Kash network.
 
 ## Installation
   <details>
@@ -46,8 +46,8 @@ Your feedback, contributions, and issue reports will be integral to evolving thi
       ```      
   5. Clone the repo
       ```bash
-      git clone https://github.com/kaspanet/rusty-kaspa
-      cd rusty-kaspa
+      git clone https://github.com/Kash-Protocol/rusty-kash
+      cd rusty-kash
       ```
   </details>
 
@@ -83,8 +83,8 @@ Your feedback, contributions, and issue reports will be integral to evolving thi
       ```      
   7. Clone the repo
       ```bash
-      git clone https://github.com/kaspanet/rusty-kaspa
-      cd rusty-kaspa
+      git clone https://github.com/Kash-Protocol/rusty-kash
+      cd rusty-kash
       ```
  </details>      
 
@@ -143,8 +143,8 @@ To build WASM on MacOS you need to install `llvm` from homebrew (at the time of 
       ```      
   5. Clone the repo
       ```bash
-      git clone https://github.com/kaspanet/rusty-kaspa
-      cd rusty-kaspa
+      git clone https://github.com/Kash-Protocol/rusty-kash
+      cd rusty-kash
       ```
 
  </details>   
@@ -164,7 +164,7 @@ To build WASM on MacOS you need to install `llvm` from homebrew (at the time of 
   </summary>
 
   ```bash
-  cd rusty-kaspa
+  cd rusty-kash
   cd wasm
   ./build-node
   cd nodejs
@@ -180,7 +180,7 @@ To build WASM on MacOS you need to install `llvm` from homebrew (at the time of 
   </summary>
 
   ```bash
-  cd rusty-kaspa
+  cd rusty-kash
   cd wasm
   ./build-react-native
   ```
@@ -194,7 +194,7 @@ To build WASM on MacOS you need to install `llvm` from homebrew (at the time of 
   </summary>
 
   ```bash
-  cd rusty-kaspa
+  cd rusty-kash
   cd wasm
   ./build-web
   ```
@@ -254,12 +254,12 @@ The framework is compatible with all major desktop and mobile browsers.
   **Start a mainnet node**
 
   ```bash
-  cargo run --release --bin kaspad
+  cargo run --release --bin kashd
   ```
   **Start a testnet node**
 
   ```bash
-cargo run --release --bin kaspad -- --testnet
+cargo run --release --bin kashd -- --testnet
   ```
 
 
@@ -269,7 +269,7 @@ cargo run --release --bin kaspad -- --testnet
 wRPC
   </summary>
 
-  wRPC subsystem is disabled by default in `kaspad` and can be enabled via:
+  wRPC subsystem is disabled by default in `kashd` and can be enabled via:
 
 
   JSON protocol:
@@ -284,7 +284,7 @@ wRPC
 
   **Sidenote:**
 
-  Rusty Kaspa integrates an optional wRPC
+  Rusty Kash integrates an optional wRPC
   subsystem. wRPC is a high-performance, platform-neutral, Rust-centric, WebSocket-framed RPC 
   implementation that can use [Borsh](https://borsh.io/) and JSON protocol encoding.
 
@@ -296,10 +296,10 @@ wRPC
   both client and server should be built from the same codebase.  
 
   JSON protocol is based on 
-  Kaspa data structures and is data-structure-version agnostic. You can connect to the
+  Kash data structures and is data-structure-version agnostic. You can connect to the
   JSON endpoint using any WebSocket library. Built-in RPC clients for JavaScript and
   TypeScript capable of running in web browsers and Node.js are available as a part of
-  the Kaspa WASM framework.
+  the Kash WASM framework.
 
   **wRPC to gRPC Proxy is deprecated and no longer supported.**
 
@@ -315,17 +315,17 @@ Mining
 
 Mining is currently supported only on testnet, so once you've setup a test node, follow these instructions.
 
-1. Download and unzip the latest binaries bundle of [kaspanet/kaspad](https://github.com/kaspanet/kaspad/releases).
+1. Download and unzip the latest binaries bundle of [Kash-Protocol/kashd](https://github.com/Kash-Protocol/kashd/releases).
 
-2. In a separate terminal run the kaspanet/kaspad miner:
+2. In a separate terminal run the Kash-Protocol/kashd miner:
 
     ```
-    kaspaminer --testnet --miningaddr kaspatest:qrcqat6l9zcjsu7swnaztqzrv0s7hu04skpaezxk43y4etj8ncwfk308jlcew
+    kashminer --testnet --miningaddr kashtest:qrcqat6l9zcjsu7swnaztqzrv0s7hu04skpaezxk43y4etj8ncwfk308jlcew
     ```
 
     This will create and feed a DAG with the miner getting block templates from the node and submitting them back when mined. The node processes and stores the blocks while applying all currently implemented logic. Execution can be stopped and resumed, the data is persisted in a database.
 
-    You can replace the above mining address with your own address by creating one as described [here](https://github.com/kaspanet/docs/blob/main/Getting%20Started/Full%20Node%20Installation.md#creating-a-wallet-optional). 
+    You can replace the above mining address with your own address by creating one as described [here](https://github.com/kashnet/docs/blob/main/Getting%20Started/Full%20Node%20Installation.md#creating-a-wallet-optional). 
 
 </details>
 
@@ -337,7 +337,7 @@ Mining is currently supported only on testnet, so once you've setup a test node,
 
 <summary>Simulation framework (Simpa)</summary>
 
-Logging in `kaspad` and `simpa` can be [filtered](https://docs.rs/env_logger/0.10.0/env_logger/#filtering-results) by either:
+Logging in `kashd` and `simpa` can be [filtered](https://docs.rs/env_logger/0.10.0/env_logger/#filtering-results) by either:
 
 The current codebase supports a full in-process network simulation, building an actual DAG over virtual time with virtual delay and benchmarking validation time (following the simulation generation). 
 
@@ -361,10 +361,10 @@ cargo run --release --bin simpa -- -t=200 -d=2 -b=8 -n=1000
 
 <summary>Heap Profiling</summary>
 
-Heap-profiling in `kaspad` and `simpa` can be done by enabling `heap` feature and profile using the `--features` argument
+Heap-profiling in `kashd` and `simpa` can be done by enabling `heap` feature and profile using the `--features` argument
 
 ```bash
-cargo run --bin kaspad --profile heap --features=heap
+cargo run --bin kashd --profile heap --features=heap
 ```
 
 It will produce `{bin-name}-heap.json` file in the root of the workdir, that can be inspected by the [dhat-viewer](https://github.com/unofficial-mirror/valgrind/tree/master/dhat)
@@ -380,7 +380,7 @@ It will produce `{bin-name}-heap.json` file in the root of the workdir, that can
 **Run unit and most integration tests**
 
 ```bash
-cd rusty-kaspa
+cd rusty-kash
 cargo test --release
 // or install nextest and run
 ```
@@ -390,7 +390,7 @@ cargo test --release
 **Using nextest**
 
 ```bash
-cd rusty-kaspa
+cd rusty-kash
 cargo nextest run --release
 ```
 
@@ -404,7 +404,7 @@ cargo nextest run --release
 <summary>Benchmarks</summary>
 
 ```bash
-cd rusty-kaspa
+cd rusty-kash
 cargo bench
 ```
 
@@ -414,13 +414,13 @@ cargo bench
 
 <summary>Logging</summary>
 
-Logging in `kaspad` and `simpa` can be [filtered](https://docs.rs/env_logger/0.10.0/env_logger/#filtering-results) by either:
+Logging in `kashd` and `simpa` can be [filtered](https://docs.rs/env_logger/0.10.0/env_logger/#filtering-results) by either:
 
 1. Defining the environment variable `RUST_LOG`
 2. Adding the --loglevel argument like in the following example:
 
     ```
-    (cargo run --bin kaspad -- --loglevel info,kaspa_rpc_core=trace,kaspa_grpc_core=trace,consensus=trace,kaspa_core=trace) 2>&1 | tee ~/rusty-kaspa.log
+    (cargo run --bin kashd -- --loglevel info,kash_rpc_core=trace,kash_grpc_core=trace,consensus=trace,kash_core=trace) 2>&1 | tee ~/rusty-kash.log
     ```
     In this command we set the `loglevel` to `INFO`.
 

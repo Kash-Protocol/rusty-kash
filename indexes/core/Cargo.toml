@@ -1,6 +1,6 @@
 [package]
-name = "kaspa-index-core"
-description = "Kaspa index core"
+name = "kash-index-core"
+description = "Kash index core"
 version.workspace = true
 edition.workspace = true
 authors.workspace = true
@@ -12,10 +12,10 @@ async-channel.workspace = true
 async-trait.workspace = true
 derive_more.workspace = true
 futures.workspace = true
-kaspa-consensus-core.workspace = true
-kaspa-hashes.workspace = true
-kaspa-notify.workspace = true
-kaspa-utils.workspace = true
+kash-consensus-core.workspace = true
+kash-hashes.workspace = true
+kash-notify.workspace = true
+kash-utils.workspace = true
 log.workspace = true
 paste.workspace = true
 serde.workspace = true

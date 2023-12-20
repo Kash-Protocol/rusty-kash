@@ -1,7 +1,7 @@
 use std::net::AddrParseError;
 
 use downcast::DowncastError;
-use kaspa_wallet_core::error::Error as WalletError;
+use kash_wallet_core::error::Error as WalletError;
 use workflow_core::channel::ChannelError;
 use workflow_terminal::error::Error as TerminalError;
 
@@ -28,10 +28,10 @@ pub enum Error {
     ChannelError(String),
 
     #[error(transparent)]
-    WrpcError(#[from] kaspa_wrpc_client::error::Error),
+    WrpcError(#[from] kash_wrpc_client::error::Error),
 
     #[error(transparent)]
-    RpcError(#[from] kaspa_rpc_core::RpcError),
+    RpcError(#[from] kash_rpc_core::RpcError),
 
     #[error(transparent)]
     SerdeJsonError(#[from] serde_json::Error),
@@ -91,7 +91,7 @@ pub enum Error {
     NoKeys,
 
     #[error(transparent)]
-    AddressError(#[from] kaspa_addresses::AddressError),
+    AddressError(#[from] kash_addresses::AddressError),
 
     #[error("{0}")]
     DowncastError(String),
@@ -103,16 +103,16 @@ pub enum Error {
     NodeJs(#[from] workflow_node::error::Error),
 
     #[error(transparent)]
-    Daemon(#[from] kaspa_daemon::error::Error),
+    Daemon(#[from] kash_daemon::error::Error),
 
     #[error(transparent)]
     Dom(#[from] workflow_dom::error::Error),
 
     #[error(transparent)]
-    NetworkId(#[from] kaspa_consensus_core::network::NetworkIdError),
+    NetworkId(#[from] kash_consensus_core::network::NetworkIdError),
 
     #[error(transparent)]
-    Bip32(#[from] kaspa_bip32::Error),
+    Bip32(#[from] kash_bip32::Error),
 
     #[error("private key {0} already exists")]
     PrivateKeyAlreadyExists(String),

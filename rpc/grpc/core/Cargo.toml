@@ -1,6 +1,6 @@
 [package]
-name = "kaspa-grpc-core"
-description = "Kaspa gRPC core"
+name = "kash-grpc-core"
+description = "Kash gRPC core"
 version.workspace = true
 edition.workspace = true
 authors.workspace = true
@@ -8,11 +8,11 @@ include.workspace = true
 license.workspace = true
 
 [dependencies]
-kaspa-consensus-core.workspace = true
-kaspa-core.workspace = true
-kaspa-notify.workspace = true
-kaspa-rpc-core.workspace = true
-kaspa-utils.workspace = true
+kash-consensus-core.workspace = true
+kash-core.workspace = true
+kash-notify.workspace = true
+kash-rpc-core.workspace = true
+kash-utils.workspace = true
 
 async-channel.workspace = true
 async-stream.workspace = true

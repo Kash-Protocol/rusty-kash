@@ -1,6 +1,6 @@
 [package]
-name = "kaspa-wasm"
-description = "KASPA WASM bindings"
+name = "kash-wasm"
+description = "KASH WASM bindings"
 version.workspace = true
 edition.workspace = true
 authors.workspace = true
@@ -14,16 +14,16 @@ crate-type = ["cdylib"]
 
 [dependencies]
 js-sys.workspace = true
-kaspa-addresses.workspace = true
-kaspa-consensus-core.workspace = true
-kaspa-consensus-wasm.workspace = true
-kaspa-core.workspace = true
-kaspa-math.workspace = true
-kaspa-pow.workspace = true
-kaspa-rpc-core.workspace = true
-kaspa-utils.workspace = true
-kaspa-wallet-core.workspace = true
-kaspa-wrpc-client.workspace = true
+kash-addresses.workspace = true
+kash-consensus-core.workspace = true
+kash-consensus-wasm.workspace = true
+kash-core.workspace = true
+kash-math.workspace = true
+kash-pow.workspace = true
+kash-rpc-core.workspace = true
+kash-utils.workspace = true
+kash-wallet-core.workspace = true
+kash-wrpc-client.workspace = true
 num.workspace = true
 wasm-bindgen.workspace = true
 workflow-log.workspace = true
@@ -38,7 +38,7 @@ targets = ["wasm32-unknown-unknown"]
 
 [package.metadata.emanate.wasm]
 targets = [
-    { target = "nodejs", out-dir = "nodejs/kaspa" },
-    { target = "web", out-dir = "web/kaspa" }
+    { target = "nodejs", out-dir = "nodejs/kash" },
+    { target = "web", out-dir = "web/kash" }
 ]
 folder = "setup"

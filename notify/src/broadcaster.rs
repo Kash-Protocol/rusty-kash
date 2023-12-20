@@ -7,7 +7,7 @@ use async_channel::{Receiver, Sender};
 use core::fmt::Debug;
 use derive_more::Deref;
 use futures::{future::FutureExt, select};
-use kaspa_core::{debug, trace};
+use kash_core::{debug, trace};
 use std::{
     collections::HashMap,
     sync::{
@@ -333,21 +333,21 @@ mod tests {
 
     #[tokio::test]
     async fn test_overall() {
-        kaspa_core::log::try_init_logger("trace,kaspa_notify=trace");
+        kash_core::log::try_init_logger("trace,kash_notify=trace");
         let mut test = Test::new("BlockAdded broadcast (OverallSubscription type)", 2, overall_test_steps(0));
         test.run().await;
     }
 
     #[tokio::test]
     async fn test_virtual_chain_changed() {
-        kaspa_core::log::try_init_logger("trace,kaspa_notify=trace");
+        kash_core::log::try_init_logger("trace,kash_notify=trace");
         let mut test = Test::new("VirtualChainChanged broadcast", 2, virtual_chain_changed_test_steps(0));
         test.run().await;
     }
 
     #[tokio::test]
     async fn test_utxos_changed() {
-        kaspa_core::log::try_init_logger("trace,kaspa_notify=trace");
+        kash_core::log::try_init_logger("trace,kash_notify=trace");
         let mut test = Test::new("UtxosChanged broadcast", 3, utxos_changed_test_steps(0));
         test.run().await;
     }

@@ -7,10 +7,10 @@ const {
     RpcClient,
     UtxoProcessor,
     UtxoContext,
-    kaspaToSompi,
+    kashToSompi,
     createTransactions,
     initConsolePanicHook
-} = require('./kaspa/kaspa_wasm');
+} = require('./kash/kash_wasm');
 
 initConsolePanicHook();
 
@@ -59,12 +59,12 @@ const { encoding, networkId, destinationAddress } = require("./utils").parseArgs
     await context.trackAddresses([sourceAddress]);
 
     // 7) Check balance, if there are enough funds, send a transaction
-    if (context.balance.mature > kaspaToSompi(0.2) + 1000n) {
+    if (context.balance.mature > kashToSompi(0.2) + 1000n) {
         console.log("Sending transaction");
 
         let generator = new Generator({
             context,
-            outputs: [[destinationAddress, kaspaToSompi(0.2)]],
+            outputs: [[destinationAddress, kashToSompi(0.2)]],
             priorityFee: 0,
             changeAddress: sourceAddress,
         });

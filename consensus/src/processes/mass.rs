@@ -1,4 +1,4 @@
-use kaspa_consensus_core::{mass::transaction_estimated_serialized_size, tx::Transaction};
+use kash_consensus_core::{mass::transaction_estimated_serialized_size, tx::Transaction};
 
 // TODO (aspect) - review and potentially merge this with the new MassCalculator currently located in the wallet core
 // (i.e. migrate mass calculator from wallet core here or to consensus core)

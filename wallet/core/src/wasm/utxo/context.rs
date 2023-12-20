@@ -4,8 +4,8 @@ use crate::utxo as native;
 use crate::utxo::{UtxoContextBinding, UtxoContextId};
 use crate::wasm::utxo::UtxoProcessor;
 use crate::wasm::Balance;
-use kaspa_addresses::AddressList;
-use kaspa_hashes::Hash;
+use kash_addresses::AddressList;
+use kash_hashes::Hash;
 
 #[derive(Clone)]
 #[wasm_bindgen(inspectable)]

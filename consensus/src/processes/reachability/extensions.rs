@@ -1,7 +1,7 @@
 use super::interval::Interval;
 use crate::model::stores::reachability::ReachabilityStoreReader;
-use kaspa_database::prelude::StoreResult;
-use kaspa_hashes::Hash;
+use kash_database::prelude::StoreResult;
+use kash_hashes::Hash;
 
 pub(super) trait ReachabilityStoreIntervalExtensions {
     fn interval_children_capacity(&self, block: Hash) -> StoreResult<Interval>;

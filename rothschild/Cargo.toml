@@ -1,6 +1,6 @@
 [package]
 name = "rothschild"
-description = "Kaspa Transaction Generator"
+description = "Kash Transaction Generator"
 version.workspace = true
 edition.workspace = true
 authors.workspace = true
@@ -8,13 +8,13 @@ include.workspace = true
 license.workspace = true
 
 [dependencies]
-kaspa-core.workspace = true
-kaspa-consensus-core.workspace = true
-kaspa-grpc-client.workspace = true
-kaspa-rpc-core.workspace = true
-kaspa-addresses.workspace = true
-kaspa-txscript.workspace = true
-kaspa-utils.workspace = true
+kash-core.workspace = true
+kash-consensus-core.workspace = true
+kash-grpc-client.workspace = true
+kash-rpc-core.workspace = true
+kash-addresses.workspace = true
+kash-txscript.workspace = true
+kash-utils.workspace = true
 
 clap.workspace = true
 faster-hex.workspace = true

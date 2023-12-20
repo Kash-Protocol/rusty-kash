@@ -7,13 +7,13 @@ use super::{
     option::TryIntoOptionEx,
 };
 use crate::pb as protowire;
-use kaspa_consensus_core::{
+use kash_consensus_core::{
     header::Header,
     pruning::{PruningPointProof, PruningPointsList},
     tx::{TransactionId, TransactionOutpoint, UtxoEntry},
 };
-use kaspa_hashes::Hash;
-use kaspa_utils::networking::{IpAddress, PeerId};
+use kash_hashes::Hash;
+use kash_utils::networking::{IpAddress, PeerId};
 
 use std::sync::Arc;
 

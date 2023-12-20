@@ -1,6 +1,6 @@
 [package]
-name = "kaspa-consensus-wasm"
-description = "Kaspa consensus core WASM bindings"
+name = "kash-consensus-wasm"
+description = "Kash consensus core WASM bindings"
 version.workspace = true
 edition.workspace = true
 authors.workspace = true
@@ -8,11 +8,11 @@ include.workspace = true
 license.workspace = true
 
 [dependencies]
-kaspa-consensus-core.workspace = true
-kaspa-addresses.workspace = true
-kaspa-txscript.workspace = true
-kaspa-hashes.workspace = true
-kaspa-utils.workspace = true
+kash-consensus-core.workspace = true
+kash-addresses.workspace = true
+kash-txscript.workspace = true
+kash-hashes.workspace = true
+kash-utils.workspace = true
 
 wasm-bindgen.workspace = true
 serde.workspace = true

@@ -1,13 +1,13 @@
 
 [package]
-name = "kaspa-os"
-description = "Kaspa Node & Wallet Manager"
+name = "kash-os"
+description = "Kash Node & Wallet Manager"
 # please keep this version detached from the workspace
 version = "0.0.2"
 edition.workspace = true
 authors.workspace = true
 license.workspace = true
-repository = "https://github.com/kaspanet/rusty-kaspa"
+repository = "https://github.com/Kash-Protocol/rusty-kash"
 include = [
     "src/**/*.rs",
     "src/**/*.txt",
@@ -18,7 +18,7 @@ include = [
 
 [features]
 metrics = []
-legacy-rpc = ["kaspa-cli/legacy-rpc","kaspa-wallet-core/legacy-rpc"]
+legacy-rpc = ["kash-cli/legacy-rpc","kash-wallet-core/legacy-rpc"]
 default = ["metrics"]
 
 [lib]
@@ -31,12 +31,12 @@ cfg-if.workspace = true
 downcast.workspace = true
 futures.workspace = true
 js-sys.workspace = true
-kaspa-cli.workspace = true
-kaspa-consensus-core.workspace = true
-kaspa-core.workspace = true
-kaspa-daemon.workspace = true
-kaspa-rpc-core.workspace = true
-kaspa-wallet-core.workspace = true
+kash-cli.workspace = true
+kash-consensus-core.workspace = true
+kash-core.workspace = true
+kash-daemon.workspace = true
+kash-rpc-core.workspace = true
+kash-wallet-core.workspace = true
 nw-sys.workspace = true
 regex.workspace = true
 serde_json.workspace = true

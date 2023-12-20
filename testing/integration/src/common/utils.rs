@@ -1,5 +1,5 @@
 use itertools::Itertools;
-use kaspa_consensus_core::{
+use kash_consensus_core::{
     constants::TX_VERSION,
     sign::sign,
     subnets::SUBNETWORK_ID_NATIVE,
@@ -9,7 +9,7 @@ use kaspa_consensus_core::{
         utxo_diff::UtxoDiff,
     },
 };
-use kaspa_core::info;
+use kash_core::info;
 use rayon::prelude::{IntoParallelIterator, ParallelIterator};
 use secp256k1::KeyPair;
 use std::{

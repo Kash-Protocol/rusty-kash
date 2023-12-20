@@ -1,6 +1,6 @@
 use crate::model::*;
-use kaspa_consensus_core::tx;
-use kaspa_consensus_wasm::*;
+use kash_consensus_core::tx;
+use kash_consensus_wasm::*;
 use std::sync::Arc;
 
 impl From<RpcUtxosByAddressesEntry> for UtxoEntry {

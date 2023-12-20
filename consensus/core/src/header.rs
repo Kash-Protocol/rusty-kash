@@ -1,8 +1,8 @@
 use crate::{hashing, BlueWorkType};
 use borsh::{BorshDeserialize, BorshSchema, BorshSerialize};
 use js_sys::{Array, Object};
-use kaspa_hashes::Hash;
-use kaspa_utils::hex::ToHex;
+use kash_hashes::Hash;
+use kash_utils::hex::ToHex;
 use serde::{Deserialize, Serialize};
 use serde_wasm_bindgen::*;
 use wasm_bindgen::prelude::*;
@@ -284,7 +284,7 @@ impl TryFrom<JsValue> for Header {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use kaspa_math::Uint192;
+    use kash_math::Uint192;
     use serde_json::Value;
 
     #[test]

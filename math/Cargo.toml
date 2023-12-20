@@ -1,6 +1,6 @@
 [package]
-name = "kaspa-math"
-description = "Kaspa misc math library"
+name = "kash-math"
+description = "Kash misc math library"
 version.workspace = true
 edition.workspace = true
 authors.workspace = true
@@ -11,7 +11,7 @@ include.workspace = true
 borsh.workspace = true
 faster-hex.workspace = true
 js-sys.workspace = true
-kaspa-utils.workspace = true
+kash-utils.workspace = true
 malachite-base.workspace = true
 malachite-nz.workspace = true
 serde-wasm-bindgen.workspace = true

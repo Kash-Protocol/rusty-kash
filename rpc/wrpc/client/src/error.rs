@@ -18,14 +18,14 @@ pub enum Error {
     #[error("wRPC -> {0}")]
     RpcError(#[from] RpcError),
 
-    #[error("Kaspa RpcApi -> {0}")]
-    RpcApiError(#[from] kaspa_rpc_core::error::RpcError),
+    #[error("Kash RpcApi -> {0}")]
+    RpcApiError(#[from] kash_rpc_core::error::RpcError),
 
-    #[error("Kaspa RpcApi -> {0}")]
+    #[error("Kash RpcApi -> {0}")]
     WebSocketError(#[from] WebSocketError),
 
     #[error("Notification subsystem -> {0}")]
-    NotificationError(#[from] kaspa_notify::error::Error),
+    NotificationError(#[from] kash_notify::error::Error),
 
     #[error("Channel -> {0}")]
     ChannelError(String),
@@ -40,10 +40,10 @@ pub enum Error {
     ToValue(String),
 
     #[error("invalid network type: {0}")]
-    NetworkType(#[from] kaspa_consensus_core::network::NetworkTypeError),
+    NetworkType(#[from] kash_consensus_core::network::NetworkTypeError),
 
     #[error(transparent)]
-    ConsensusWasm(#[from] kaspa_consensus_wasm::error::Error),
+    ConsensusWasm(#[from] kash_consensus_wasm::error::Error),
 }
 
 impl Error {

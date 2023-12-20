@@ -2,18 +2,18 @@ use std::{collections::HashMap, time::Duration};
 
 use clap::{Arg, Command};
 use itertools::Itertools;
-use kaspa_addresses::Address;
-use kaspa_consensus_core::{
+use kash_addresses::Address;
+use kash_consensus_core::{
     config::params::{TESTNET11_PARAMS, TESTNET_PARAMS},
     constants::TX_VERSION,
     sign::sign,
     subnets::SUBNETWORK_ID_NATIVE,
     tx::{MutableTransaction, Transaction, TransactionInput, TransactionOutpoint, TransactionOutput, UtxoEntry},
 };
-use kaspa_core::{info, kaspad_env::version, time::unix_now, warn};
-use kaspa_grpc_client::GrpcClient;
-use kaspa_rpc_core::{api::rpc::RpcApi, notify::mode::NotificationMode};
-use kaspa_txscript::pay_to_address_script;
+use kash_core::{info, kashd_env::version, time::unix_now, warn};
+use kash_grpc_client::GrpcClient;
+use kash_rpc_core::{api::rpc::RpcApi, notify::mode::NotificationMode};
+use kash_txscript::pay_to_address_script;
 use secp256k1::{rand::thread_rng, KeyPair};
 use tokio::time::{interval, MissedTickBehavior};
 
@@ -72,7 +72,7 @@ pub fn cli() -> Command {
 
 #[tokio::main]
 async fn main() {
-    kaspa_core::log::init_logger(None, "");
+    kash_core::log::init_logger(None, "");
     let args = Args::parse();
     let mut stats = Stats { num_txs: 0, since: unix_now(), num_utxos: 0, utxos_amount: 0, num_outs: 0 };
     let rpc_client = GrpcClient::connect(
@@ -95,24 +95,24 @@ async fn main() {
         secp256k1::KeyPair::from_seckey_slice(secp256k1::SECP256K1, &private_key_bytes).unwrap()
     } else {
         let (sk, pk) = &secp256k1::generate_keypair(&mut thread_rng());
-        let kaspa_addr =
-            Address::new(kaspa_addresses::Prefix::Testnet, kaspa_addresses::Version::PubKey, &pk.x_only_public_key().0.serialize());
+        let kash_addr =
+            Address::new(kash_addresses::Prefix::Testnet, kash_addresses::Version::PubKey, &pk.x_only_public_key().0.serialize());
         info!(
             "Generated private key {} and address {}. Send some funds to this address and rerun rothschild with `--private-key {}`",
             sk.display_secret(),
-            String::from(&kaspa_addr),
+            String::from(&kash_addr),
             sk.display_secret()
         );
         return;
     };
 
-    let kaspa_addr = Address::new(
-        kaspa_addresses::Prefix::Testnet,
-        kaspa_addresses::Version::PubKey,
+    let kash_addr = Address::new(
+        kash_addresses::Prefix::Testnet,
+        kash_addresses::Version::PubKey,
         &schnorr_key.x_only_public_key().0.serialize(),
     );
 
-    info!("Using Rothschild with private key {} and address {}", schnorr_key.display_secret(), String::from(&kaspa_addr));
+    info!("Using Rothschild with private key {} and address {}", schnorr_key.display_secret(), String::from(&kash_addr));
     let info = rpc_client.get_block_dag_info().await.unwrap();
     let coinbase_maturity = match info.network.suffix {
         Some(11) => TESTNET11_PARAMS.coinbase_maturity,
@@ -134,7 +134,7 @@ async fn main() {
         coinbase_maturity,
     );
 
-    let mut utxos = refresh_utxos(&rpc_client, kaspa_addr.clone(), &mut pending, coinbase_maturity).await;
+    let mut utxos = refresh_utxos(&rpc_client, kash_addr.clone(), &mut pending, coinbase_maturity).await;
     let mut ticker = interval(Duration::from_secs_f64(1.0 / (args.tps.min(100) as f64)));
     ticker.set_missed_tick_behavior(MissedTickBehavior::Delay);
 
@@ -145,14 +145,14 @@ async fn main() {
         maximize_inputs = should_maximize_inputs(maximize_inputs, &utxos, &pending);
         let now = unix_now();
         let has_funds =
-            maybe_send_tx(&rpc_client, kaspa_addr.clone(), &mut utxos, &mut pending, schnorr_key, &mut stats, maximize_inputs).await;
+            maybe_send_tx(&rpc_client, kash_addr.clone(), &mut utxos, &mut pending, schnorr_key, &mut stats, maximize_inputs).await;
         if !has_funds {
             info!("Has not enough funds");
         }
         if !has_funds || now - last_refresh > 60_000 {
             info!("Refetching UTXO set");
             tokio::time::sleep(Duration::from_millis(100)).await; // We don't want this operation to be too frequent since its heavy on the node, so we wait some time before executing it.
-            utxos = refresh_utxos(&rpc_client, kaspa_addr.clone(), &mut pending, coinbase_maturity).await;
+            utxos = refresh_utxos(&rpc_client, kash_addr.clone(), &mut pending, coinbase_maturity).await;
             last_refresh = unix_now();
             pause_if_mempool_is_full(&rpc_client).await;
         }
@@ -192,20 +192,20 @@ async fn pause_if_mempool_is_full(rpc_client: &GrpcClient) {
 
 async fn refresh_utxos(
     rpc_client: &GrpcClient,
-    kaspa_addr: Address,
+    kash_addr: Address,
     pending: &mut HashMap<TransactionOutpoint, u64>,
     coinbase_maturity: u64,
 ) -> Vec<(TransactionOutpoint, UtxoEntry)> {
-    populate_pending_outpoints_from_mempool(rpc_client, kaspa_addr.clone(), pending).await;
-    fetch_spendable_utxos(rpc_client, kaspa_addr, coinbase_maturity).await
+    populate_pending_outpoints_from_mempool(rpc_client, kash_addr.clone(), pending).await;
+    fetch_spendable_utxos(rpc_client, kash_addr, coinbase_maturity).await
 }
 
 async fn populate_pending_outpoints_from_mempool(
     rpc_client: &GrpcClient,
-    kaspa_addr: Address,
+    kash_addr: Address,
     pending_outpoints: &mut HashMap<TransactionOutpoint, u64>,
 ) {
-    let entries = rpc_client.get_mempool_entries_by_addresses(vec![kaspa_addr], true, false).await.unwrap();
+    let entries = rpc_client.get_mempool_entries_by_addresses(vec![kash_addr], true, false).await.unwrap();
     let now = unix_now();
     for entry in entries {
         for entry in entry.sending {
@@ -218,10 +218,10 @@ async fn populate_pending_outpoints_from_mempool(
 
 async fn fetch_spendable_utxos(
     rpc_client: &GrpcClient,
-    kaspa_addr: Address,
+    kash_addr: Address,
     coinbase_maturity: u64,
 ) -> Vec<(TransactionOutpoint, UtxoEntry)> {
-    let resp = rpc_client.get_utxos_by_addresses(vec![kaspa_addr]).await.unwrap();
+    let resp = rpc_client.get_utxos_by_addresses(vec![kash_addr]).await.unwrap();
     let dag_info = rpc_client.get_block_dag_info().await.unwrap();
     let mut utxos = Vec::with_capacity(resp.len());
     for resp_entry in
@@ -244,7 +244,7 @@ fn is_utxo_spendable(entry: &UtxoEntry, virtual_daa_score: u64, coinbase_maturit
 
 async fn maybe_send_tx(
     rpc_client: &GrpcClient,
-    kaspa_addr: Address,
+    kash_addr: Address,
     utxos: &mut Vec<(TransactionOutpoint, UtxoEntry)>,
     pending: &mut HashMap<TransactionOutpoint, u64>,
     schnorr_key: KeyPair,
@@ -257,7 +257,7 @@ async fn maybe_send_tx(
         return false;
     }
 
-    let tx = generate_tx(schnorr_key, &selected_utxos, selected_amount, num_outs, &kaspa_addr);
+    let tx = generate_tx(schnorr_key, &selected_utxos, selected_amount, num_outs, &kash_addr);
 
     let now = unix_now();
     for input in tx.inputs.iter() {
@@ -318,9 +318,9 @@ fn generate_tx(
     utxos: &[(TransactionOutpoint, UtxoEntry)],
     send_amount: u64,
     num_outs: u64,
-    kaspa_addr: &Address,
+    kash_addr: &Address,
 ) -> Transaction {
-    let script_public_key = pay_to_address_script(kaspa_addr);
+    let script_public_key = pay_to_address_script(kash_addr);
     let inputs = utxos
         .iter()
         .map(|(op, _)| TransactionInput { previous_outpoint: *op, signature_script: vec![], sequence: 0, sig_op_count: 1 })

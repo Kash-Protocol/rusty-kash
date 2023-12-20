@@ -1,7 +1,7 @@
 use crate::imports::*;
 use crate::runtime::Balance;
 use crate::utxo::{UTXO_MATURITY_PERIOD_COINBASE_TRANSACTION_DAA, UTXO_MATURITY_PERIOD_USER_TRANSACTION_DAA};
-pub use kaspa_consensus_wasm::{TryIntoUtxoEntryReferences, UtxoEntryReference};
+pub use kash_consensus_wasm::{TryIntoUtxoEntryReferences, UtxoEntryReference};
 
 pub trait UtxoEntryReferenceExtension {
     fn is_mature(&self, current_daa_score: u64) -> bool;

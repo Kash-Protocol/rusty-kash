@@ -3,7 +3,7 @@ use crate::result::Result;
 use crate::runtime::account::{Account, AccountId, AccountKind, Inner};
 use crate::runtime::Wallet;
 use crate::storage::{self, Metadata, PrvKeyDataId, Settings};
-use kaspa_addresses::Version;
+use kash_addresses::Version;
 use secp256k1::PublicKey;
 
 pub struct Keypair {

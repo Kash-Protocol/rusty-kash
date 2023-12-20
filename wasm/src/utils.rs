@@ -1,13 +1,13 @@
 use js_sys::BigInt;
-use kaspa_math::Uint256;
-use kaspa_utils::hex::ToHex;
+use kash_math::Uint256;
+use kash_utils::hex::ToHex;
 use num::Float;
 use wasm_bindgen::prelude::*;
 
-// https://github.com/tmrlvi/kaspa-miner/blob/bf361d02a46c580f55f46b5dfa773477634a5753/src/client/stratum.rs#L36
+// https://github.com/tmrlvi/kash-miner/blob/bf361d02a46c580f55f46b5dfa773477634a5753/src/client/stratum.rs#L36
 const DIFFICULTY_1_TARGET: (u64, i16) = (0xffffu64, 208); // 0xffff 2^208
 
-/// `calculate_difficulty` is based on set_difficulty function: https://github.com/tmrlvi/kaspa-miner/blob/bf361d02a46c580f55f46b5dfa773477634a5753/src/client/stratum.rs#L375
+/// `calculate_difficulty` is based on set_difficulty function: https://github.com/tmrlvi/kash-miner/blob/bf361d02a46c580f55f46b5dfa773477634a5753/src/client/stratum.rs#L375
 #[wasm_bindgen(js_name = calculateDifficulty)]
 pub fn calculate_difficulty(difficulty: f32) -> Result<BigInt, JsError> {
     let mut buf = [0u64, 0u64, 0u64, 0u64];

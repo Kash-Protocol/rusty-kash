@@ -60,12 +60,12 @@ use crate::tx::{
     PendingTransactionStream,
 };
 use crate::utxo::{UtxoContext, UtxoEntryReference};
-use kaspa_consensus_core::constants::UNACCEPTED_DAA_SCORE;
-use kaspa_consensus_core::subnets::SUBNETWORK_ID_NATIVE;
-use kaspa_consensus_core::tx as cctx;
-use kaspa_consensus_core::tx::{Transaction, TransactionInput, TransactionOutpoint, TransactionOutput};
-use kaspa_consensus_wasm::UtxoEntry;
-use kaspa_txscript::pay_to_address_script;
+use kash_consensus_core::constants::UNACCEPTED_DAA_SCORE;
+use kash_consensus_core::subnets::SUBNETWORK_ID_NATIVE;
+use kash_consensus_core::tx as cctx;
+use kash_consensus_core::tx::{Transaction, TransactionInput, TransactionOutpoint, TransactionOutput};
+use kash_consensus_wasm::UtxoEntry;
+use kash_txscript::pay_to_address_script;
 use std::collections::VecDeque;
 
 use super::SignerT;

@@ -1,6 +1,6 @@
 [package]
-name = "kaspa-muhash"
-description = "Kaspa Muhash library"
+name = "kash-muhash"
+description = "Kash Muhash library"
 version.workspace = true
 edition.workspace = true
 authors.workspace = true
@@ -8,8 +8,8 @@ include.workspace = true
 license.workspace = true
 
 [dependencies]
-kaspa-hashes.workspace = true
-kaspa-math.workspace = true
+kash-hashes.workspace = true
+kash-math.workspace = true
 rand_chacha.workspace = true
 serde.workspace = true
 

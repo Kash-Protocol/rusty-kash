@@ -1,21 +1,21 @@
 /*!
-# `rusty-kaspa WASM32 bindings`
+# `rusty-kash WASM32 bindings`
 
-[<img alt="github" src="https://img.shields.io/badge/github-kaspanet/rusty--kaspa-8da0cb?style=for-the-badge&labelColor=555555&color=8da0cb&logo=github" height="20">](https://github.com/kaspanet/rusty-kaspa/tree/master/wasm)
-[<img alt="crates.io" src="https://img.shields.io/crates/v/kaspa-wasm.svg?maxAge=2592000&style=for-the-badge&color=fc8d62&logo=rust" height="20">](https://crates.io/crates/kaspa-wasm)
-[<img alt="docs.rs" src="https://img.shields.io/badge/docs.rs-kaspa--wasm-56c2a5?maxAge=2592000&style=for-the-badge&logo=docs.rs" height="20">](https://docs.rs/kaspa-wasm)
-<img alt="license" src="https://img.shields.io/crates/l/kaspa-wasm.svg?maxAge=2592000&color=6ac&style=for-the-badge&logoColor=fff" height="20">
+[<img alt="github" src="https://img.shields.io/badge/github-kashnet/rusty--kash-8da0cb?style=for-the-badge&labelColor=555555&color=8da0cb&logo=github" height="20">](https://github.com/Kash-Protocol/rusty-kash/tree/master/wasm)
+[<img alt="crates.io" src="https://img.shields.io/crates/v/kash-wasm.svg?maxAge=2592000&style=for-the-badge&color=fc8d62&logo=rust" height="20">](https://crates.io/crates/kash-wasm)
+[<img alt="docs.rs" src="https://img.shields.io/badge/docs.rs-kash--wasm-56c2a5?maxAge=2592000&style=for-the-badge&logo=docs.rs" height="20">](https://docs.rs/kash-wasm)
+<img alt="license" src="https://img.shields.io/crates/l/kash-wasm.svg?maxAge=2592000&color=6ac&style=for-the-badge&logoColor=fff" height="20">
 
 <br>
 
-Rusty-Kaspa WASM32 bindings offer direct integration of Rust code and Rusty-Kaspa
+Rusty-Kash WASM32 bindings offer direct integration of Rust code and Rusty-Kash
 codebase within JavaScript environments such as Node.js and Web Browsers.
 
 ## Documentation
 
-- [**integrating with Kaspa** guide](https://kaspa-mdbook.aspectron.com/)
-- [**Rustdoc** documentation](https://docs.rs/kaspa-wasm/latest/kaspa-wasm)
-- [**JSDoc** documentation](https://aspectron.com/docs/kaspa-wasm/)
+- [**integrating with Kash** guide](https://kash-mdbook.aspectron.com/)
+- [**Rustdoc** documentation](https://docs.rs/kash-wasm/latest/kash-wasm)
+- [**JSDoc** documentation](https://aspectron.com/docs/kash-wasm/)
 
 Please note that while WASM directly binds JacaScript and Rust resources, their names on JavaScript side
 are different from their name in Rust as they conform to the 'camelCase' convention in JavaScript and
@@ -32,8 +32,8 @@ transaction creation.
 
 - **Wallet API** — API for async core wallet processing tasks.
 
-- **RPC API** — [RPC interface bindings](rpc) for the Kaspa node using WebSocket connections.
-Compatible with Rusty Kaspa as well as with the Golang node (kaspad) via the `kaspa-wrpc-proxy`
+- **RPC API** — [RPC interface bindings](rpc) for the Kash node using WebSocket connections.
+Compatible with Rusty Kash as well as with the Golang node (kashd) via the `kash-wrpc-proxy`
 WebSocket / gRPC proxy (located in `rpc/wrpc/proxy`).
 
 ## Using RPC
@@ -59,9 +59,9 @@ globalThis.WebSocket = require('isomorphic-ws');
 <html>
     <head>
         <script type="module">
-            import * as kaspa_wasm from './kaspa/kaspa-wasm.js';
+            import * as kash_wasm from './kash/kash-wasm.js';
             (async () => {
-                const kaspa = await kaspa_wasm.default('./kaspa/kaspa-wasm_bg.wasm');
+                const kash = await kash_wasm.default('./kash/kash-wasm_bg.wasm');
             })();
         </script>
     </head>
@@ -75,7 +75,7 @@ globalThis.WebSocket = require('isomorphic-ws');
 // W3C WebSocket module shim
 globalThis.WebSocket = require('websocket').w3cwebsocket;
 
-let {RpcClient,Encoding,init_console_panic_hook,defer} = require('./kaspa-rpc');
+let {RpcClient,Encoding,init_console_panic_hook,defer} = require('./kash-rpc');
 // init_console_panic_hook();
 
 let rpc = new RpcClient(Encoding.Borsh,"ws://127.0.0.1:17110");
@@ -90,7 +90,7 @@ let rpc = new RpcClient(Encoding.Borsh,"ws://127.0.0.1:17110");
 })();
 ```
 
-For more details, please follow the [**integrating with Kaspa**](https://kaspa-mdbook.aspectron.com/) guide.
+For more details, please follow the [**integrating with Kash**](https://kash-mdbook.aspectron.com/) guide.
 
 */
 
@@ -99,22 +99,22 @@ For more details, please follow the [**integrating with Kaspa**](https://kaspa-m
 pub mod utils;
 pub use crate::utils::*;
 
-pub use kaspa_addresses::{Address, Version as AddressVersion};
-pub use kaspa_consensus_core::tx::{ScriptPublicKey, Transaction, TransactionInput, TransactionOutpoint, TransactionOutput};
-pub use kaspa_pow::wasm::*;
+pub use kash_addresses::{Address, Version as AddressVersion};
+pub use kash_consensus_core::tx::{ScriptPublicKey, Transaction, TransactionInput, TransactionOutpoint, TransactionOutput};
+pub use kash_pow::wasm::*;
 
 pub mod rpc {
-    //! Kaspa RPC interface
+    //! Kash RPC interface
     //!
 
     pub mod messages {
-        //! Kaspa RPC messages
-        pub use kaspa_rpc_core::model::message::*;
+        //! Kash RPC messages
+        pub use kash_rpc_core::model::message::*;
     }
-    pub use kaspa_rpc_core::api::rpc::RpcApi;
-    pub use kaspa_wrpc_client::wasm::RpcClient;
+    pub use kash_rpc_core::api::rpc::RpcApi;
+    pub use kash_wrpc_client::wasm::RpcClient;
 }
 
-pub use kaspa_consensus_wasm::*;
+pub use kash_consensus_wasm::*;
 
-pub use kaspa_wallet_core::wasm::{tx::*, utils::*, utxo::*, wallet::*, xprivatekey::*, xpublickey::*};
+pub use kash_wallet_core::wasm::{tx::*, utils::*, utxo::*, wallet::*, xprivatekey::*, xpublickey::*};

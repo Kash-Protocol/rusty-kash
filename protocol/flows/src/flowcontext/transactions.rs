@@ -1,10 +1,10 @@
 use super::process_queue::ProcessQueue;
 use itertools::Itertools;
-use kaspa_consensus_core::tx::TransactionId;
-use kaspa_core::debug;
-use kaspa_p2p_lib::{
+use kash_consensus_core::tx::TransactionId;
+use kash_core::debug;
+use kash_p2p_lib::{
     make_message,
-    pb::{kaspad_message::Payload, InvTransactionsMessage, KaspadMessage},
+    pb::{kashd_message::Payload, InvTransactionsMessage, KashdMessage},
     Hub,
 };
 use std::time::{Duration, Instant};
@@ -76,7 +76,7 @@ impl TransactionsSpread {
     /// every [`BROADCAST_INTERVAL`] milliseconds or when the queue length is larger than the Inv message
     /// capacity.
     ///
-    /// _GO-KASPAD: EnqueueTransactionIDsForPropagation_
+    /// _GO-KASHD: EnqueueTransactionIDsForPropagation_
     pub async fn broadcast_transactions<I: IntoIterator<Item = TransactionId>>(&mut self, transaction_ids: I) {
         self.transaction_ids.enqueue_chunk(transaction_ids);
 
@@ -95,7 +95,7 @@ impl TransactionsSpread {
         self.last_broadcast_time = Instant::now();
     }
 
-    async fn broadcast(&self, msg: KaspadMessage) {
+    async fn broadcast(&self, msg: KashdMessage) {
         self.hub.broadcast(msg).await
     }
 }

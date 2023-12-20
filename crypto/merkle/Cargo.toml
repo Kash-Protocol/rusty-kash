@@ -1,6 +1,6 @@
 [package]
-name = "kaspa-merkle"
-description = "Kaspa merkle tree library"
+name = "kash-merkle"
+description = "Kash merkle tree library"
 version.workspace = true
 edition.workspace = true
 authors.workspace = true
@@ -8,4 +8,4 @@ include.workspace = true
 license.workspace = true
 
 [dependencies]
-kaspa-hashes.workspace = true
+kash-hashes.workspace = true

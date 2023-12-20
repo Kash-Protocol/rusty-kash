@@ -1,6 +1,6 @@
 [package]
-name = "kaspa-mining-errors"
-description = "Kaspa mining error definitions"
+name = "kash-mining-errors"
+description = "Kash mining error definitions"
 version.workspace = true
 edition.workspace = true
 authors.workspace = true
@@ -11,4 +11,4 @@ license.workspace = true
 
 [dependencies]
 thiserror.workspace = true
-kaspa-consensus-core.workspace = true
+kash-consensus-core.workspace = true

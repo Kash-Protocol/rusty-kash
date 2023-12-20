@@ -1,10 +1,10 @@
 use crate::matrix::Matrix;
 use js_sys::BigInt;
-use kaspa_consensus_core::{hashing, header::Header};
-use kaspa_hashes::Hash;
-use kaspa_hashes::PowHash;
-use kaspa_math::Uint256;
-use kaspa_utils::hex::ToHex;
+use kash_consensus_core::{hashing, header::Header};
+use kash_hashes::Hash;
+use kash_hashes::PowHash;
+use kash_math::Uint256;
+use kash_utils::hex::ToHex;
 use wasm_bindgen::prelude::*;
 use workflow_wasm::error::Error;
 use workflow_wasm::prelude::*;

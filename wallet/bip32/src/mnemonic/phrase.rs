@@ -14,7 +14,7 @@ use zeroize::{Zeroize, Zeroizing};
 use wasm_bindgen::prelude::*;
 use {super::seed::Seed, hmac::Hmac, sha2::Sha512};
 
-use kaspa_utils::hex::*;
+use kash_utils::hex::*;
 //use workflow_wasm::jsvalue::*;
 use crate::Result;
 /// Number of PBKDF2 rounds to perform when deriving the seed
@@ -265,12 +265,12 @@ mod tests {
                 "xprv9s21ZrQH143K2YStJyGeTyoWRBu2N1wkamjidQSdxrVeDziGfvwkmP67L2xf6weijVapZxwi64pW8ywHDvCaBQA8PyrRHqkjuuPY9aapypz"
             ],
             [
-                // KPRV (kaspa mainnet xprv)
+                // KPRV (kash mainnet xprv)
                 "cruise village slam canyon monster scrub myself farm add riot large board sentence outer nice coast raven bird scheme undo december blanket trim hero",
                 "kprv5y2qurMHCsXYr8yytxy6ZwYWLtFbdtWWavDL6bPfz2fNLvnZymmNfE6KpQqNHHjb7mAWYCtuUkZPbkgUR19LSKS9VasqRR852L5GMVY8wf9"
             ],
             [
-                // KTRV (kaspa testnet xprv)
+                // KTRV (kash testnet xprv)
                 "short diagram life tip retreat nothing dynamic absent lamp carry mansion keen truck cram crash science liberty emotion live pepper orphan quiz wide prison",
                 "ktrv5himbbCxArFU23gGTxVHNKahNXXSETHjNWgwc5qm85nKS1p55FEb8DUdTd2CPvQvBUKYFRSjjXb5nagr7wXUE4eSaFSxof8cUd6Sm66NRjA"
             ]

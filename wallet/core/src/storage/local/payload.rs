@@ -2,7 +2,7 @@ use crate::imports::*;
 use crate::result::Result;
 use crate::secret::Secret;
 use crate::storage::{Account, AddressBookEntry, PrvKeyData, PrvKeyDataId};
-use kaspa_bip32::Mnemonic;
+use kash_bip32::Mnemonic;
 use zeroize::{Zeroize, ZeroizeOnDrop};
 
 pub const PAYLOAD_VERSION: [u16; 3] = [1, 0, 0];

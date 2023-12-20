@@ -1,6 +1,6 @@
 [package]
-name = "kaspa-database"
-description = "Kaspa database"
+name = "kash-database"
+description = "Kash database"
 version.workspace = true
 edition.workspace = true
 authors.workspace = true
@@ -13,8 +13,8 @@ enum-primitive-derive.workspace = true
 faster-hex.workspace = true
 indexmap.workspace = true
 itertools.workspace = true
-kaspa-hashes.workspace = true
-kaspa-utils.workspace = true
+kash-hashes.workspace = true
+kash-utils.workspace = true
 num_cpus.workspace = true
 num-traits.workspace = true
 parking_lot.workspace = true

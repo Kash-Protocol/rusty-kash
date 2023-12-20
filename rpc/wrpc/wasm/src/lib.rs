@@ -1,2 +1,2 @@
 #[allow(unused_imports)]
-use kaspa_wrpc_client::wasm::*;
+use kash_wrpc_client::wasm::*;

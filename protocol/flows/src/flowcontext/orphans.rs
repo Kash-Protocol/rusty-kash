@@ -1,12 +1,12 @@
 use indexmap::{map::Entry::Occupied, IndexMap};
-use kaspa_consensus_core::{
+use kash_consensus_core::{
     api::{BlockValidationFuture, BlockValidationFutures},
     block::Block,
 };
-use kaspa_consensusmanager::ConsensusProxy;
-use kaspa_core::debug;
-use kaspa_hashes::Hash;
-use kaspa_utils::option::OptionExtensions;
+use kash_consensusmanager::ConsensusProxy;
+use kash_core::debug;
+use kash_hashes::Hash;
+use kash_utils::option::OptionExtensions;
 use rand::Rng;
 use std::{
     collections::{HashMap, HashSet, VecDeque},
@@ -227,13 +227,13 @@ impl OrphanBlocksPool {
 mod tests {
     use super::*;
     use futures::future::try_join_all;
-    use kaspa_consensus_core::{
+    use kash_consensus_core::{
         api::{BlockValidationFutures, ConsensusApi},
         blockstatus::BlockStatus,
         errors::block::BlockProcessResult,
     };
-    use kaspa_consensusmanager::{ConsensusInstance, SessionLock};
-    use kaspa_core::assert_match;
+    use kash_consensusmanager::{ConsensusInstance, SessionLock};
+    use kash_core::assert_match;
     use parking_lot::RwLock;
     use std::sync::Arc;
 

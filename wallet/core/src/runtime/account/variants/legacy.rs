@@ -7,7 +7,7 @@ use crate::secret::Secret;
 use crate::storage::{self, Metadata, PrvKeyDataId, Settings};
 use crate::AddressDerivationManager;
 use crate::AddressDerivationManagerTrait;
-use kaspa_bip32::{ExtendedPrivateKey, Prefix, SecretKey};
+use kash_bip32::{ExtendedPrivateKey, Prefix, SecretKey};
 
 pub struct Legacy {
     inner: Arc<Inner>,

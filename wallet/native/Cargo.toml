@@ -1,6 +1,6 @@
 [package]
-name = "kaspa-wallet"
-description = "Kaspa wallet"
+name = "kash-wallet"
+description = "Kash wallet"
 version.workspace = true
 edition.workspace = true
 authors.workspace = true
@@ -8,13 +8,13 @@ include.workspace = true
 license.workspace = true
 
 [features]
-legacy-rpc = ["kaspa-cli/legacy-rpc"]
+legacy-rpc = ["kash-cli/legacy-rpc"]
 default = []
 
 [dependencies]
 async-std.workspace = true
 async-trait.workspace = true
-kaspa-cli.workspace = true
+kash-cli.workspace = true
 tokio.workspace = true
 workflow-log.workspace = true
 workflow-terminal.workspace = true

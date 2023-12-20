@@ -1,12 +1,12 @@
 use crate::error::Error;
 use crate::imports::*;
 use crate::parse::parse_host;
-use kaspa_consensus_core::network::NetworkType;
-use kaspa_rpc_core::{
+use kash_consensus_core::network::NetworkType;
+use kash_rpc_core::{
     api::ctl::RpcCtl,
     notify::collector::{RpcCoreCollector, RpcCoreConverter},
 };
-pub use kaspa_rpc_macros::build_wrpc_client_interface;
+pub use kash_rpc_macros::build_wrpc_client_interface;
 use std::fmt::Debug;
 use workflow_core::{channel::Multiplexer, runtime as application_runtime};
 use workflow_dom::utils::window;
@@ -39,7 +39,7 @@ struct Inner {
 
 impl Inner {
     pub fn new(encoding: Encoding, url: &str) -> Result<Inner> {
-        // log_trace!("Kaspa wRPC::{encoding} connecting to: {url}");
+        // log_trace!("Kash wRPC::{encoding} connecting to: {url}");
         let rpc_ctl = RpcCtl::with_descriptor(url);
         let wrpc_ctl_multiplexer = Multiplexer::<WrpcCtl>::new();
 
@@ -68,7 +68,7 @@ impl Inner {
             let notification_sender_ = notification_channel.sender.clone();
             interface.notification(
                 notification_op,
-                workflow_rpc::client::Notification::new(move |notification: kaspa_rpc_core::Notification| {
+                workflow_rpc::client::Notification::new(move |notification: kash_rpc_core::Notification| {
                     let notification_sender = notification_sender_.clone();
                     Box::pin(async move {
                         // log_info!("notification receivers: {}", notification_sender.receiver_count());
@@ -77,7 +77,7 @@ impl Inner {
                             // log_info!("notification: posting to channel: {notification:?}");
                             notification_sender.send(notification).await?;
                         } else {
-                            log_warning!("WARNING: Kaspa RPC notification is not consumed by user: {:?}", notification);
+                            log_warning!("WARNING: Kash RPC notification is not consumed by user: {:?}", notification);
                         }
                         Ok(())
                     })
@@ -129,7 +129,7 @@ impl Inner {
 
 impl Debug for Inner {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        f.debug_struct("KaspaRpcClient")
+        f.debug_struct("KashRpcClient")
             .field("rpc", &"rpc")
             .field("notification_channel", &self.notification_channel)
             .field("encoding", &self.encoding)
@@ -154,7 +154,7 @@ impl SubscriptionManager for Inner {
 
 const WRPC_CLIENT: &str = "wrpc-client";
 
-/// [`KaspaRpcClient`] allows connection to the Kaspa wRPC Server via
+/// [`KashRpcClient`] allows connection to the Kash wRPC Server via
 /// binary Borsh or JSON protocols.
 ///
 /// RpcClient has two ways to interface with the underlying RPC subsystem:
@@ -164,20 +164,20 @@ const WRPC_CLIENT: &str = "wrpc-client";
 /// method invocation server-side.
 ///
 #[derive(Clone)]
-pub struct KaspaRpcClient {
+pub struct KashRpcClient {
     inner: Arc<Inner>,
     notifier: Option<Arc<Notifier<Notification, ChannelConnection>>>,
     notification_mode: NotificationMode,
 }
 
-impl KaspaRpcClient {
-    /// Create a new `KaspaRpcClient` with the given Encoding and URL
-    pub fn new(encoding: Encoding, url: &str) -> Result<KaspaRpcClient> {
+impl KashRpcClient {
+    /// Create a new `KashRpcClient` with the given Encoding and URL
+    pub fn new(encoding: Encoding, url: &str) -> Result<KashRpcClient> {
         Self::new_with_args(encoding, NotificationMode::Direct, url)
     }
 
     /// Extended constructor that accepts [`NotificationMode`] argument.
-    pub fn new_with_args(encoding: Encoding, notification_mode: NotificationMode, url: &str) -> Result<KaspaRpcClient> {
+    pub fn new_with_args(encoding: Encoding, notification_mode: NotificationMode, url: &str) -> Result<KashRpcClient> {
         let inner = Arc::new(Inner::new(encoding, url)?);
         let notifier = if matches!(notification_mode, NotificationMode::MultiListeners) {
             let enabled_events = EVENT_TYPE_ARRAY[..].into();
@@ -189,7 +189,7 @@ impl KaspaRpcClient {
             None
         };
 
-        let client = KaspaRpcClient { inner, notifier, notification_mode };
+        let client = KashRpcClient { inner, notifier, notification_mode };
 
         Ok(client)
     }
@@ -355,10 +355,10 @@ impl KaspaRpcClient {
                             match msg {
                                 WrpcCtl::Open => {
                                     // inner.rpc_ctl.set_descriptor(Some(inner.rpc.url()));
-                                    inner.rpc_ctl.signal_open().await.expect("(KaspaRpcClient) rpc_ctl.signal_open() error");
+                                    inner.rpc_ctl.signal_open().await.expect("(KashRpcClient) rpc_ctl.signal_open() error");
                                 }
                                 WrpcCtl::Close => {
-                                    inner.rpc_ctl.signal_close().await.expect("(KaspaRpcClient) rpc_ctl.signal_close() error");
+                                    inner.rpc_ctl.signal_close().await.expect("(KashRpcClient) rpc_ctl.signal_close() error");
                                     // inner.rpc_ctl.set_descriptor(None);
                                 }
                             }
@@ -381,7 +381,7 @@ impl KaspaRpcClient {
 }
 
 #[async_trait]
-impl RpcApi for KaspaRpcClient {
+impl RpcApi for KashRpcClient {
     //
     // The following proc-macro iterates over the array of enum variants
     // generating a function for each variant as follows:

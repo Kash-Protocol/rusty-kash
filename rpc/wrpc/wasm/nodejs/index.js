@@ -1,7 +1,7 @@
 // W3C WebSocket module shim
 globalThis.WebSocket = require('websocket').w3cwebsocket;
 
-let {RpcClient,Encoding,init_console_panic_hook,defer} = require('./kaspa-rpc');
+let {RpcClient,Encoding,init_console_panic_hook,defer} = require('./kash-rpc');
 // init_console_panic_hook();
 
 const MAX_NOTIFICATION = 10;

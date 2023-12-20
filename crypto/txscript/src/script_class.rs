@@ -1,7 +1,7 @@
 use crate::{opcodes, MAX_SCRIPT_PUBLIC_KEY_VERSION};
 use borsh::{BorshDeserialize, BorshSchema, BorshSerialize};
-use kaspa_addresses::Version;
-use kaspa_consensus_core::tx::{ScriptPublicKey, ScriptPublicKeyVersion};
+use kash_addresses::Version;
+use kash_consensus_core::tx::{ScriptPublicKey, ScriptPublicKeyVersion};
 use serde::{Deserialize, Serialize};
 use std::{
     fmt::{Display, Formatter},
@@ -139,7 +139,7 @@ impl From<Version> for ScriptClass {
 
 #[cfg(test)]
 mod tests {
-    use kaspa_consensus_core::tx::ScriptVec;
+    use kash_consensus_core::tx::ScriptVec;
 
     use super::*;
 

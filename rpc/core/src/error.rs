@@ -1,5 +1,5 @@
-use kaspa_consensus_core::tx::TransactionId;
-use kaspa_utils::networking::IpAddress;
+use kash_consensus_core::tx::TransactionId;
+use kash_utils::networking::IpAddress;
 use std::{net::AddrParseError, num::TryFromIntError};
 use thiserror::Error;
 use workflow_core::channel::ChannelError;
@@ -81,25 +81,25 @@ pub enum RpcError {
     SubmitBlockError(SubmitBlockRejectReason),
 
     #[error(transparent)]
-    AddressError(#[from] kaspa_addresses::AddressError),
+    AddressError(#[from] kash_addresses::AddressError),
 
     #[error(transparent)]
-    NetworkTypeError(#[from] kaspa_consensus_core::network::NetworkTypeError),
+    NetworkTypeError(#[from] kash_consensus_core::network::NetworkTypeError),
 
     #[error(transparent)]
-    NetworkIdError(#[from] kaspa_consensus_core::network::NetworkIdError),
+    NetworkIdError(#[from] kash_consensus_core::network::NetworkIdError),
 
     #[error(transparent)]
-    NotificationError(#[from] kaspa_notify::error::Error),
+    NotificationError(#[from] kash_notify::error::Error),
 
     #[error(transparent)]
-    MiningManagerError(#[from] kaspa_mining_errors::manager::MiningManagerError),
+    MiningManagerError(#[from] kash_mining_errors::manager::MiningManagerError),
 
     #[error(transparent)]
-    ConsensusError(#[from] kaspa_consensus_core::errors::consensus::ConsensusError),
+    ConsensusError(#[from] kash_consensus_core::errors::consensus::ConsensusError),
 
     #[error(transparent)]
-    ScriptClassError(#[from] kaspa_txscript::script_class::Error),
+    ScriptClassError(#[from] kash_txscript::script_class::Error),
 
     #[error(transparent)]
     NodeIdError(#[from] uuid::Error),

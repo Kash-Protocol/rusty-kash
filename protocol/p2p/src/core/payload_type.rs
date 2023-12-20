@@ -1,8 +1,8 @@
-use crate::pb::kaspad_message::Payload as KaspadMessagePayload;
+use crate::pb::kashd_message::Payload as KashdMessagePayload;
 
 #[repr(u8)]
 #[derive(Debug, Copy, Clone, Eq, Hash, PartialEq)]
-pub enum KaspadMessagePayloadType {
+pub enum KashdMessagePayloadType {
     Addresses = 0,
     Block,
     Transaction,
@@ -48,57 +48,57 @@ pub enum KaspadMessagePayloadType {
     RequestNextPruningPointAndItsAnticoneBlocks,
 }
 
-impl From<&KaspadMessagePayload> for KaspadMessagePayloadType {
-    fn from(payload: &KaspadMessagePayload) -> Self {
+impl From<&KashdMessagePayload> for KashdMessagePayloadType {
+    fn from(payload: &KashdMessagePayload) -> Self {
         match payload {
-            KaspadMessagePayload::Addresses(_) => KaspadMessagePayloadType::Addresses,
-            KaspadMessagePayload::Block(_) => KaspadMessagePayloadType::Block,
-            KaspadMessagePayload::Transaction(_) => KaspadMessagePayloadType::Transaction,
-            KaspadMessagePayload::BlockLocator(_) => KaspadMessagePayloadType::BlockLocator,
-            KaspadMessagePayload::RequestAddresses(_) => KaspadMessagePayloadType::RequestAddresses,
-            KaspadMessagePayload::RequestRelayBlocks(_) => KaspadMessagePayloadType::RequestRelayBlocks,
-            KaspadMessagePayload::RequestTransactions(_) => KaspadMessagePayloadType::RequestTransactions,
-            KaspadMessagePayload::IbdBlock(_) => KaspadMessagePayloadType::IbdBlock,
-            KaspadMessagePayload::InvRelayBlock(_) => KaspadMessagePayloadType::InvRelayBlock,
-            KaspadMessagePayload::InvTransactions(_) => KaspadMessagePayloadType::InvTransactions,
-            KaspadMessagePayload::Ping(_) => KaspadMessagePayloadType::Ping,
-            KaspadMessagePayload::Pong(_) => KaspadMessagePayloadType::Pong,
-            KaspadMessagePayload::Verack(_) => KaspadMessagePayloadType::Verack,
-            KaspadMessagePayload::Version(_) => KaspadMessagePayloadType::Version,
-            KaspadMessagePayload::TransactionNotFound(_) => KaspadMessagePayloadType::TransactionNotFound,
-            KaspadMessagePayload::Reject(_) => KaspadMessagePayloadType::Reject,
-            KaspadMessagePayload::PruningPointUtxoSetChunk(_) => KaspadMessagePayloadType::PruningPointUtxoSetChunk,
-            KaspadMessagePayload::RequestIbdBlocks(_) => KaspadMessagePayloadType::RequestIbdBlocks,
-            KaspadMessagePayload::UnexpectedPruningPoint(_) => KaspadMessagePayloadType::UnexpectedPruningPoint,
-            KaspadMessagePayload::IbdBlockLocator(_) => KaspadMessagePayloadType::IbdBlockLocator,
-            KaspadMessagePayload::IbdBlockLocatorHighestHash(_) => KaspadMessagePayloadType::IbdBlockLocatorHighestHash,
-            KaspadMessagePayload::RequestNextPruningPointUtxoSetChunk(_) => {
-                KaspadMessagePayloadType::RequestNextPruningPointUtxoSetChunk
+            KashdMessagePayload::Addresses(_) => KashdMessagePayloadType::Addresses,
+            KashdMessagePayload::Block(_) => KashdMessagePayloadType::Block,
+            KashdMessagePayload::Transaction(_) => KashdMessagePayloadType::Transaction,
+            KashdMessagePayload::BlockLocator(_) => KashdMessagePayloadType::BlockLocator,
+            KashdMessagePayload::RequestAddresses(_) => KashdMessagePayloadType::RequestAddresses,
+            KashdMessagePayload::RequestRelayBlocks(_) => KashdMessagePayloadType::RequestRelayBlocks,
+            KashdMessagePayload::RequestTransactions(_) => KashdMessagePayloadType::RequestTransactions,
+            KashdMessagePayload::IbdBlock(_) => KashdMessagePayloadType::IbdBlock,
+            KashdMessagePayload::InvRelayBlock(_) => KashdMessagePayloadType::InvRelayBlock,
+            KashdMessagePayload::InvTransactions(_) => KashdMessagePayloadType::InvTransactions,
+            KashdMessagePayload::Ping(_) => KashdMessagePayloadType::Ping,
+            KashdMessagePayload::Pong(_) => KashdMessagePayloadType::Pong,
+            KashdMessagePayload::Verack(_) => KashdMessagePayloadType::Verack,
+            KashdMessagePayload::Version(_) => KashdMessagePayloadType::Version,
+            KashdMessagePayload::TransactionNotFound(_) => KashdMessagePayloadType::TransactionNotFound,
+            KashdMessagePayload::Reject(_) => KashdMessagePayloadType::Reject,
+            KashdMessagePayload::PruningPointUtxoSetChunk(_) => KashdMessagePayloadType::PruningPointUtxoSetChunk,
+            KashdMessagePayload::RequestIbdBlocks(_) => KashdMessagePayloadType::RequestIbdBlocks,
+            KashdMessagePayload::UnexpectedPruningPoint(_) => KashdMessagePayloadType::UnexpectedPruningPoint,
+            KashdMessagePayload::IbdBlockLocator(_) => KashdMessagePayloadType::IbdBlockLocator,
+            KashdMessagePayload::IbdBlockLocatorHighestHash(_) => KashdMessagePayloadType::IbdBlockLocatorHighestHash,
+            KashdMessagePayload::RequestNextPruningPointUtxoSetChunk(_) => {
+                KashdMessagePayloadType::RequestNextPruningPointUtxoSetChunk
             }
-            KaspadMessagePayload::DonePruningPointUtxoSetChunks(_) => KaspadMessagePayloadType::DonePruningPointUtxoSetChunks,
-            KaspadMessagePayload::IbdBlockLocatorHighestHashNotFound(_) => {
-                KaspadMessagePayloadType::IbdBlockLocatorHighestHashNotFound
+            KashdMessagePayload::DonePruningPointUtxoSetChunks(_) => KashdMessagePayloadType::DonePruningPointUtxoSetChunks,
+            KashdMessagePayload::IbdBlockLocatorHighestHashNotFound(_) => {
+                KashdMessagePayloadType::IbdBlockLocatorHighestHashNotFound
             }
-            KaspadMessagePayload::BlockWithTrustedData(_) => KaspadMessagePayloadType::BlockWithTrustedData,
-            KaspadMessagePayload::DoneBlocksWithTrustedData(_) => KaspadMessagePayloadType::DoneBlocksWithTrustedData,
-            KaspadMessagePayload::RequestPruningPointAndItsAnticone(_) => KaspadMessagePayloadType::RequestPruningPointAndItsAnticone,
-            KaspadMessagePayload::BlockHeaders(_) => KaspadMessagePayloadType::BlockHeaders,
-            KaspadMessagePayload::RequestNextHeaders(_) => KaspadMessagePayloadType::RequestNextHeaders,
-            KaspadMessagePayload::DoneHeaders(_) => KaspadMessagePayloadType::DoneHeaders,
-            KaspadMessagePayload::RequestPruningPointUtxoSet(_) => KaspadMessagePayloadType::RequestPruningPointUtxoSet,
-            KaspadMessagePayload::RequestHeaders(_) => KaspadMessagePayloadType::RequestHeaders,
-            KaspadMessagePayload::RequestBlockLocator(_) => KaspadMessagePayloadType::RequestBlockLocator,
-            KaspadMessagePayload::PruningPoints(_) => KaspadMessagePayloadType::PruningPoints,
-            KaspadMessagePayload::RequestPruningPointProof(_) => KaspadMessagePayloadType::RequestPruningPointProof,
-            KaspadMessagePayload::PruningPointProof(_) => KaspadMessagePayloadType::PruningPointProof,
-            KaspadMessagePayload::Ready(_) => KaspadMessagePayloadType::Ready,
-            KaspadMessagePayload::BlockWithTrustedDataV4(_) => KaspadMessagePayloadType::BlockWithTrustedDataV4,
-            KaspadMessagePayload::TrustedData(_) => KaspadMessagePayloadType::TrustedData,
-            KaspadMessagePayload::RequestIbdChainBlockLocator(_) => KaspadMessagePayloadType::RequestIbdChainBlockLocator,
-            KaspadMessagePayload::IbdChainBlockLocator(_) => KaspadMessagePayloadType::IbdChainBlockLocator,
-            KaspadMessagePayload::RequestAntipast(_) => KaspadMessagePayloadType::RequestAntipast,
-            KaspadMessagePayload::RequestNextPruningPointAndItsAnticoneBlocks(_) => {
-                KaspadMessagePayloadType::RequestNextPruningPointAndItsAnticoneBlocks
+            KashdMessagePayload::BlockWithTrustedData(_) => KashdMessagePayloadType::BlockWithTrustedData,
+            KashdMessagePayload::DoneBlocksWithTrustedData(_) => KashdMessagePayloadType::DoneBlocksWithTrustedData,
+            KashdMessagePayload::RequestPruningPointAndItsAnticone(_) => KashdMessagePayloadType::RequestPruningPointAndItsAnticone,
+            KashdMessagePayload::BlockHeaders(_) => KashdMessagePayloadType::BlockHeaders,
+            KashdMessagePayload::RequestNextHeaders(_) => KashdMessagePayloadType::RequestNextHeaders,
+            KashdMessagePayload::DoneHeaders(_) => KashdMessagePayloadType::DoneHeaders,
+            KashdMessagePayload::RequestPruningPointUtxoSet(_) => KashdMessagePayloadType::RequestPruningPointUtxoSet,
+            KashdMessagePayload::RequestHeaders(_) => KashdMessagePayloadType::RequestHeaders,
+            KashdMessagePayload::RequestBlockLocator(_) => KashdMessagePayloadType::RequestBlockLocator,
+            KashdMessagePayload::PruningPoints(_) => KashdMessagePayloadType::PruningPoints,
+            KashdMessagePayload::RequestPruningPointProof(_) => KashdMessagePayloadType::RequestPruningPointProof,
+            KashdMessagePayload::PruningPointProof(_) => KashdMessagePayloadType::PruningPointProof,
+            KashdMessagePayload::Ready(_) => KashdMessagePayloadType::Ready,
+            KashdMessagePayload::BlockWithTrustedDataV4(_) => KashdMessagePayloadType::BlockWithTrustedDataV4,
+            KashdMessagePayload::TrustedData(_) => KashdMessagePayloadType::TrustedData,
+            KashdMessagePayload::RequestIbdChainBlockLocator(_) => KashdMessagePayloadType::RequestIbdChainBlockLocator,
+            KashdMessagePayload::IbdChainBlockLocator(_) => KashdMessagePayloadType::IbdChainBlockLocator,
+            KashdMessagePayload::RequestAntipast(_) => KashdMessagePayloadType::RequestAntipast,
+            KashdMessagePayload::RequestNextPruningPointAndItsAnticoneBlocks(_) => {
+                KashdMessagePayloadType::RequestNextPruningPointAndItsAnticoneBlocks
             }
         }
     }

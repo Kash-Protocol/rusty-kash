@@ -1,7 +1,7 @@
 {
-  "name": "kaspa-os",
+  "name": "kash-os",
   "main": "index.js",
-  "description": "Kaspa OS",
+  "description": "Kash OS",
   "version": "0.1.0",
   "chromium-args": "--disable-background-timer-throttling"
 }

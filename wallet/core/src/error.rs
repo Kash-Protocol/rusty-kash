@@ -1,9 +1,9 @@
 use base64::DecodeError;
 use downcast::DowncastError;
-use kaspa_bip32::Error as BIP32Error;
-use kaspa_consensus_core::sign::Error as CoreSignError;
-use kaspa_rpc_core::RpcError as KaspaRpcError;
-use kaspa_wrpc_client::error::Error as KaspaWorkflowRpcError;
+use kash_bip32::Error as BIP32Error;
+use kash_consensus_core::sign::Error as CoreSignError;
+use kash_rpc_core::RpcError as KashRpcError;
+use kash_wrpc_client::error::Error as KashWorkflowRpcError;
 use std::sync::PoisonError;
 use wasm_bindgen::JsValue;
 use workflow_core::abortable::Aborted;
@@ -23,13 +23,13 @@ pub enum Error {
     AccountSelection,
 
     #[error("{0}")]
-    KaspaRpcClientResult(#[from] KaspaRpcError),
+    KashRpcClientResult(#[from] KashRpcError),
 
     #[error("wRPC -> {0}")]
     RpcError(#[from] RpcError),
 
     #[error("Wallet wRPC -> {0}")]
-    KaspaWorkflowRpcError(#[from] KaspaWorkflowRpcError),
+    KashWorkflowRpcError(#[from] KashWorkflowRpcError),
 
     #[error("Bip32 -> {0}")]
     BIP32Error(#[from] BIP32Error),
@@ -86,10 +86,10 @@ pub enum Error {
     NetworkTypeConnected,
 
     #[error("{0}")]
-    NetworkType(#[from] kaspa_consensus_core::network::NetworkTypeError),
+    NetworkType(#[from] kash_consensus_core::network::NetworkTypeError),
 
     #[error("{0}")]
-    NetworkId(#[from] kaspa_consensus_core::network::NetworkIdError),
+    NetworkId(#[from] kash_consensus_core::network::NetworkIdError),
 
     #[error("The server UTXO index is not enabled")]
     MissingUtxoIndex,
@@ -113,7 +113,7 @@ pub enum Error {
     WorkflowStore(#[from] workflow_store::error::Error),
 
     #[error(transparent)]
-    Address(#[from] kaspa_addresses::AddressError),
+    Address(#[from] kash_addresses::AddressError),
 
     #[error("Serde WASM bindgen -> {0}")]
     SerdeWasmBindgen(Sendable<Printable>),
@@ -131,7 +131,7 @@ pub enum Error {
     FromUtf8Error(#[from] std::string::FromUtf8Error),
 
     #[error(transparent)]
-    ScriptBuilderError(#[from] kaspa_txscript::script_builder::ScriptBuilderError),
+    ScriptBuilderError(#[from] kash_txscript::script_builder::ScriptBuilderError),
 
     #[error("argon2 -> {0}")]
     Argon2(argon2::Error),
@@ -200,7 +200,7 @@ pub enum Error {
     DowncastError(String),
 
     #[error(transparent)]
-    ConsensusWasm(#[from] kaspa_consensus_wasm::error::Error),
+    ConsensusWasm(#[from] kash_consensus_wasm::error::Error),
 
     #[error("Fees::Include or Fees::Exclude are not allowed in sweep transactions")]
     GeneratorFeesInSweepTransaction,
@@ -218,10 +218,10 @@ pub enum Error {
     GeneratorTransactionIsTooHeavy,
 
     #[error(transparent)]
-    MultisigCreateError(#[from] kaspa_txscript::MultisigCreateError),
+    MultisigCreateError(#[from] kash_txscript::MultisigCreateError),
 
     #[error(transparent)]
-    TxScriptError(#[from] kaspa_txscript_errors::TxScriptError),
+    TxScriptError(#[from] kash_txscript_errors::TxScriptError),
 }
 
 impl From<Aborted> for Error {

@@ -1,6 +1,6 @@
 [package]
-name = "kaspa-index-processor"
-description = "Kaspa index processor"
+name = "kash-index-processor"
+description = "Kash index processor"
 version.workspace = true
 edition.workspace = true
 authors.workspace = true
@@ -8,16 +8,16 @@ include.workspace = true
 license.workspace = true
 
 [dependencies]
-kaspa-consensus-core.workspace = true
-kaspa-consensus-notify.workspace = true
-kaspa-consensusmanager.workspace = true
-kaspa-core.workspace = true
-kaspa-database.workspace = true
-kaspa-hashes.workspace = true
-kaspa-index-core.workspace = true
-kaspa-notify.workspace = true
-kaspa-utils.workspace = true
-kaspa-utxoindex.workspace = true
+kash-consensus-core.workspace = true
+kash-consensus-notify.workspace = true
+kash-consensusmanager.workspace = true
+kash-core.workspace = true
+kash-database.workspace = true
+kash-hashes.workspace = true
+kash-index-core.workspace = true
+kash-notify.workspace = true
+kash-utils.workspace = true
+kash-utxoindex.workspace = true
 
 async-channel.workspace = true
 async-trait.workspace = true
@@ -30,7 +30,7 @@ tokio = { workspace = true, features = [ "rt-multi-thread", "macros", "signal" ]
 triggered.workspace = true
 
 [dev-dependencies]
-kaspa-consensus.workspace = true
+kash-consensus.workspace = true
 parking_lot.workspace = true
 tokio = { workspace = true, features = ["rt", "macros"] }
 rand = {workspace = true,  features = [ "small_rng" ]}

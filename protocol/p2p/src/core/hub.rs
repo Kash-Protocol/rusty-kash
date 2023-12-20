@@ -1,5 +1,5 @@
-use crate::{common::ProtocolError, pb::KaspadMessage, ConnectionInitializer, Peer, Router};
-use kaspa_core::{debug, info, warn};
+use crate::{common::ProtocolError, pb::KashdMessage, ConnectionInitializer, Peer, Router};
+use kash_core::{debug, info, warn};
 use parking_lot::RwLock;
 use std::{
     collections::{hash_map::Entry::Occupied, HashMap},
@@ -85,7 +85,7 @@ impl Hub {
     }
 
     /// Send a message to a specific peer
-    pub async fn send(&self, peer_key: PeerKey, msg: KaspadMessage) -> Result<bool, ProtocolError> {
+    pub async fn send(&self, peer_key: PeerKey, msg: KashdMessage) -> Result<bool, ProtocolError> {
         let op = self.peers.read().get(&peer_key).cloned();
         if let Some(router) = op {
             router.enqueue(msg).await?;
@@ -96,7 +96,7 @@ impl Hub {
     }
 
     /// Broadcast a message to all peers
-    pub async fn broadcast(&self, msg: KaspadMessage) {
+    pub async fn broadcast(&self, msg: KashdMessage) {
         let peers = self.peers.read().values().cloned().collect::<Vec<_>>();
         for router in peers {
             let _ = router.enqueue(msg.clone()).await;
@@ -104,7 +104,7 @@ impl Hub {
     }
 
     /// Broadcast a vector of messages to all peers
-    pub async fn broadcast_many(&self, msgs: Vec<KaspadMessage>) {
+    pub async fn broadcast_many(&self, msgs: Vec<KashdMessage>) {
         if msgs.is_empty() {
             return;
         }

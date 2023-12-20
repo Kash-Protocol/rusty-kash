@@ -38,7 +38,7 @@ use crate::{
     },
     processes::window::{WindowManager, WindowType},
 };
-use kaspa_consensus_core::{
+use kash_consensus_core::{
     acceptance_data::AcceptanceData,
     api::{BlockValidationFutures, ConsensusApi},
     block::{Block, BlockTemplate, TemplateBuildMode, TemplateTransactionSelector, VirtualStateApproxId},
@@ -61,18 +61,18 @@ use kaspa_consensus_core::{
     tx::{MutableTransaction, Transaction, TransactionOutpoint, UtxoEntry},
     BlockHashSet, BlueWorkType, ChainPath,
 };
-use kaspa_consensus_notify::root::ConsensusNotificationRoot;
+use kash_consensus_notify::root::ConsensusNotificationRoot;
 
 use crossbeam_channel::{
     bounded as bounded_crossbeam, unbounded as unbounded_crossbeam, Receiver as CrossbeamReceiver, Sender as CrossbeamSender,
 };
 use itertools::Itertools;
-use kaspa_consensusmanager::{SessionLock, SessionReadGuard};
+use kash_consensusmanager::{SessionLock, SessionReadGuard};
 
-use kaspa_database::prelude::StoreResultExtensions;
-use kaspa_hashes::Hash;
-use kaspa_muhash::MuHash;
-use kaspa_txscript::caches::TxScriptCacheCounters;
+use kash_database::prelude::StoreResultExtensions;
+use kash_hashes::Hash;
+use kash_muhash::MuHash;
+use kash_txscript::caches::TxScriptCacheCounters;
 
 use std::thread::{self, JoinHandle};
 use std::{
@@ -511,8 +511,8 @@ impl ConsensusApi for Consensus {
         // Part 1: Add samples from pruning point headers:
         if self.config.net.network_type == NetworkType::Mainnet {
             // For mainnet, we add extra data (16 pp headers) from before checkpoint genesis.
-            // Source: https://github.com/kaspagang/kaspad-py-explorer/blob/main/src/tx_timestamp_estimation.ipynb
-            // For context see also: https://github.com/kaspagang/kaspad-py-explorer/blob/main/src/genesis_proof.ipynb
+            // Source: https://github.com/kashgang/kashd-py-explorer/blob/main/src/tx_timestamp_estimation.ipynb
+            // For context see also: https://github.com/kashgang/kashd-py-explorer/blob/main/src/genesis_proof.ipynb
             const POINTS: &[DaaScoreTimestamp] = &[
                 DaaScoreTimestamp { daa_score: 0, timestamp: 1636298787842 },
                 DaaScoreTimestamp { daa_score: 87133, timestamp: 1636386662010 },

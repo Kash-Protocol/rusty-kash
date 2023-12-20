@@ -1,6 +1,6 @@
 [package]
-name = "kaspa-txscript"
-description = "Kaspa txscript engine library"
+name = "kash-txscript"
+description = "Kash txscript engine library"
 version.workspace = true
 edition.workspace = true
 authors.workspace = true
@@ -12,10 +12,10 @@ blake2b_simd.workspace = true
 borsh.workspace = true
 indexmap.workspace = true
 itertools.workspace = true
-kaspa-addresses.workspace = true
-kaspa-consensus-core.workspace = true
-kaspa-hashes.workspace = true
-kaspa-txscript-errors.workspace = true
+kash-addresses.workspace = true
+kash-consensus-core.workspace = true
+kash-hashes.workspace = true
+kash-txscript-errors.workspace = true
 log.workspace = true
 parking_lot.workspace = true
 rand.workspace = true
