@@ -36,8 +36,8 @@ extern "C" {
 ///
 /// let generator = new Generator({
 ///     utxoEntries : [...],
-///     changeAddress : "kaspa:...",
-///     outputs : [[1000, "kaspa:..."], [2000, "kaspa:..."], ...],
+///     changeAddress : "kash:...",
+///     outputs : [[1000, "kash:..."], [2000, "kash:..."], ...],
 ///     priorityFee : 1000n,
 /// });
 ///

@@ -20,16 +20,16 @@ use crate::{
     MiningCounters,
 };
 use itertools::Itertools;
-use kaspa_consensus_core::{
+use kash_consensus_core::{
     api::ConsensusApi,
     block::{BlockTemplate, TemplateBuildMode},
     coinbase::MinerData,
     errors::{block::RuleError as BlockRuleError, tx::TxRuleError},
     tx::{MutableTransaction, Transaction, TransactionId, TransactionOutput},
 };
-use kaspa_consensusmanager::{spawn_blocking, ConsensusProxy};
-use kaspa_core::{debug, error, info, time::Stopwatch, warn};
-use kaspa_mining_errors::{manager::MiningManagerError, mempool::RuleError};
+use kash_consensusmanager::{spawn_blocking, ConsensusProxy};
+use kash_core::{debug, error, info, time::Stopwatch, warn};
+use kash_mining_errors::{manager::MiningManagerError, mempool::RuleError};
 use parking_lot::RwLock;
 use std::sync::Arc;
 use tokio::sync::mpsc::UnboundedSender;
@@ -177,7 +177,7 @@ impl MiningManager {
                             // Original golang comment:
                             // mempool.remove_transactions might return errors in situations that are perfectly fine in this context.
                             // TODO: Once the mempool invariants are clear, this might return an error:
-                            // https://github.com/kaspanet/kaspad/issues/1553
+                            // https://github.com/Kash-Protocol/kashd/issues/1553
                             // NOTE: unlike golang, here we continue removing also if an error was found
                             error!("Error from mempool.remove_transactions: {:?}", err);
                         }

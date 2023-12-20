@@ -3,9 +3,9 @@ use crate::{
     flow_trait::Flow,
     flowcontext::transactions::MAX_INV_PER_TX_INV_MSG,
 };
-use kaspa_consensus_core::tx::{Transaction, TransactionId};
-use kaspa_consensusmanager::ConsensusProxy;
-use kaspa_mining::{
+use kash_consensus_core::tx::{Transaction, TransactionId};
+use kash_consensusmanager::ConsensusProxy;
+use kash_mining::{
     errors::MiningManagerError,
     mempool::{
         errors::RuleError,
@@ -13,10 +13,10 @@ use kaspa_mining::{
     },
     model::tx_query::TransactionQuery,
 };
-use kaspa_p2p_lib::{
+use kash_p2p_lib::{
     common::{ProtocolError, DEFAULT_TIMEOUT},
     dequeue, make_message,
-    pb::{kaspad_message::Payload, RequestTransactionsMessage, TransactionNotFoundMessage},
+    pb::{kashd_message::Payload, RequestTransactionsMessage, TransactionNotFoundMessage},
     IncomingRoute, Router,
 };
 use std::sync::Arc;
@@ -68,7 +68,7 @@ impl RelayTransactionsFlow {
 
     pub fn invs_channel_size() -> usize {
         // TODO: reevaluate when the node is fully functional and later when the network tx rate increases
-        // Note: in go-kaspad we have 10,000 for this channel combined with tx channel.
+        // Note: in go-kashd we have 10,000 for this channel combined with tx channel.
         8192
     }
 
@@ -192,7 +192,7 @@ impl RelayTransactionsFlow {
                 Err(MiningManagerError::MempoolError(RuleError::RejectSpamTransaction(_))) => {
                     self.spam_counter += 1;
                     if self.spam_counter % 100 == 0 {
-                        kaspa_core::warn!("Peer {} has shared {} spam txs", self.router, self.spam_counter);
+                        kash_core::warn!("Peer {} has shared {} spam txs", self.router, self.spam_counter);
                     }
                 }
                 Err(_) => {}

@@ -31,7 +31,7 @@ mod tests {
     use crate::secret::Secret;
     use crate::storage::local::Payload;
     use crate::storage::local::Wallet;
-    use kaspa_bip32::{Language, Mnemonic};
+    use kash_bip32::{Language, Mnemonic};
     use std::sync::Arc;
 
     #[tokio::test]

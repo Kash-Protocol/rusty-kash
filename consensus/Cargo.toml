@@ -1,6 +1,6 @@
 [package]
-name = "kaspa-consensus"
-description = "Kaspa consensus library"
+name = "kash-consensus"
+description = "Kash consensus library"
 version.workspace = true
 edition.workspace = true
 authors.workspace = true
@@ -15,19 +15,19 @@ faster-hex.workspace = true
 futures-util.workspace = true
 indexmap.workspace = true
 itertools.workspace = true
-kaspa-consensus-core.workspace = true
-kaspa-consensus-notify.workspace = true
-kaspa-consensusmanager.workspace = true
-kaspa-core.workspace = true
-kaspa-database.workspace = true
-kaspa-hashes.workspace = true
-kaspa-math.workspace = true
-kaspa-merkle.workspace = true
-kaspa-muhash.workspace = true
-kaspa-notify.workspace = true
-kaspa-pow.workspace = true
-kaspa-txscript.workspace = true
-kaspa-utils.workspace = true
+kash-consensus-core.workspace = true
+kash-consensus-notify.workspace = true
+kash-consensusmanager.workspace = true
+kash-core.workspace = true
+kash-database.workspace = true
+kash-hashes.workspace = true
+kash-math.workspace = true
+kash-merkle.workspace = true
+kash-muhash.workspace = true
+kash-notify.workspace = true
+kash-pow.workspace = true
+kash-txscript.workspace = true
+kash-utils.workspace = true
 log.workspace = true
 once_cell.workspace = true
 parking_lot.workspace = true
@@ -49,7 +49,7 @@ criterion.workspace = true
 serde_json.workspace = true
 flate2.workspace = true
 rand_distr.workspace = true
-kaspa-txscript-errors.workspace = true
+kash-txscript-errors.workspace = true
 
 [[bench]]
 name = "hash_benchmarks"
@@ -57,4 +57,4 @@ harness = false
 
 [features]
 html_reports = []
-devnet-prealloc = ["kaspa-consensus-core/devnet-prealloc"]
+devnet-prealloc = ["kash-consensus-core/devnet-prealloc"]

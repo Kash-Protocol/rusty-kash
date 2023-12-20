@@ -1,19 +1,19 @@
 use crate::{processor::Processor, IDENT};
-use kaspa_consensus_notify::{
+use kash_consensus_notify::{
     connection::ConsensusChannelConnection, notification::Notification as ConsensusNotification, notifier::ConsensusNotifier,
 };
-use kaspa_core::{
+use kash_core::{
     task::service::{AsyncService, AsyncServiceError, AsyncServiceFuture},
     trace, warn,
 };
-use kaspa_index_core::notifier::IndexNotifier;
-use kaspa_notify::{
+use kash_index_core::notifier::IndexNotifier;
+use kash_notify::{
     connection::ChannelType,
     events::{EventSwitches, EventType},
     scope::{PruningPointUtxoSetOverrideScope, Scope, UtxosChangedScope},
 };
-use kaspa_utils::{channel::Channel, triggers::SingleTrigger};
-use kaspa_utxoindex::api::UtxoIndexProxy;
+use kash_utils::{channel::Channel, triggers::SingleTrigger};
+use kash_utxoindex::api::UtxoIndexProxy;
 use std::sync::Arc;
 
 const INDEX_SERVICE: &str = IDENT;

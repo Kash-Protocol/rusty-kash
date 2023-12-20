@@ -1,10 +1,10 @@
 use std::sync::Arc;
 
-use kaspa_database::prelude::StoreResult;
-use kaspa_database::prelude::DB;
-use kaspa_database::prelude::{BatchDbWriter, CachedDbItem};
-use kaspa_database::registry::DatabaseStorePrefixes;
-use kaspa_hashes::Hash;
+use kash_database::prelude::StoreResult;
+use kash_database::prelude::DB;
+use kash_database::prelude::{BatchDbWriter, CachedDbItem};
+use kash_database::registry::DatabaseStorePrefixes;
+use kash_hashes::Hash;
 use rocksdb::WriteBatch;
 
 use super::utxo_set::DbUtxoSetStore;

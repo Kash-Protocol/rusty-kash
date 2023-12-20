@@ -120,11 +120,11 @@ jobs:
       - name: Run cargo doc tests
         run: cargo test --doc --release --workspace
 
-      - name: Run cargo test on kaspa-hashes without asm
-        run: cargo nextest run --release -p kaspa-hashes --features=no-asm --benches
+      - name: Run cargo test on kash-hashes without asm
+        run: cargo nextest run --release -p kash-hashes --features=no-asm --benches
 
-      - name: Run cargo doc tests with features=no-asm on kaspa-hashes
-        run: cargo test --doc --release -p kaspa-hashes --features=no-asm
+      - name: Run cargo doc tests with features=no-asm on kash-hashes
+        run: cargo test --doc --release -p kash-hashes --features=no-asm
 
   # test-release:
   #   name: Test Suite Release
@@ -264,14 +264,14 @@ jobs:
 
       # append here any new wasm32 crate not already covered by the existing checks
 
-      - name: Run cargo check of kaspa-wrpc-wasm for wasm32 target
-        run: cargo clippy -p kaspa-wrpc-wasm --target wasm32-unknown-unknown
+      - name: Run cargo check of kash-wrpc-wasm for wasm32 target
+        run: cargo clippy -p kash-wrpc-wasm --target wasm32-unknown-unknown
 
-      - name: Run cargo check of kaspa-wallet-cli-wasm for wasm32 target
-        run: cargo clippy -p kaspa-wallet-cli-wasm --target wasm32-unknown-unknown
+      - name: Run cargo check of kash-wallet-cli-wasm for wasm32 target
+        run: cargo clippy -p kash-wallet-cli-wasm --target wasm32-unknown-unknown
 
-      - name: Run cargo check of kaspa-wasm for wasm32 target
-        run: cargo clippy -p kaspa-wasm --target wasm32-unknown-unknown
+      - name: Run cargo check of kash-wasm for wasm32 target
+        run: cargo clippy -p kash-wasm --target wasm32-unknown-unknown
 
   build-wasm32:
     name: Build Wasm32
@@ -329,7 +329,7 @@ jobs:
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
 
       - name: Build wasm pack for nodejs
-        run: cd wasm && wasm-pack build --target nodejs --out-dir nodejs/kaspa --features full
+        run: cd wasm && wasm-pack build --target nodejs --out-dir nodejs/kash --features full
 
   build-release:
     name: Build Ubuntu Release
@@ -366,4 +366,4 @@ jobs:
         # We're using musl to make the binaries statically linked and portable
         run: |
           cargo install cargo-zigbuild
-          cargo --verbose zigbuild --bin kaspad --bin simpa --bin rothschild --release --target x86_64-unknown-linux-gnu.2.27 # Use an older glibc version
+          cargo --verbose zigbuild --bin kashd --bin simpa --bin rothschild --release --target x86_64-unknown-linux-gnu.2.27 # Use an older glibc version

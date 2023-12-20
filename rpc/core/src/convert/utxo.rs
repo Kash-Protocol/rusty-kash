@@ -1,8 +1,8 @@
 use crate::RpcUtxosByAddressesEntry;
-use kaspa_addresses::Prefix;
-use kaspa_consensus_core::tx::UtxoEntry;
-use kaspa_index_core::indexed_utxos::UtxoSetByScriptPublicKey;
-use kaspa_txscript::extract_script_pub_key_address;
+use kash_addresses::Prefix;
+use kash_consensus_core::tx::UtxoEntry;
+use kash_index_core::indexed_utxos::UtxoSetByScriptPublicKey;
+use kash_txscript::extract_script_pub_key_address;
 
 // ----------------------------------------------------------------------------
 // index to rpc_core

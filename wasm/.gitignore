@@ -3,7 +3,7 @@ Cargo.lock
 analyzer-target
 /web/node_modules
 package-lock.json
-/nodejs/kaspa-wallet
+/nodejs/kash-wallet
 /nodejs/node_modules
 /nodejs/package-lock.json
 /setup

@@ -94,8 +94,8 @@ pub fn try_init_logger(filters: &str) {
 #[macro_export]
 macro_rules! trace {
     ($($t:tt)*) => {
-        if kaspa_core::log::log_level_enabled(log::Level::Trace) {
-            kaspa_core::console::log(&format_args!($($t)*).to_string());
+        if kash_core::log::log_level_enabled(log::Level::Trace) {
+            kash_core::console::log(&format_args!($($t)*).to_string());
         }
     };
 }
@@ -112,8 +112,8 @@ macro_rules! trace {
 #[macro_export]
 macro_rules! debug {
     ($($t:tt)*) => (
-        if kaspa_core::log::log_level_enabled(log::Level::Debug) {
-            kaspa_core::console::log(&format_args!($($t)*).to_string());
+        if kash_core::log::log_level_enabled(log::Level::Debug) {
+            kash_core::console::log(&format_args!($($t)*).to_string());
         }
     )
 }
@@ -130,8 +130,8 @@ macro_rules! debug {
 #[macro_export]
 macro_rules! info {
     ($($t:tt)*) => (
-        if kaspa_core::log::log_level_enabled(log::Level::Info) {
-            kaspa_core::console::log(&format_args!($($t)*).to_string());
+        if kash_core::log::log_level_enabled(log::Level::Info) {
+            kash_core::console::log(&format_args!($($t)*).to_string());
         }
     )
 }
@@ -148,8 +148,8 @@ macro_rules! info {
 #[macro_export]
 macro_rules! warn {
     ($($t:tt)*) => (
-        if kaspa_core::log::log_level_enabled(log::Level::Warn) {
-            kaspa_core::console::warn(&format_args!($($t)*).to_string());
+        if kash_core::log::log_level_enabled(log::Level::Warn) {
+            kash_core::console::warn(&format_args!($($t)*).to_string());
         }
     )
 }
@@ -166,8 +166,8 @@ macro_rules! warn {
 #[macro_export]
 macro_rules! error {
     ($($t:tt)*) => (
-        if kaspa_core::log::log_level_enabled(log::Level::Error) {
-            kaspa_core::console::error(&format_args!($($t)*).to_string());
+        if kash_core::log::log_level_enabled(log::Level::Error) {
+            kash_core::console::error(&format_args!($($t)*).to_string());
         }
     )
 }

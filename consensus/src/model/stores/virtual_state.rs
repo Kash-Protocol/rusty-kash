@@ -1,15 +1,15 @@
 use std::sync::Arc;
 
-use kaspa_consensus_core::{
+use kash_consensus_core::{
     block::VirtualStateApproxId, coinbase::BlockRewardData, config::genesis::GenesisBlock, tx::TransactionId,
     utxo::utxo_diff::UtxoDiff, BlockHashMap, BlockHashSet, HashMapCustomHasher,
 };
-use kaspa_database::prelude::StoreResult;
-use kaspa_database::prelude::{BatchDbWriter, CachedDbItem, DirectDbWriter};
-use kaspa_database::prelude::{StoreError, DB};
-use kaspa_database::registry::DatabaseStorePrefixes;
-use kaspa_hashes::Hash;
-use kaspa_muhash::MuHash;
+use kash_database::prelude::StoreResult;
+use kash_database::prelude::{BatchDbWriter, CachedDbItem, DirectDbWriter};
+use kash_database::prelude::{StoreError, DB};
+use kash_database::registry::DatabaseStorePrefixes;
+use kash_hashes::Hash;
+use kash_muhash::MuHash;
 use rocksdb::WriteBatch;
 use serde::{Deserialize, Serialize};
 

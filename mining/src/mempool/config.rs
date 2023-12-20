@@ -1,4 +1,4 @@
-use kaspa_consensus_core::constants::TX_VERSION;
+use kash_consensus_core::constants::TX_VERSION;
 
 pub(crate) const DEFAULT_MAXIMUM_TRANSACTION_COUNT: u64 = 1_000_000;
 pub(crate) const DEFAULT_MAXIMUM_READY_TRANSACTION_COUNT: u64 = 100_000;
@@ -13,7 +13,7 @@ pub(crate) const DEFAULT_ORPHAN_EXPIRE_SCAN_INTERVAL_SECONDS: u64 = 10;
 
 pub(crate) const DEFAULT_MAXIMUM_ORPHAN_TRANSACTION_MASS: u64 = 100_000;
 
-// TODO: when rusty-kaspa nodes run most of the network, consider increasing this value
+// TODO: when rusty-kash nodes run most of the network, consider increasing this value
 pub(crate) const DEFAULT_MAXIMUM_ORPHAN_TRANSACTION_COUNT: u64 = 50;
 
 /// DEFAULT_MINIMUM_RELAY_TRANSACTION_FEE specifies the minimum transaction fee for a transaction to be accepted to
@@ -97,7 +97,7 @@ impl Config {
     }
 
     /// Build a default config.
-    /// The arguments should be obtained from the current consensus [`kaspa_consensus_core::config::params::Params`] instance.
+    /// The arguments should be obtained from the current consensus [`kash_consensus_core::config::params::Params`] instance.
     pub const fn build_default(target_milliseconds_per_block: u64, relay_non_std_transactions: bool, max_block_mass: u64) -> Self {
         Self {
             maximum_transaction_count: DEFAULT_MAXIMUM_TRANSACTION_COUNT,
@@ -126,7 +126,7 @@ impl Config {
     }
 
     /// Build a default config with optional spam blocking.
-    /// The arguments should be obtained from the current consensus [`kaspa_consensus_core::config::params::Params`] instance.
+    /// The arguments should be obtained from the current consensus [`kash_consensus_core::config::params::Params`] instance.
     pub const fn build_default_with_spam_blocking_option(
         block_spam_txs: bool,
         target_milliseconds_per_block: u64,

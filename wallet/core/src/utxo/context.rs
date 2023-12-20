@@ -8,7 +8,7 @@ use crate::tx::PendingTransaction;
 use crate::utxo::{
     PendingUtxoEntryReference, UtxoContextBinding, UtxoEntryId, UtxoEntryReference, UtxoEntryReferenceExtension, UtxoProcessor,
 };
-use kaspa_hashes::Hash;
+use kash_hashes::Hash;
 use sorted_insert::SortedInsertBinaryByKey;
 
 static PROCESSOR_ID_SEQUENCER: AtomicU64 = AtomicU64::new(0);

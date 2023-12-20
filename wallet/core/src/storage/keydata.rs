@@ -3,7 +3,7 @@ use crate::imports::*;
 use crate::result::Result;
 use crate::secret::Secret;
 use faster_hex::{hex_decode, hex_string};
-use kaspa_bip32::{ExtendedPrivateKey, ExtendedPublicKey, Language, Mnemonic};
+use kash_bip32::{ExtendedPrivateKey, ExtendedPublicKey, Language, Mnemonic};
 use secp256k1::SecretKey;
 use serde::Serializer;
 use std::collections::HashMap;
@@ -85,8 +85,8 @@ impl Zeroize for KeyDataId {
 pub type PrvKeyDataId = KeyDataId;
 pub type PrvKeyDataMap = HashMap<PrvKeyDataId, PrvKeyData>;
 
-/// Indicates key capabilities in the context of Kaspa
-/// core (kaspa-wallet) or legacy (KDX/PWA) wallets.
+/// Indicates key capabilities in the context of Kash
+/// core (kash-wallet) or legacy (KDX/PWA) wallets.
 /// The setting is based on the type of key import.
 #[derive(Clone, Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]

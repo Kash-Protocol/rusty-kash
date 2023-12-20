@@ -1,6 +1,6 @@
 [package]
-name = "kaspa-utils-tower"
-description = "Kaspa utilities and middleware for Tower HTTP"
+name = "kash-utils-tower"
+description = "Kash utilities and middleware for Tower HTTP"
 version.workspace = true
 edition.workspace = true
 authors.workspace = true

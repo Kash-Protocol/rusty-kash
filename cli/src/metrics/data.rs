@@ -57,7 +57,7 @@ impl Metric {
             | Metric::Difficulty
             | Metric::PastMedianTime
             | Metric::VirtualParentHashes
-            | Metric::VirtualDaaScore => "kaspa",
+            | Metric::VirtualDaaScore => "kash",
         }
     }
 }

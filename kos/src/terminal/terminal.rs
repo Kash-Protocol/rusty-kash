@@ -1,5 +1,5 @@
 use crate::imports::*;
-use kaspa_cli_lib::metrics::MetricsSnapshot;
+use kash_cli_lib::metrics::MetricsSnapshot;
 
 static mut TERMINAL: Option<Arc<Terminal>> = None;
 static mut SHUTDOWN_ATTEMPTS: usize = 0;
@@ -9,7 +9,7 @@ pub struct Terminal {
     pub inner: Arc<Application>,
     pub ipc: Arc<Ipc<TermOps>>,
     pub core: Arc<CoreIpc>,
-    pub cli: Arc<KaspaCli>,
+    pub cli: Arc<KashCli>,
     pub window: Arc<Window>,
     pub callbacks: CallbackMap,
     pub settings: Arc<SettingsStore<TerminalSettings>>,
@@ -23,7 +23,7 @@ impl Terminal {
         let core_ipc_target = get_ipc_target(Modules::Core).await?.expect("Unable to aquire background window");
         let core = Arc::new(CoreIpc::new(core_ipc_target));
         log_info!("-> creating daemon interface");
-        let daemons = Arc::new(Daemons::new().with_kaspad(core.clone()).with_cpu_miner(core.clone()));
+        let daemons = Arc::new(Daemons::new().with_kashd(core.clone()).with_cpu_miner(core.clone()));
 
         log_info!("-> loading settings");
         let settings = Arc::new(SettingsStore::<TerminalSettings>::try_new("terminal")?);
@@ -33,8 +33,8 @@ impl Terminal {
         let scrollback = settings.get::<u32>(TerminalSettings::Scrollback);
         log_info!("-> terminal cli init");
         let terminal_options = TerminalOptions { font_size, scrollback, ..TerminalOptions::default() };
-        let options = KaspaCliOptions::new(terminal_options, Some(daemons));
-        let cli = KaspaCli::try_new_arc(options).await?;
+        let options = KashCliOptions::new(terminal_options, Some(daemons));
+        let cli = KashCli::try_new_arc(options).await?;
 
         log_info!("-> getting local nw window");
         let window = Arc::new(nw_sys::window::get());
@@ -235,11 +235,11 @@ impl Terminal {
             let greeting = r"
 Hello Kaspian!
 
-If you have any questions, please join us on discord at https://discord.gg/kaspa
+If you have any questions, please join us on discord at https://discord.gg/kash
 
 If you are a first-time user, you can type 'guide' or 'help' to get started.
 
-Please note, this is an alpha software release of the Kaspa-OS; expect some bugs!
+Please note, this is an alpha software release of the Kash-OS; expect some bugs!
 
 ";
 
@@ -252,7 +252,7 @@ Please note, this is an alpha software release of the Kaspa-OS; expect some bugs
         } else {
             format!("{} Rust Core v{}", kos_current_version, framework_version)
         };
-        let banner = format!("Kaspa OS v{} (type 'help' for list of commands)", version);
+        let banner = format!("Kash OS v{} (type 'help' for list of commands)", version);
         self.cli.term().writeln(banner);
 
         log_info!("-> cli run ...");
@@ -275,7 +275,7 @@ Please note, this is an alpha software release of the Kaspa-OS; expect some bugs
 
 #[wasm_bindgen]
 pub async fn init_application() -> Result<()> {
-    kaspa_core::log::set_log_level(LevelFilter::Info);
+    kash_core::log::set_log_level(LevelFilter::Info);
     workflow_log::set_colors_enabled(true);
 
     let terminal = Terminal::try_new().await?;

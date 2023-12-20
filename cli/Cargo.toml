@@ -1,6 +1,6 @@
 [package]
-name = "kaspa-cli"
-description = "Kaspa CLI library"
+name = "kash-cli"
+description = "Kash CLI library"
 version.workspace = true
 edition.workspace = true
 authors.workspace = true
@@ -14,11 +14,11 @@ include = [
 ]
 
 [features]
-legacy-rpc = ["kaspa-wallet-core/legacy-rpc"]
+legacy-rpc = ["kash-wallet-core/legacy-rpc"]
 default = []
 
 [lib]
-name = "kaspa_cli_lib"
+name = "kash_cli_lib"
 crate-type = ["cdylib", "lib"]
 
 [dependencies]
@@ -31,15 +31,15 @@ downcast.workspace = true
 faster-hex.workspace = true
 futures.workspace = true
 js-sys.workspace = true
-kaspa-addresses.workspace = true
-kaspa-bip32.workspace = true
-kaspa-consensus-core.workspace = true
-kaspa-core.workspace = true
-kaspa-daemon.workspace = true
-kaspa-rpc-core.workspace = true
-kaspa-utils.workspace = true
-kaspa-wallet-core.workspace = true
-kaspa-wrpc-client.workspace = true
+kash-addresses.workspace = true
+kash-bip32.workspace = true
+kash-consensus-core.workspace = true
+kash-core.workspace = true
+kash-daemon.workspace = true
+kash-rpc-core.workspace = true
+kash-utils.workspace = true
+kash-wallet-core.workspace = true
+kash-wrpc-client.workspace = true
 nw-sys.workspace = true
 pad.workspace = true
 regex.workspace = true

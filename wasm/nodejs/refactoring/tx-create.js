@@ -1,6 +1,6 @@
 globalThis.WebSocket = require('websocket').w3cwebsocket; // W3C WebSocket module shim
 
-const kaspa = require('../kaspa/kaspa_wasm');
+const kash = require('../kash/kash_wasm');
 const { parseArgs, guardRpcIsSynced } = require("../utils");
 const {
     RpcClient, UtxoSet, Address, Encoding, UtxoOrdering,
@@ -15,8 +15,8 @@ const {
     minimumTransactionFee,
     adjustTransactionForFee,
     Sequence,
-} = kaspa;
-kaspa.init_console_panic_hook();
+} = kash;
+kash.init_console_panic_hook();
 
 (async () => {
     const {
@@ -33,7 +33,7 @@ kaspa.init_console_panic_hook();
 
     // let res = await rpc.getBlockTemplate({
     //     extraData:[],
-    //     payAddress:"kaspa:qrwee7xc2qw5whq8qzv82qjld6zunwy46lsy3hueej5kvgfwvamhswy03lsyh"
+    //     payAddress:"kash:qrwee7xc2qw5whq8qzv82qjld6zunwy46lsy3hueej5kvgfwvamhsfafs868v"
     // });
     // console.log("res", res.block.header.blueWork);
 
@@ -42,11 +42,11 @@ kaspa.init_console_panic_hook();
     const info = await rpc.getInfo();
     console.log("info", info);
 
-    const addr = address ?? "kaspatest:qz7ulu4c25dh7fzec9zjyrmlhnkzrg4wmf89q7gzr3gfrsj3uz6xjceef60sd";
+    const addr = address ?? "kashtest:qz7ulu4c25dh7fzec9zjyrmlhnkzrg4wmf89q7gzr3gfrsj3uz6xjtawge0mc";
 
     const addresses = [
         addr,
-        //new Address("kaspatest:qz7ulu4c25dh7fzec9zjyrmlhnkzrg4wmf89q7gzr3gfrsj3uz6xjceef60sd")
+        //new Address("kashtest:qz7ulu4c25dh7fzec9zjyrmlhnkzrg4wmf89q7gzr3gfrsj3uz6xjtawge0mc")
     ];
 
     console.log("\ngetting UTXOs...", addresses);
@@ -100,10 +100,10 @@ kaspa.init_console_panic_hook();
     console.log("utxoEntries:", utxoEntries.items);
 
     // let outputs = [
-    //     new kaspa.TransactionOutput(300n, new kaspa.ScriptPublicKey(0, keypair3.publicKey)),
+    //     new kash.TransactionOutput(300n, new kash.ScriptPublicKey(0, keypair3.publicKey)),
     //     {
     //         value: 300n,
-    //         scriptPublicKey : new kaspa.ScriptPublicKey(0, keypair3.publicKey)
+    //         scriptPublicKey : new kash.ScriptPublicKey(0, keypair3.publicKey)
     //     },
     // ];
 

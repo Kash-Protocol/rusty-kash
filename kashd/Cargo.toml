@@ -1,0 +1,54 @@
+[package]
+name = "kashd"
+description = "Kash full node daemon"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+include.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[lib]
+name = "kashd_lib"
+crate-type = ["cdylib", "lib"]
+
+[dependencies]
+kash-addresses.workspace = true
+kash-addressmanager.workspace = true
+kash-consensus-core.workspace = true
+kash-consensus-notify.workspace = true
+kash-consensus.workspace = true
+kash-consensusmanager.workspace = true
+kash-core.workspace = true
+kash-database.workspace = true
+kash-grpc-server.workspace = true
+kash-hashes.workspace = true
+kash-index-processor.workspace = true
+kash-mining.workspace = true
+kash-p2p-flows.workspace = true
+kash-perf-monitor.workspace = true
+kash-rpc-core.workspace = true
+kash-rpc-service.workspace = true
+kash-txscript.workspace = true
+kash-utils.workspace = true
+kash-utils-tower.workspace = true
+kash-utxoindex.workspace = true
+kash-wrpc-server.workspace = true
+
+async-channel.workspace = true
+clap.workspace = true
+dhat = { workspace = true, optional = true }
+dirs.workspace = true
+futures-util.workspace = true
+log.workspace = true
+num_cpus.workspace = true
+rand.workspace = true
+rayon.workspace = true
+tempfile.workspace = true
+thiserror.workspace = true
+tokio = { workspace = true, features = ["rt", "macros", "rt-multi-thread"] }
+workflow-log.workspace = true
+
+[features]
+heap = ["dhat"]
+devnet-prealloc = ["kash-consensus/devnet-prealloc"]

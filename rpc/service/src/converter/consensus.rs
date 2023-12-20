@@ -1,6 +1,6 @@
 use async_trait::async_trait;
-use kaspa_addresses::Address;
-use kaspa_consensus_core::{
+use kash_addresses::Address;
+use kash_consensus_core::{
     block::Block,
     config::Config,
     hashing::tx::hash,
@@ -8,17 +8,17 @@ use kaspa_consensus_core::{
     tx::{MutableTransaction, Transaction, TransactionId, TransactionInput, TransactionOutput},
     ChainPath,
 };
-use kaspa_consensus_notify::notification::{self as consensus_notify, Notification as ConsensusNotification};
-use kaspa_consensusmanager::{ConsensusManager, ConsensusProxy};
-use kaspa_math::Uint256;
-use kaspa_mining::model::{owner_txs::OwnerTransactions, TransactionIdSet};
-use kaspa_notify::converter::Converter;
-use kaspa_rpc_core::{
+use kash_consensus_notify::notification::{self as consensus_notify, Notification as ConsensusNotification};
+use kash_consensusmanager::{ConsensusManager, ConsensusProxy};
+use kash_math::Uint256;
+use kash_mining::model::{owner_txs::OwnerTransactions, TransactionIdSet};
+use kash_notify::converter::Converter;
+use kash_rpc_core::{
     BlockAddedNotification, Notification, RpcAcceptedTransactionIds, RpcBlock, RpcBlockVerboseData, RpcHash, RpcMempoolEntry,
     RpcMempoolEntryByAddress, RpcResult, RpcTransaction, RpcTransactionInput, RpcTransactionOutput, RpcTransactionOutputVerboseData,
     RpcTransactionVerboseData,
 };
-use kaspa_txscript::{extract_script_pub_key_address, script_class::ScriptClass};
+use kash_txscript::{extract_script_pub_key_address, script_class::ScriptClass};
 use std::{collections::HashMap, fmt::Debug, sync::Arc};
 
 /// Conversion of consensus_core to rpc_core structures
@@ -45,7 +45,7 @@ impl ConsensusConverter {
 
     /// Converts a consensus [`Block`] into an [`RpcBlock`], optionally including transaction verbose data.
     ///
-    /// _GO-KASPAD: PopulateBlockWithVerboseData_
+    /// _GO-KASHD: PopulateBlockWithVerboseData_
     pub async fn get_block(
         &self,
         consensus: &ConsensusProxy,
@@ -113,7 +113,7 @@ impl ConsensusConverter {
 
     /// Converts a consensus [`Transaction`] into an [`RpcTransaction`], optionally including verbose data.
     ///
-    /// _GO-KASPAD: PopulateTransactionWithVerboseData
+    /// _GO-KASHD: PopulateTransactionWithVerboseData
     pub fn get_transaction(
         &self,
         consensus: &ConsensusProxy,

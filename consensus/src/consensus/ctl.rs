@@ -1,6 +1,6 @@
 use super::{factory::MultiConsensusManagementStore, Consensus};
-use kaspa_consensusmanager::ConsensusCtl;
-use kaspa_database::prelude::DB;
+use kash_consensusmanager::ConsensusCtl;
+use kash_database::prelude::DB;
 use parking_lot::RwLock;
 use std::{
     path::PathBuf,

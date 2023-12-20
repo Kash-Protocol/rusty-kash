@@ -2,7 +2,7 @@ use crate::imports::*;
 use crate::input::TransactionInput;
 use crate::output::TransactionOutput;
 use crate::result::Result;
-use kaspa_consensus_core::subnets::{self, SubnetworkId};
+use kash_consensus_core::subnets::{self, SubnetworkId};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -20,7 +20,7 @@ pub struct TransactionInner {
     pub id: TransactionId,
 }
 
-/// Represents a Kaspa transaction
+/// Represents a Kash transaction
 #[derive(Clone, Debug, Serialize, Deserialize)]
 #[wasm_bindgen(inspectable)]
 pub struct Transaction {

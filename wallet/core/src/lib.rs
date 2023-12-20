@@ -1,5 +1,5 @@
 extern crate alloc;
-extern crate self as kaspa_wallet_core;
+extern crate self as kash_wallet_core;
 
 pub mod derivation;
 pub mod encryption;
@@ -20,8 +20,8 @@ pub mod wasm;
 
 pub use derivation::{AddressDerivationManager, AddressDerivationManagerTrait};
 pub use events::{Events, SyncState};
-pub use kaspa_addresses::{Address, Prefix as AddressPrefix};
-pub use kaspa_wrpc_client::client::{ConnectOptions, ConnectStrategy};
+pub use kash_addresses::{Address, Prefix as AddressPrefix};
+pub use kash_wrpc_client::client::{ConnectOptions, ConnectStrategy};
 pub use result::Result;
 pub use settings::{DefaultSettings, SettingsStore, SettingsStoreT, WalletSettings};
 

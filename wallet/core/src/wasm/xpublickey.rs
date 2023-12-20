@@ -1,8 +1,8 @@
 use crate::derivation::gen1::WalletDerivationManager;
 use crate::derivation::traits::WalletDerivationManagerTrait;
 use crate::Result;
-use kaspa_bip32::ExtendedPublicKey;
-use kaspa_bip32::{ExtendedPrivateKey, SecretKey};
+use kash_bip32::ExtendedPublicKey;
+use kash_bip32::{ExtendedPrivateKey, SecretKey};
 use std::str::FromStr;
 use wasm_bindgen::prelude::*;
 use workflow_wasm::serde::to_value;

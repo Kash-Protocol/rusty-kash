@@ -1,6 +1,6 @@
 use crate::imports::*;
 use crate::result::Result;
-use kaspa_txscript::script_builder::ScriptBuilder as Inner;
+use kash_txscript::script_builder::ScriptBuilder as Inner;
 
 ///
 ///  ScriptBuilder provides a facility for building custom scripts. It allows

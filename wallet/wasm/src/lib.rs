@@ -1,11 +1,11 @@
-use kaspa_cli_lib::kaspa_cli;
+use kash_cli_lib::kash_cli;
 use wasm_bindgen::prelude::*;
 use workflow_terminal::Options;
 use workflow_terminal::Result;
 
 #[wasm_bindgen]
-pub async fn load_kaspa_wallet_cli() -> Result<()> {
+pub async fn load_kash_wallet_cli() -> Result<()> {
     let options = Options { ..Options::default() };
-    kaspa_cli(options, None).await?;
+    kash_cli(options, None).await?;
     Ok(())
 }

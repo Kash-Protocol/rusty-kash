@@ -9,7 +9,7 @@ pub struct TransactionOutputInner {
     pub script_public_key: ScriptPublicKey,
 }
 
-/// Represents a Kaspad transaction output
+/// Represents a Kashd transaction output
 #[derive(Clone, Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 #[wasm_bindgen(inspectable)]

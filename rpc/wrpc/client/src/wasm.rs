@@ -2,11 +2,11 @@ use crate::error::Error;
 use crate::imports::*;
 use crate::result::Result;
 use js_sys::Array;
-use kaspa_addresses::{Address, AddressList};
-use kaspa_consensus_core::network::{wasm::Network, NetworkType};
-use kaspa_consensus_wasm::{SignableTransaction, Transaction};
-use kaspa_notify::notification::Notification as NotificationT;
-pub use kaspa_rpc_macros::{build_wrpc_wasm_bindgen_interface, build_wrpc_wasm_bindgen_subscriptions};
+use kash_addresses::{Address, AddressList};
+use kash_consensus_core::network::{wasm::Network, NetworkType};
+use kash_consensus_wasm::{SignableTransaction, Transaction};
+use kash_notify::notification::Notification as NotificationT;
+pub use kash_rpc_macros::{build_wrpc_wasm_bindgen_interface, build_wrpc_wasm_bindgen_subscriptions};
 pub use serde_wasm_bindgen::from_value;
 pub use workflow_wasm::serde::to_value;
 
@@ -24,12 +24,12 @@ pub struct Inner {
     notification_callback: Arc<Mutex<Option<NotificationSink>>>,
 }
 
-/// Kaspa RPC client
+/// Kash RPC client
 #[wasm_bindgen(inspectable)]
 #[derive(Clone)]
 pub struct RpcClient {
     #[wasm_bindgen(skip)]
-    pub client: Arc<KaspaRpcClient>,
+    pub client: Arc<KashRpcClient>,
     pub(crate) inner: Arc<Inner>,
 }
 
@@ -41,7 +41,7 @@ impl RpcClient {
         let url = if let Some(network_type) = network_type { Self::parse_url(url, encoding, network_type)? } else { url.to_string() };
 
         let rpc_client = RpcClient {
-            client: Arc::new(KaspaRpcClient::new(encoding, url.as_str()).unwrap_or_else(|err| panic!("{err}"))),
+            client: Arc::new(KashRpcClient::new(encoding, url.as_str()).unwrap_or_else(|err| panic!("{err}"))),
             inner: Arc::new(Inner {
                 notification_task: AtomicBool::new(false),
                 notification_ctl: DuplexChannel::oneshot(),
@@ -62,7 +62,7 @@ impl RpcClient {
         self.client.is_open()
     }
 
-    /// Connect to the Kaspa RPC server. This function starts a background
+    /// Connect to the Kash RPC server. This function starts a background
     /// task that connects and reconnects to the server if the connection
     /// is terminated.  Use [`disconnect()`] to terminate the connection.
     pub async fn connect(&self, args: JsValue) -> Result<()> {
@@ -73,7 +73,7 @@ impl RpcClient {
         Ok(())
     }
 
-    /// Disconnect from the Kaspa RPC server.
+    /// Disconnect from the Kash RPC server.
     pub async fn disconnect(&self) -> Result<()> {
         self.clear_notification_callback();
         self.stop_notification_task().await?;
@@ -107,7 +107,7 @@ impl RpcClient {
 }
 
 impl RpcClient {
-    pub fn new_with_rpc_client(client: Arc<KaspaRpcClient>) -> RpcClient {
+    pub fn new_with_rpc_client(client: Arc<KashRpcClient>) -> RpcClient {
         RpcClient {
             client,
             inner: Arc::new(Inner {
@@ -118,7 +118,7 @@ impl RpcClient {
         }
     }
 
-    pub fn client(&self) -> &Arc<KaspaRpcClient> {
+    pub fn client(&self) -> &Arc<KashRpcClient> {
         &self.client
     }
 
@@ -188,7 +188,7 @@ impl RpcClient {
     ///
     #[wasm_bindgen(js_name = parseUrl)]
     pub fn parse_url(url: &str, encoding: Encoding, network: Network) -> Result<String> {
-        let url_ = KaspaRpcClient::parse_url(Some(url.to_string()), encoding, network.try_into()?)?;
+        let url_ = KashRpcClient::parse_url(Some(url.to_string()), encoding, network.try_into()?)?;
         let url_ = url_.ok_or(Error::custom(format!("received a malformed URL: {url}")))?;
         Ok(url_)
     }

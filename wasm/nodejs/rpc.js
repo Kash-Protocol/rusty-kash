@@ -1,12 +1,12 @@
 globalThis.WebSocket = require('websocket').w3cwebsocket; // W3C WebSocket module shim
 
-const kaspa = require('./kaspa/kaspa_wasm');
+const kash = require('./kash/kash_wasm');
 const { parseArgs } = require("./utils");
 const {
     RpcClient
-} = kaspa;
+} = kash;
 
-kaspa.initConsolePanicHook();
+kash.initConsolePanicHook();
 
 const {
     networkId,

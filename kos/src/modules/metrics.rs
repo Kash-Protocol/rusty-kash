@@ -1,5 +1,5 @@
 use crate::imports::*;
-use kaspa_cli_lib::metrics::{metrics::MetricsSinkFn, Metrics as Inner};
+use kash_cli_lib::metrics::{metrics::MetricsSinkFn, Metrics as Inner};
 
 pub struct Metrics {
     inner: Arc<Inner>,
@@ -31,7 +31,7 @@ impl Handler for Metrics {
     }
 
     async fn handle(self: Arc<Self>, ctx: &Arc<dyn Context>, argv: Vec<String>, cmd: &str) -> cli::Result<()> {
-        let ctx = ctx.clone().downcast_arc::<KaspaCli>()?;
+        let ctx = ctx.clone().downcast_arc::<KashCli>()?;
         self.main(ctx, argv, cmd).await.map_err(|e| e.to_string())?;
         Ok(())
     }
@@ -46,7 +46,7 @@ impl Metrics {
         self.inner.unregister_sink();
     }
 
-    async fn main(self: Arc<Self>, ctx: Arc<KaspaCli>, mut argv: Vec<String>, _cmd: &str) -> Result<()> {
+    async fn main(self: Arc<Self>, ctx: Arc<KashCli>, mut argv: Vec<String>, _cmd: &str) -> Result<()> {
         if argv.is_empty() {
             self.inner.display_help(ctx, argv).await?;
             return Ok(());
@@ -82,7 +82,7 @@ impl Metrics {
         Ok(())
     }
 
-    pub async fn display_help(self: &Arc<Self>, ctx: Arc<KaspaCli>, _argv: Vec<String>) -> Result<()> {
+    pub async fn display_help(self: &Arc<Self>, ctx: Arc<KashCli>, _argv: Vec<String>) -> Result<()> {
         ctx.term().help(&[("open", "Open metrics window"), ("close", "Close metrics window")], None)?;
 
         Ok(())

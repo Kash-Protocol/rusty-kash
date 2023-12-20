@@ -1,11 +1,11 @@
-const kaspa = require('./kaspa/kaspa_wasm');
+const kash = require('./kash/kash_wasm');
 const {
     Mnemonic,
     XPrv,
     DerivationPath
-} = kaspa;
+} = kash;
 
-kaspa.initConsolePanicHook();
+kash.initConsolePanicHook();
 
 (async () => {
 

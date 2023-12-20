@@ -1,6 +1,6 @@
 [package]
-name = "kaspa-addressmanager"
-description = "Kaspa address manager"
+name = "kash-addressmanager"
+description = "Kash address manager"
 version.workspace = true
 edition.workspace = true
 authors.workspace = true
@@ -11,10 +11,10 @@ license.workspace = true
 borsh.workspace = true
 igd-next.workspace = true
 itertools.workspace = true
-kaspa-consensus-core.workspace = true
-kaspa-core.workspace = true
-kaspa-database.workspace = true
-kaspa-utils.workspace = true
+kash-consensus-core.workspace = true
+kash-core.workspace = true
+kash-database.workspace = true
+kash-utils.workspace = true
 local-ip-address.workspace = true
 log.workspace = true
 parking_lot.workspace = true

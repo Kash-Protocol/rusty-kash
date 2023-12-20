@@ -1,6 +1,6 @@
 [package]
-name = "kaspa-mining"
-description = "Kaspa mining"
+name = "kash-mining"
+description = "Kash mining"
 version.workspace = true
 edition.workspace = true
 authors.workspace = true
@@ -8,15 +8,15 @@ include.workspace = true
 license.workspace = true
 
 [dependencies]
-kaspa-addresses.workspace = true
-kaspa-consensus-core.workspace = true
-kaspa-consensusmanager.workspace = true
-kaspa-core.workspace = true
-kaspa-hashes.workspace = true
-kaspa-mining-errors.workspace = true
-kaspa-muhash.workspace = true
-kaspa-txscript.workspace = true
-kaspa-utils.workspace = true
+kash-addresses.workspace = true
+kash-consensus-core.workspace = true
+kash-consensusmanager.workspace = true
+kash-core.workspace = true
+kash-hashes.workspace = true
+kash-mining-errors.workspace = true
+kash-muhash.workspace = true
+kash-txscript.workspace = true
+kash-utils.workspace = true
 
 futures-util.workspace = true
 itertools.workspace = true
@@ -29,7 +29,7 @@ thiserror.workspace = true
 tokio = { workspace = true, features = [ "rt-multi-thread", "macros", "signal" ] }
 
 [dev-dependencies]
-kaspa-txscript.workspace = true
+kash-txscript.workspace = true
 criterion.workspace = true
 secp256k1.workspace = true
 

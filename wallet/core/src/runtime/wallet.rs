@@ -15,14 +15,14 @@ use crate::{derivation::gen0, derivation::gen0::import::*, derivation::gen1, der
 use futures::future::join_all;
 use futures::stream::StreamExt;
 use futures::{select, FutureExt, Stream};
-use kaspa_bip32::{Language, Mnemonic};
-use kaspa_notify::{
+use kash_bip32::{Language, Mnemonic};
+use kash_notify::{
     listener::ListenerId,
     scope::{Scope, VirtualDaaScoreChangedScope},
 };
-use kaspa_rpc_core::notify::mode::NotificationMode;
-use kaspa_wallet_core::storage::MultiSig;
-use kaspa_wrpc_client::{KaspaRpcClient, WrpcEncoding};
+use kash_rpc_core::notify::mode::NotificationMode;
+use kash_wallet_core::storage::MultiSig;
+use kash_wrpc_client::{KashRpcClient, WrpcEncoding};
 use std::sync::Arc;
 use workflow_core::task::spawn;
 use workflow_log::log_error;
@@ -143,7 +143,7 @@ impl Wallet {
 
     pub fn try_with_wrpc(store: Arc<dyn Interface>, network_id: Option<NetworkId>) -> Result<Wallet> {
         let rpc_client =
-            Arc::new(KaspaRpcClient::new_with_args(WrpcEncoding::Borsh, NotificationMode::MultiListeners, "wrpc://127.0.0.1:17110")?);
+            Arc::new(KashRpcClient::new_with_args(WrpcEncoding::Borsh, NotificationMode::MultiListeners, "wrpc://127.0.0.1:17110")?);
         let rpc_ctl = rpc_client.ctl().clone();
         let rpc_api: Arc<DynRpcApi> = rpc_client;
         let rpc = Rpc::new(rpc_api, rpc_ctl);
@@ -337,8 +337,8 @@ impl Wallet {
         Ok(self.get_prv_key_info(account).await?.map(|info| info.is_encrypted()))
     }
 
-    pub fn wrpc_client(&self) -> Option<Arc<KaspaRpcClient>> {
-        self.rpc_api().clone().downcast_arc::<KaspaRpcClient>().ok()
+    pub fn wrpc_client(&self) -> Option<Arc<KashRpcClient>> {
+        self.rpc_api().clone().downcast_arc::<KashRpcClient>().ok()
     }
 
     pub fn rpc_api(&self) -> Arc<DynRpcApi> {
@@ -449,7 +449,7 @@ impl Wallet {
         self.utxo_processor().network_id()
     }
 
-    pub fn address_prefix(&self) -> Result<kaspa_addresses::Prefix> {
+    pub fn address_prefix(&self) -> Result<kash_addresses::Prefix> {
         Ok(self.network_id()?.into())
     }
 
@@ -505,7 +505,7 @@ impl Wallet {
                     .await?
                     .ok_or(Error::PrivateKeyNotFound(prv_key_data_id.to_hex()))?;
                 let xpub_key = prv_key_data.create_xpub(None, AccountKind::MultiSig, 0).await?; // todo it can be done concurrently
-                let xpub_prefix = kaspa_bip32::Prefix::XPUB;
+                let xpub_prefix = kash_bip32::Prefix::XPUB;
                 generated_xpubs.push(xpub_key.to_string(Some(xpub_prefix)));
                 prv_key_data_ids.push(prv_key_data_id);
             }
@@ -568,7 +568,7 @@ impl Wallet {
             .await?
             .ok_or(Error::PrivateKeyNotFound(prv_key_data_id.to_hex()))?;
         let xpub_key = prv_key_data.create_xpub(args.payment_secret.as_ref(), args.account_kind, account_index).await?;
-        let xpub_prefix = kaspa_bip32::Prefix::XPUB;
+        let xpub_prefix = kash_bip32::Prefix::XPUB;
         let xpub_keys = Arc::new(vec![xpub_key.to_string(Some(xpub_prefix))]);
 
         let bip32 = storage::Bip32::new(account_index, xpub_keys, false);
@@ -620,7 +620,7 @@ impl Wallet {
 
         self.inner.store.create(&ctx, wallet_args.into()).await?;
         let descriptor = self.inner.store.descriptor()?;
-        let xpub_prefix = kaspa_bip32::Prefix::XPUB;
+        let xpub_prefix = kash_bip32::Prefix::XPUB;
         let mnemonic = Mnemonic::create_random()?;
         let account_index = 0;
         let prv_key_data = PrvKeyData::try_from((mnemonic.clone(), account_args.payment_secret.as_ref()))?;
@@ -915,7 +915,7 @@ impl Wallet {
             AccountKind::Bip32 => {
                 let account_index = 0;
                 let xpub_key = prv_key_data.create_xpub(payment_secret, account_kind, account_index).await?;
-                let xpub_keys = Arc::new(vec![xpub_key.to_string(Some(kaspa_bip32::Prefix::KPUB))]);
+                let xpub_keys = Arc::new(vec![xpub_key.to_string(Some(kash_bip32::Prefix::KPUB))]);
                 let ecdsa = false;
                 // ---
 
@@ -978,7 +978,7 @@ impl Wallet {
                 return Err(Error::PrivateKeyAlreadyExists(prv_key_data.id.to_hex()));
             }
             let xpub_key = prv_key_data.create_xpub(payment_secret.as_ref(), AccountKind::MultiSig, 0).await?; // todo it can be done concurrently
-            let xpub_prefix = kaspa_bip32::Prefix::XPUB;
+            let xpub_prefix = kash_bip32::Prefix::XPUB;
             generated_xpubs.push(xpub_key.to_string(Some(xpub_prefix)));
             prv_key_data_ids.push(prv_key_data.id);
             prv_key_data_store.store(&ctx, prv_key_data).await?;
@@ -1022,11 +1022,11 @@ mod test {
 
     use super::*;
     use crate::utxo::{UtxoContext, UtxoContextBinding, UtxoIterator};
-    use kaspa_addresses::{Address, Prefix, Version};
-    use kaspa_bip32::{ChildNumber, ExtendedPrivateKey, SecretKey};
-    use kaspa_consensus_core::subnets::SUBNETWORK_ID_NATIVE;
-    use kaspa_consensus_wasm::{sign_transaction, SignableTransaction, Transaction, TransactionInput, TransactionOutput};
-    use kaspa_txscript::pay_to_address_script;
+    use kash_addresses::{Address, Prefix, Version};
+    use kash_bip32::{ChildNumber, ExtendedPrivateKey, SecretKey};
+    use kash_consensus_core::subnets::SUBNETWORK_ID_NATIVE;
+    use kash_consensus_wasm::{sign_transaction, SignableTransaction, Transaction, TransactionInput, TransactionOutput};
+    use kash_txscript::pay_to_address_script;
     use workflow_rpc::client::ConnectOptions;
 
     async fn create_utxos_context_with_addresses(
@@ -1067,7 +1067,7 @@ mod test {
         let result = wallet.get_info().await;
         println!("wallet.get_info(): {result:#?}");
 
-        let address = Address::try_from("kaspatest:qz7ulu4c25dh7fzec9zjyrmlhnkzrg4wmf89q7gzr3gfrsj3uz6xjceef60sd")?;
+        let address = Address::try_from("kashtest:qz7ulu4c25dh7fzec9zjyrmlhnkzrg4wmf89q7gzr3gfrsj3uz6xjceef60sd")?;
 
         let utxo_context =
             self::create_utxos_context_with_addresses(rpc_api.clone(), vec![address.clone()], current_daa_score, utxo_processor)
@@ -1076,7 +1076,7 @@ mod test {
         let utxo_set_balance = utxo_context.calculate_balance().await;
         println!("get_utxos_by_addresses: {utxo_set_balance:?}");
 
-        let to_address = Address::try_from("kaspatest:qpakxqlesqywgkq7rg4wyhjd93kmw7trkl3gpa3vd5flyt59a43yyn8vu0w8c")?;
+        let to_address = Address::try_from("kashtest:qpakxqlesqywgkq7rg4wyhjd93kmw7trkl3gpa3vd5flyt59a43yyn8vu0w8c")?;
         let mut iter = UtxoIterator::new(&utxo_context);
         let utxo = iter.next().unwrap();
         let utxo = (*utxo.utxo).clone();
@@ -1103,7 +1103,7 @@ mod test {
         let mtx = SignableTransaction::new(tx, (*entries).clone().into());
 
         let derivation_path =
-            gen1::WalletDerivationManager::build_derivate_path(false, 0, None, Some(kaspa_bip32::AddressType::Receive))?;
+            gen1::WalletDerivationManager::build_derivate_path(false, 0, None, Some(kash_bip32::AddressType::Receive))?;
 
         let xprv = "kprv5y2qurMHCsXYrNfU3GCihuwG3vMqFji7PZXajMEqyBkNh9UZUJgoHYBLTKu1eM4MvUtomcXPQ3Sw9HZ5ebbM4byoUciHo1zrPJBQfqpLorQ";
 

@@ -1,6 +1,6 @@
 [package]
-name = "kaspa-notify"
-description = "Kaspa notification subsystem"
+name = "kash-notify"
+description = "Kash notification subsystem"
 version.workspace = true
 edition.workspace = true
 authors.workspace = true
@@ -15,12 +15,12 @@ derive_more.workspace = true
 futures-util.workspace = true
 futures.workspace = true
 itertools.workspace = true
-kaspa-addresses.workspace = true
-kaspa-consensus-core.workspace = true
-kaspa-core.workspace = true
-kaspa-txscript-errors.workspace = true
-kaspa-txscript.workspace = true
-kaspa-utils.workspace = true
+kash-addresses.workspace = true
+kash-consensus-core.workspace = true
+kash-core.workspace = true
+kash-txscript-errors.workspace = true
+kash-txscript.workspace = true
+kash-utils.workspace = true
 log.workspace = true
 parking_lot.workspace = true
 paste.workspace = true

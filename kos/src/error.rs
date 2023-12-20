@@ -1,5 +1,5 @@
 use downcast::DowncastError;
-use kaspa_daemon::error::Error as DaemonError;
+use kash_daemon::error::Error as DaemonError;
 use thiserror::Error;
 use wasm_bindgen::JsValue;
 use workflow_core::channel::ChannelError;
@@ -21,7 +21,7 @@ pub enum Error {
     WorkflowNw(#[from] workflow_nw::error::Error),
 
     #[error(transparent)]
-    Cli(#[from] kaspa_cli_lib::error::Error),
+    Cli(#[from] kash_cli_lib::error::Error),
 
     #[error(transparent)]
     Ipc(#[from] workflow_nw::ipc::error::Error),
@@ -45,10 +45,10 @@ pub enum Error {
     ChannelError(String),
 
     #[error(transparent)]
-    Daemon(#[from] kaspa_daemon::error::Error),
+    Daemon(#[from] kash_daemon::error::Error),
 
     #[error(transparent)]
-    WalletError(#[from] kaspa_wallet_core::error::Error),
+    WalletError(#[from] kash_wallet_core::error::Error),
 
     #[error(transparent)]
     Dom(#[from] workflow_dom::error::Error),

@@ -1,13 +1,13 @@
 use crate::{adaptor::Adaptor, manager::Manager};
-use kaspa_consensus_core::config::Config;
-use kaspa_core::{
+use kash_consensus_core::config::Config;
+use kash_core::{
     debug,
     task::service::{AsyncService, AsyncServiceFuture},
     trace, warn,
 };
-use kaspa_rpc_service::service::RpcCoreService;
-use kaspa_utils::{networking::NetAddress, triggers::SingleTrigger};
-use kaspa_utils_tower::counters::TowerConnectionCounters;
+use kash_rpc_service::service::RpcCoreService;
+use kash_utils::{networking::NetAddress, triggers::SingleTrigger};
+use kash_utils_tower::counters::TowerConnectionCounters;
 use std::sync::Arc;
 
 const GRPC_SERVICE: &str = "grpc-service";

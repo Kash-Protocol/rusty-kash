@@ -2,7 +2,7 @@ use async_channel::unbounded;
 use clap::Parser;
 use futures::{future::try_join_all, Future};
 use itertools::Itertools;
-use kaspa_consensus::{
+use kash_consensus::{
     config::ConfigBuilder,
     consensus::Consensus,
     constants::perf::PerfParams,
@@ -14,23 +14,23 @@ use kaspa_consensus::{
     },
     params::{Params, Testnet11Bps, DEVNET_PARAMS, NETWORK_DELAY_BOUND, TESTNET11_PARAMS},
 };
-use kaspa_consensus_core::{
+use kash_consensus_core::{
     api::ConsensusApi, block::Block, blockstatus::BlockStatus, config::bps::calculate_ghostdag_k, errors::block::BlockProcessResult,
     BlockHashSet, BlockLevel, HashMapCustomHasher,
 };
-use kaspa_consensus_notify::root::ConsensusNotificationRoot;
-use kaspa_core::{info, task::service::AsyncService, task::tick::TickService, time::unix_now, trace, warn};
-use kaspa_database::prelude::ConnBuilder;
-use kaspa_database::{create_temp_db, load_existing_db};
-use kaspa_hashes::Hash;
-use kaspa_perf_monitor::builder::Builder;
-use kaspa_utils::fd_budget;
-use simulator::network::KaspaNetworkSimulator;
+use kash_consensus_notify::root::ConsensusNotificationRoot;
+use kash_core::{info, task::service::AsyncService, task::tick::TickService, time::unix_now, trace, warn};
+use kash_database::prelude::ConnBuilder;
+use kash_database::{create_temp_db, load_existing_db};
+use kash_hashes::Hash;
+use kash_perf_monitor::builder::Builder;
+use kash_utils::fd_budget;
+use simulator::network::KashNetworkSimulator;
 use std::{collections::VecDeque, sync::Arc, time::Duration};
 
 pub mod simulator;
 
-/// Kaspa Network Simulator
+/// Kash Network Simulator
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
 struct Args {
@@ -122,10 +122,10 @@ fn main() {
     let args = Args::parse();
 
     // Initialize the logger
-    kaspa_core::log::init_logger(None, &args.log_level);
+    kash_core::log::init_logger(None, &args.log_level);
 
     // Configure the panic behavior
-    kaspa_core::panic::configure_panic();
+    kash_core::panic::configure_panic();
 
     // Print package name and version
     info!("{} v{}", env!("CARGO_PKG_NAME"), env!("CARGO_PKG_VERSION"));
@@ -208,7 +208,7 @@ fn main_impl(mut args: Args) {
         (consensus, lifetime)
     } else {
         let until = if args.target_blocks.is_none() { config.genesis.timestamp + args.sim_time * 1000 } else { u64::MAX }; // milliseconds
-        let mut sim = KaspaNetworkSimulator::new(args.delay, args.bps, args.target_blocks, config.clone(), args.output_dir);
+        let mut sim = KashNetworkSimulator::new(args.delay, args.bps, args.target_blocks, config.clone(), args.output_dir);
         let (consensus, handles, lifetime) = sim
             .init(
                 args.miners,
@@ -257,7 +257,7 @@ fn apply_args_to_consensus_params(args: &Args, params: &mut Params) {
     params.genesis.timestamp = 0;
     if args.testnet11 {
         info!(
-            "Using kaspa-testnet-11 configuration (GHOSTDAG K={}, DAA window size={}, Median time window size={})",
+            "Using kash-testnet-11 configuration (GHOSTDAG K={}, DAA window size={}, Median time window size={})",
             params.ghostdag_k,
             params.difficulty_window_size(0),
             params.past_median_time_window_size(0),
@@ -407,8 +407,8 @@ mod tests {
         args.tpb = 1;
         args.test_pruning = true;
 
-        kaspa_core::panic::configure_panic();
-        kaspa_core::log::try_init_logger(&args.log_level);
+        kash_core::panic::configure_panic();
+        kash_core::log::try_init_logger(&args.log_level);
         main_impl(args);
     }
 }

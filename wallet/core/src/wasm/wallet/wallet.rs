@@ -7,8 +7,8 @@ use crate::storage::PrvKeyDataId;
 use crate::storage::{self, Hint};
 use crate::wasm::wallet::account::Account;
 use crate::wasm::wallet::keydata::PrvKeyDataInfo;
-use kaspa_wrpc_client::wasm::RpcClient;
-use kaspa_wrpc_client::WrpcEncoding;
+use kash_wrpc_client::wasm::RpcClient;
+use kash_wrpc_client::WrpcEncoding;
 use runtime::AccountKind;
 use workflow_core::sendable::Sendable;
 use workflow_wasm::channel::EventDispatcher;
@@ -116,7 +116,7 @@ impl Wallet {
                 None
             } else {
                 Some(name.as_string().ok_or(Error::Custom(
-                    "Wallet::exists(): Wallet name must be a string (or falsy for default `kaspa`)".to_string(),
+                    "Wallet::exists(): Wallet name must be a string (or falsy for default `kash`)".to_string(),
                 ))?)
             };
 

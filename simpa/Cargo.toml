@@ -1,6 +1,6 @@
 [package]
 name = "simpa"
-description = "Kaspa Network Simulator"
+description = "Kash Network Simulator"
 publish = false
 version.workspace = true
 edition.workspace = true
@@ -9,14 +9,14 @@ include.workspace = true
 license.workspace = true
 
 [dependencies]
-kaspa-consensus-core.workspace = true
-kaspa-consensus-notify.workspace = true
-kaspa-consensus.workspace = true
-kaspa-core.workspace = true
-kaspa-database.workspace = true
-kaspa-hashes.workspace = true
-kaspa-perf-monitor.workspace = true
-kaspa-utils.workspace = true
+kash-consensus-core.workspace = true
+kash-consensus-notify.workspace = true
+kash-consensus.workspace = true
+kash-core.workspace = true
+kash-database.workspace = true
+kash-hashes.workspace = true
+kash-perf-monitor.workspace = true
+kash-utils.workspace = true
 
 async-channel.workspace = true
 clap.workspace = true

@@ -1,6 +1,6 @@
 [package]
-name = "kaspa-wallet-cli-wasm"
-description = "Kaspa CLI wallet for WASM"
+name = "kash-wallet-cli-wasm"
+description = "Kash CLI wallet for WASM"
 version.workspace = true
 edition.workspace = true
 authors.workspace = true
@@ -8,7 +8,7 @@ include.workspace = true
 license.workspace = true
 
 [features]
-legacy-rpc = ["kaspa-cli/legacy-rpc"]
+legacy-rpc = ["kash-cli/legacy-rpc"]
 default = []
 
 [lib]
@@ -17,7 +17,7 @@ crate-type = ["cdylib", "lib"]
 [dependencies]
 async-trait.workspace = true
 js-sys.workspace = true
-kaspa-cli.workspace = true
+kash-cli.workspace = true
 wasm-bindgen-futures.workspace = true
 wasm-bindgen.workspace = true
 workflow-log.workspace = true

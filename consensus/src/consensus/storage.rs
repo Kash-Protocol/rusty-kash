@@ -27,9 +27,9 @@ use crate::{
 
 use itertools::Itertools;
 
-use kaspa_consensus_core::{blockstatus::BlockStatus, config::constants::perf, BlockHashSet};
-use kaspa_database::registry::DatabaseStorePrefixes;
-use kaspa_hashes::Hash;
+use kash_consensus_core::{blockstatus::BlockStatus, config::constants::perf, BlockHashSet};
+use kash_database::registry::DatabaseStorePrefixes;
+use kash_hashes::Hash;
 use parking_lot::RwLock;
 use rand::Rng;
 use std::{cmp::max, mem::size_of, ops::DerefMut, sync::Arc};

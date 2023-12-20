@@ -1,14 +1,14 @@
 use crate::{connection::*, router::*, server::*};
 use async_trait::async_trait;
-use kaspa_core::{
+use kash_core::{
     info,
     task::service::{AsyncService, AsyncServiceError, AsyncServiceFuture},
     trace, warn,
 };
-use kaspa_rpc_core::api::ops::RpcApiOps;
-use kaspa_rpc_service::service::RpcCoreService;
-use kaspa_utils::triggers::SingleTrigger;
-pub use kaspa_wrpc_core::ServerCounters;
+use kash_rpc_core::api::ops::RpcApiOps;
+use kash_rpc_service::service::RpcCoreService;
+use kash_utils::triggers::SingleTrigger;
+pub use kash_wrpc_core::ServerCounters;
 use std::sync::atomic::Ordering;
 use std::sync::Arc;
 use tokio::sync::oneshot::{channel as oneshot_channel, Sender as OneshotSender};
@@ -30,9 +30,9 @@ impl Default for Options {
     }
 }
 
-/// ### KaspaRpcHandler
+/// ### KashRpcHandler
 ///
-/// [`KaspaRpcHandler`] is a handler struct that implements the [`RpcHandler`] trait
+/// [`KashRpcHandler`] is a handler struct that implements the [`RpcHandler`] trait
 /// allowing it to receive [`connect()`](RpcHandler::connect),
 /// [`disconnect()`](RpcHandler::disconnect) and [`handshake()`](RpcHandler::handshake)
 /// calls invoked by the [`RpcServer`].
@@ -45,26 +45,26 @@ impl Default for Options {
 ///
 /// RPC method handling is implemented in the [`Router`].
 ///
-pub struct KaspaRpcHandler {
+pub struct KashRpcHandler {
     pub server: Server,
     pub options: Arc<Options>,
     pub counters: Arc<ServerCounters>,
 }
 
-impl KaspaRpcHandler {
+impl KashRpcHandler {
     pub fn new(
         tasks: usize,
         encoding: WrpcEncoding,
         core_service: Option<Arc<RpcCoreService>>,
         options: Arc<Options>,
         counters: Arc<ServerCounters>,
-    ) -> KaspaRpcHandler {
-        KaspaRpcHandler { server: Server::new(tasks, encoding, core_service, options.clone()), options, counters }
+    ) -> KashRpcHandler {
+        KashRpcHandler { server: Server::new(tasks, encoding, core_service, options.clone()), options, counters }
     }
 }
 
 #[async_trait]
-impl RpcHandler for KaspaRpcHandler {
+impl RpcHandler for KashRpcHandler {
     type Context = Connection;
 
     async fn connect(self: Arc<Self>, _peer: &SocketAddr) -> WebSocketResult<()> {
@@ -84,7 +84,7 @@ impl RpcHandler for KaspaRpcHandler {
         //     std::time::Duration::from_millis(3000),
         //     sender,
         //     receiver,
-        //     Box::pin(|msg| if msg != "kaspa" { Err(WebSocketError::NegotiationFailure) } else { Ok(()) }),
+        //     Box::pin(|msg| if msg != "kash" { Err(WebSocketError::NegotiationFailure) } else { Ok(()) }),
         // )
         // .await
 
@@ -109,7 +109,7 @@ pub struct WrpcService {
     // TODO: see if tha Adapter/ConnectionHandler design of P2P and gRPC can be applied here too
     options: Arc<Options>,
     server: RpcServer,
-    rpc_handler: Arc<KaspaRpcHandler>,
+    rpc_handler: Arc<KashRpcHandler>,
     shutdown: SingleTrigger,
     // counters: Arc<ServerCounters>,
 }
@@ -125,7 +125,7 @@ impl WrpcService {
     ) -> Self {
         let options = Arc::new(options);
         // Create handle to manage connections
-        let rpc_handler = Arc::new(KaspaRpcHandler::new(tasks, *encoding, core_service, options.clone(), counters));
+        let rpc_handler = Arc::new(KashRpcHandler::new(tasks, *encoding, core_service, options.clone(), counters));
 
         // Create router (initializes Interface registering RPC method and notification handlers)
         let router = Arc::new(Router::new(rpc_handler.server.clone()));

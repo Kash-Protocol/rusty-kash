@@ -1,7 +1,7 @@
 use crate::processes::ghostdag::ordering::SortableBlock;
-use kaspa_consensus_core::BlockHasher;
-use kaspa_database::prelude::Cache;
-use kaspa_hashes::Hash;
+use kash_consensus_core::BlockHasher;
+use kash_database::prelude::Cache;
+use kash_hashes::Hash;
 use std::{
     cmp::Reverse,
     collections::BinaryHeap,

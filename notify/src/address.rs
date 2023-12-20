@@ -1,8 +1,8 @@
 use derive_more::Deref;
-use kaspa_addresses::{Address, Prefix};
-use kaspa_consensus_core::tx::ScriptPublicKey;
-use kaspa_txscript::{extract_script_pub_key_address, pay_to_address_script};
-use kaspa_txscript_errors::TxScriptError;
+use kash_addresses::{Address, Prefix};
+use kash_consensus_core::tx::ScriptPublicKey;
+use kash_txscript::{extract_script_pub_key_address, pay_to_address_script};
+use kash_txscript_errors::TxScriptError;
 
 #[allow(dead_code)]
 /// Represents an [`Address`] and its matching [`ScriptPublicKey`] representation
@@ -37,7 +37,7 @@ impl From<UtxoAddress> for Address {
 
 pub mod test_helpers {
     use super::*;
-    use kaspa_addresses::{Prefix, Version};
+    use kash_addresses::{Prefix, Version};
 
     pub fn get_3_addresses(sorted: bool) -> Vec<Address> {
         let mut addresses = vec![

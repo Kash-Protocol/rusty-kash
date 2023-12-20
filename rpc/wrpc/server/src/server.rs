@@ -4,14 +4,14 @@ use crate::{
     result::Result,
     service::Options,
 };
-use kaspa_grpc_client::GrpcClient;
-use kaspa_notify::{connection::ChannelType, events::EVENT_TYPE_ARRAY, notifier::Notifier, scope::Scope, subscriber::Subscriber};
-use kaspa_rpc_core::{
+use kash_grpc_client::GrpcClient;
+use kash_notify::{connection::ChannelType, events::EVENT_TYPE_ARRAY, notifier::Notifier, scope::Scope, subscriber::Subscriber};
+use kash_rpc_core::{
     api::rpc::{DynRpcService, RpcApi},
     notify::{channel::NotificationChannel, connection::ChannelConnection, mode::NotificationMode},
     Notification, RpcResult,
 };
-use kaspa_rpc_service::service::RpcCoreService;
+use kash_rpc_service::service::RpcCoreService;
 use std::{
     collections::HashMap,
     sync::{

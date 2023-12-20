@@ -5,9 +5,9 @@ const {
     PrivateKey,
     Generator,
     RpcClient,
-    kaspaToSompi,
+    kashToSompi,
     initConsolePanicHook
-} = require('./kaspa/kaspa_wasm');
+} = require('./kash/kash_wasm');
 
 initConsolePanicHook();
 
@@ -21,7 +21,7 @@ const { encoding, networkId } = require("./utils").parseArgs();
     const privateKey = new PrivateKey('b7e151628aed2a6abf7158809cf4f3c762e7160f38b4da56a784d9045190cfef');
 
     const sourceAddress = privateKey.toKeypair().toAddress(networkId);
-    console.info(`Full kaspa address: ${sourceAddress}`);
+    console.info(`Full kash address: ${sourceAddress}`);
 
     const rpc = new RpcClient("127.0.0.1", encoding, networkId);
     console.log(`Connecting to ${rpc.url}`);
@@ -58,7 +58,7 @@ const { encoding, networkId } = require("./utils").parseArgs();
         // is reached. The remaining amount will be sent 
         // to the change address.
         //
-        // If the requested amount is greater than the Kaspa
+        // If the requested amount is greater than the Kash
         // transaction mass, the Generator will create multiple
         // transactions where each transaction will forward
         // UTXOs to the change address, until the requested
@@ -66,7 +66,7 @@ const { encoding, networkId } = require("./utils").parseArgs();
         // transaction according to the supplied outputs.
         let generator = new Generator({
             entries,
-            outputs: [[sourceAddress, kaspaToSompi(0.2)]],
+            outputs: [[sourceAddress, kashToSompi(0.2)]],
             priorityFee: 0,
             changeAddress: sourceAddress,
         });

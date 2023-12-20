@@ -1,12 +1,12 @@
 use crate::protowire;
 use crate::{from, try_from};
-use kaspa_rpc_core::RpcError;
+use kash_rpc_core::RpcError;
 
 // ----------------------------------------------------------------------------
 // rpc_core to protowire
 // ----------------------------------------------------------------------------
 
-from!(item: &kaspa_rpc_core::ProcessMetrics, protowire::ProcessMetrics, {
+from!(item: &kash_rpc_core::ProcessMetrics, protowire::ProcessMetrics, {
     Self {
         resident_set_size: item.resident_set_size,
         virtual_memory_size: item.virtual_memory_size,
@@ -26,7 +26,7 @@ from!(item: &kaspa_rpc_core::ProcessMetrics, protowire::ProcessMetrics, {
     }
 });
 
-from!(item: &kaspa_rpc_core::ConsensusMetrics, protowire::ConsensusMetrics, {
+from!(item: &kash_rpc_core::ConsensusMetrics, protowire::ConsensusMetrics, {
     Self {
         blocks_submitted: item.blocks_submitted,
         header_counts: item.header_counts,
@@ -42,7 +42,7 @@ from!(item: &kaspa_rpc_core::ConsensusMetrics, protowire::ConsensusMetrics, {
 // protowire to rpc_core
 // ----------------------------------------------------------------------------
 
-try_from!(item: &protowire::ProcessMetrics, kaspa_rpc_core::ProcessMetrics, {
+try_from!(item: &protowire::ProcessMetrics, kash_rpc_core::ProcessMetrics, {
     Self {
         resident_set_size: item.resident_set_size,
         virtual_memory_size: item.virtual_memory_size,
@@ -62,7 +62,7 @@ try_from!(item: &protowire::ProcessMetrics, kaspa_rpc_core::ProcessMetrics, {
     }
 });
 
-try_from!(item: &protowire::ConsensusMetrics, kaspa_rpc_core::ConsensusMetrics, {
+try_from!(item: &protowire::ConsensusMetrics, kash_rpc_core::ConsensusMetrics, {
     Self {
         blocks_submitted: item.blocks_submitted,
         header_counts: item.header_counts,

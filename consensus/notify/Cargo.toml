@@ -1,6 +1,6 @@
 [package]
-name = "kaspa-consensus-notify"
-description = "Kaspa consensus notifier"
+name = "kash-consensus-notify"
+description = "Kash consensus notifier"
 version.workspace = true
 edition.workspace = true
 authors.workspace = true
@@ -12,11 +12,11 @@ async-channel.workspace = true
 cfg-if.workspace = true
 derive_more.workspace = true
 futures.workspace = true
-kaspa-consensus-core.workspace = true
-kaspa-core.workspace = true
-kaspa-hashes.workspace = true
-kaspa-notify.workspace = true
-kaspa-utils.workspace = true
+kash-consensus-core.workspace = true
+kash-core.workspace = true
+kash-hashes.workspace = true
+kash-notify.workspace = true
+kash-utils.workspace = true
 log.workspace = true
 paste.workspace = true
 thiserror.workspace = true

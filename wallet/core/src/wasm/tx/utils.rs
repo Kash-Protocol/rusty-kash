@@ -4,9 +4,9 @@ use crate::tx::PaymentOutputs;
 use crate::wasm::tx::consensus::get_consensus_params_by_address;
 use crate::wasm::tx::generator::*;
 use crate::wasm::tx::mass::MassCalculator;
-use kaspa_addresses::Address;
-use kaspa_consensus_core::subnets::SUBNETWORK_ID_NATIVE;
-use kaspa_consensus_wasm::*;
+use kash_addresses::Address;
+use kash_consensus_core::subnets::SUBNETWORK_ID_NATIVE;
+use kash_consensus_wasm::*;
 use workflow_core::runtime::is_web;
 
 /// Create a basic transaction without any mass limit checks.

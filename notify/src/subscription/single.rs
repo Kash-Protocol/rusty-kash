@@ -5,9 +5,9 @@ use crate::{
     scope::{Scope, UtxosChangedScope, VirtualChainChangedScope},
     subscription::Command,
 };
-use kaspa_addresses::Address;
-use kaspa_consensus_core::tx::ScriptPublicKey;
-use kaspa_txscript::pay_to_address_script;
+use kash_addresses::Address;
+use kash_consensus_core::tx::ScriptPublicKey;
+use kash_txscript::pay_to_address_script;
 use std::{
     collections::HashMap,
     fmt::Debug,

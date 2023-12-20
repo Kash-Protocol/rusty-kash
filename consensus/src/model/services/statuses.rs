@@ -1,7 +1,7 @@
 use crate::model::stores::statuses::StatusesStoreReader;
-use kaspa_consensus_core::blockstatus::BlockStatus;
-use kaspa_database::prelude::StoreError;
-use kaspa_hashes::Hash;
+use kash_consensus_core::blockstatus::BlockStatus;
+use kash_database::prelude::StoreError;
+use kash_hashes::Hash;
 use parking_lot::RwLock;
 use std::sync::Arc;
 

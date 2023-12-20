@@ -1,6 +1,6 @@
 [package]
-name = "kaspa-txscript-errors"
-description = "Kaspa txscript errors"
+name = "kash-txscript-errors"
+description = "Kash txscript errors"
 version.workspace = true
 edition.workspace = true
 authors.workspace = true

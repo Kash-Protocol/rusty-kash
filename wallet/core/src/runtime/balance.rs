@@ -1,5 +1,5 @@
 use crate::imports::*;
-use kaspa_consensus_core::network::NetworkType;
+use kash_consensus_core::network::NetworkType;
 
 pub enum DeltaStyle {
     Mature,
@@ -99,10 +99,10 @@ pub struct BalanceStrings {
 
 impl From<(&Option<Balance>, &NetworkType, Option<usize>)> for BalanceStrings {
     fn from((balance, network_type, padding): (&Option<Balance>, &NetworkType, Option<usize>)) -> Self {
-        let suffix = utils::kaspa_suffix(network_type);
+        let suffix = utils::kash_suffix(network_type);
         if let Some(balance) = balance {
-            let mut mature = utils::sompi_to_kaspa_string(balance.mature);
-            let mut pending = if balance.pending > 0 { Some(utils::sompi_to_kaspa_string(balance.pending)) } else { None };
+            let mut mature = utils::sompi_to_kash_string(balance.mature);
+            let mut pending = if balance.pending > 0 { Some(utils::sompi_to_kash_string(balance.pending)) } else { None };
             if let Some(padding) = padding {
                 mature = mature.pad_to_width(padding);
                 pending = pending.map(|pending| pending.pad_to_width(padding));

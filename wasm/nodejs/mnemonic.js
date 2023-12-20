@@ -1,9 +1,9 @@
-const kaspa = require('./kaspa/kaspa_wasm');
+const kash = require('./kash/kash_wasm');
 const {
     Mnemonic,
-} = kaspa;
+} = kash;
 
-kaspa.initConsolePanicHook();
+kash.initConsolePanicHook();
 
 (async () => {
 

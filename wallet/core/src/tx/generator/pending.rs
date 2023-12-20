@@ -2,11 +2,11 @@ use crate::result::Result;
 use crate::rpc::DynRpcApi;
 use crate::tx::{DataKind, Generator};
 use crate::utxo::UtxoEntryReference;
-use kaspa_addresses::Address;
-use kaspa_consensus_core::network::NetworkType;
-use kaspa_consensus_core::sign::sign_with_multiple_v2;
-use kaspa_consensus_core::tx::{SignableTransaction, Transaction, TransactionId};
-use kaspa_rpc_core::{RpcTransaction, RpcTransactionId};
+use kash_addresses::Address;
+use kash_consensus_core::network::NetworkType;
+use kash_consensus_core::sign::sign_with_multiple_v2;
+use kash_consensus_core::tx::{SignableTransaction, Transaction, TransactionId};
+use kash_rpc_core::{RpcTransaction, RpcTransactionId};
 use std::sync::Mutex;
 use std::sync::{
     atomic::{AtomicBool, Ordering},

@@ -6,37 +6,37 @@ use crate::flowcontext::{
 use crate::{v5, v6};
 use async_trait::async_trait;
 use futures::future::join_all;
-use kaspa_addressmanager::AddressManager;
-use kaspa_connectionmanager::ConnectionManager;
-use kaspa_consensus_core::api::{BlockValidationFuture, BlockValidationFutures};
-use kaspa_consensus_core::block::Block;
-use kaspa_consensus_core::config::Config;
-use kaspa_consensus_core::errors::block::RuleError;
-use kaspa_consensus_core::tx::{Transaction, TransactionId};
-use kaspa_consensus_notify::{
+use kash_addressmanager::AddressManager;
+use kash_connectionmanager::ConnectionManager;
+use kash_consensus_core::api::{BlockValidationFuture, BlockValidationFutures};
+use kash_consensus_core::block::Block;
+use kash_consensus_core::config::Config;
+use kash_consensus_core::errors::block::RuleError;
+use kash_consensus_core::tx::{Transaction, TransactionId};
+use kash_consensus_notify::{
     notification::{Notification, PruningPointUtxoSetOverrideNotification},
     root::ConsensusNotificationRoot,
 };
-use kaspa_consensusmanager::{ConsensusInstance, ConsensusManager, ConsensusProxy};
-use kaspa_core::{
+use kash_consensusmanager::{ConsensusInstance, ConsensusManager, ConsensusProxy};
+use kash_core::{
     debug, info,
-    kaspad_env::{name, version},
+    kashd_env::{name, version},
     task::tick::TickService,
 };
-use kaspa_core::{time::unix_now, warn};
-use kaspa_hashes::Hash;
-use kaspa_mining::manager::MiningManagerProxy;
-use kaspa_mining::mempool::tx::{Orphan, Priority};
-use kaspa_notify::notifier::Notify;
-use kaspa_p2p_lib::{
+use kash_core::{time::unix_now, warn};
+use kash_hashes::Hash;
+use kash_mining::manager::MiningManagerProxy;
+use kash_mining::mempool::tx::{Orphan, Priority};
+use kash_notify::notifier::Notify;
+use kash_p2p_lib::{
     common::ProtocolError,
     convert::model::version::Version,
     make_message,
-    pb::{kaspad_message::Payload, InvRelayBlockMessage},
-    ConnectionInitializer, Hub, KaspadHandshake, PeerKey, PeerProperties, Router,
+    pb::{kashd_message::Payload, InvRelayBlockMessage},
+    ConnectionInitializer, Hub, KashdHandshake, PeerKey, PeerProperties, Router,
 };
-use kaspa_utils::iter::IterExtensions;
-use kaspa_utils::networking::PeerId;
+use kash_utils::iter::IterExtensions;
+use kash_utils::networking::PeerId;
 use parking_lot::{Mutex, RwLock};
 use std::collections::HashMap;
 use std::time::Instant;
@@ -538,7 +538,7 @@ impl FlowContext {
     /// Updates the mempool after a new block arrival, relays newly unorphaned transactions
     /// and possibly rebroadcast manually added transactions when not in IBD.
     ///
-    /// _GO-KASPAD: OnNewBlock + broadcastTransactionsAfterBlockAdded_
+    /// _GO-KASHD: OnNewBlock + broadcastTransactionsAfterBlockAdded_
     pub async fn on_new_block(&self, consensus: &ConsensusProxy, block: Block, virtual_state_task: BlockValidationFuture) {
         let hash = block.hash();
         let mut blocks = self.unorphan_blocks(consensus, hash).await;
@@ -663,7 +663,7 @@ impl FlowContext {
 impl ConnectionInitializer for FlowContext {
     async fn initialize_connection(&self, router: Arc<Router>) -> Result<(), ProtocolError> {
         // Build the handshake object and subscribe to handshake messages
-        let mut handshake = KaspadHandshake::new(&router);
+        let mut handshake = KashdHandshake::new(&router);
 
         // We start the router receive loop only after we registered to handshake routes
         router.start();

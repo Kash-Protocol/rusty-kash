@@ -1,6 +1,6 @@
 use crate::service::WrpcEncoding;
-use kaspa_consensus_core::network::NetworkType;
-use kaspa_utils::networking::ContextualNetAddress;
+use kash_consensus_core::network::NetworkType;
+use kash_utils::networking::ContextualNetAddress;
 use std::{net::AddrParseError, str::FromStr};
 
 #[derive(Clone, Debug)]

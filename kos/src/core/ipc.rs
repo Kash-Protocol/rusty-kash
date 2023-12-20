@@ -5,9 +5,9 @@ pub enum CoreOps {
     TestBg,
     Shutdown,
     TerminalReady,
-    KaspadCtl,
-    KaspadStatus,
-    KaspadVersion,
+    KashdCtl,
+    KashdStatus,
+    KashdVersion,
     CpuMinerCtl,
     CpuMinerStatus,
     CpuMinerVersion,
@@ -39,8 +39,8 @@ pub enum DaemonCtl {
 }
 
 #[derive(Debug, Clone, BorshDeserialize, BorshSerialize, Serialize, Deserialize)]
-pub enum KaspadOps {
-    Configure(KaspadConfig),
+pub enum KashdOps {
+    Configure(KashdConfig),
     DaemonCtl(DaemonCtl),
 }
 
@@ -97,54 +97,54 @@ impl CoreIpc {
 }
 
 #[async_trait]
-impl KaspadCtl for CoreIpc {
-    async fn configure(&self, config: KaspadConfig) -> DaemonResult<()> {
-        // self.target.call::<_, _, ()>(CoreOps::KaspadCtl, KaspadOps::Configure(config)).await?;
-        self.target.call(CoreOps::KaspadCtl, KaspadOps::Configure(config)).await?;
+impl KashdCtl for CoreIpc {
+    async fn configure(&self, config: KashdConfig) -> DaemonResult<()> {
+        // self.target.call::<_, _, ()>(CoreOps::KashdCtl, KashdOps::Configure(config)).await?;
+        self.target.call(CoreOps::KashdCtl, KashdOps::Configure(config)).await?;
 
         Ok(())
     }
 
     async fn start(&self) -> DaemonResult<()> {
-        self.target.call(CoreOps::KaspadCtl, KaspadOps::DaemonCtl(DaemonCtl::Start)).await?;
+        self.target.call(CoreOps::KashdCtl, KashdOps::DaemonCtl(DaemonCtl::Start)).await?;
         Ok(())
     }
 
     async fn stop(&self) -> DaemonResult<()> {
-        self.target.call(CoreOps::KaspadCtl, KaspadOps::DaemonCtl(DaemonCtl::Stop)).await?;
+        self.target.call(CoreOps::KashdCtl, KashdOps::DaemonCtl(DaemonCtl::Stop)).await?;
         Ok(())
     }
 
     async fn join(&self) -> DaemonResult<()> {
-        self.target.call(CoreOps::KaspadCtl, KaspadOps::DaemonCtl(DaemonCtl::Join)).await?;
+        self.target.call(CoreOps::KashdCtl, KashdOps::DaemonCtl(DaemonCtl::Join)).await?;
         Ok(())
     }
 
     async fn restart(&self) -> DaemonResult<()> {
-        self.target.call(CoreOps::KaspadCtl, KaspadOps::DaemonCtl(DaemonCtl::Restart)).await?;
+        self.target.call(CoreOps::KashdCtl, KashdOps::DaemonCtl(DaemonCtl::Restart)).await?;
         Ok(())
     }
 
     async fn kill(&self) -> DaemonResult<()> {
-        self.target.call(CoreOps::KaspadCtl, KaspadOps::DaemonCtl(DaemonCtl::Kill)).await?;
+        self.target.call(CoreOps::KashdCtl, KashdOps::DaemonCtl(DaemonCtl::Kill)).await?;
         Ok(())
     }
 
     async fn status(&self) -> DaemonResult<DaemonStatus> {
-        Ok(self.target.call(CoreOps::KaspadStatus, ()).await?)
+        Ok(self.target.call(CoreOps::KashdStatus, ()).await?)
     }
 
     async fn version(&self) -> DaemonResult<String> {
-        Ok(self.target.call(CoreOps::KaspadVersion, ()).await?)
+        Ok(self.target.call(CoreOps::KashdVersion, ()).await?)
     }
 
     async fn mute(&self, mute: bool) -> DaemonResult<()> {
-        self.target.call(CoreOps::KaspadCtl, KaspadOps::DaemonCtl(DaemonCtl::Mute(mute))).await?;
+        self.target.call(CoreOps::KashdCtl, KashdOps::DaemonCtl(DaemonCtl::Mute(mute))).await?;
         Ok(())
     }
 
     async fn toggle_mute(&self) -> DaemonResult<()> {
-        self.target.call(CoreOps::KaspadCtl, KaspadOps::DaemonCtl(DaemonCtl::ToggleMute)).await?;
+        self.target.call(CoreOps::KashdCtl, KashdOps::DaemonCtl(DaemonCtl::ToggleMute)).await?;
         Ok(())
     }
 }
@@ -158,27 +158,27 @@ impl CpuMinerCtl for CoreIpc {
     }
 
     async fn start(&self) -> DaemonResult<()> {
-        self.target.call(CoreOps::CpuMinerCtl, KaspadOps::DaemonCtl(DaemonCtl::Start)).await?;
+        self.target.call(CoreOps::CpuMinerCtl, KashdOps::DaemonCtl(DaemonCtl::Start)).await?;
         Ok(())
     }
 
     async fn stop(&self) -> DaemonResult<()> {
-        self.target.call(CoreOps::CpuMinerCtl, KaspadOps::DaemonCtl(DaemonCtl::Stop)).await?;
+        self.target.call(CoreOps::CpuMinerCtl, KashdOps::DaemonCtl(DaemonCtl::Stop)).await?;
         Ok(())
     }
 
     async fn join(&self) -> DaemonResult<()> {
-        self.target.call(CoreOps::CpuMinerCtl, KaspadOps::DaemonCtl(DaemonCtl::Join)).await?;
+        self.target.call(CoreOps::CpuMinerCtl, KashdOps::DaemonCtl(DaemonCtl::Join)).await?;
         Ok(())
     }
 
     async fn restart(&self) -> DaemonResult<()> {
-        self.target.call(CoreOps::CpuMinerCtl, KaspadOps::DaemonCtl(DaemonCtl::Restart)).await?;
+        self.target.call(CoreOps::CpuMinerCtl, KashdOps::DaemonCtl(DaemonCtl::Restart)).await?;
         Ok(())
     }
 
     async fn kill(&self) -> DaemonResult<()> {
-        self.target.call(CoreOps::CpuMinerCtl, KaspadOps::DaemonCtl(DaemonCtl::Kill)).await?;
+        self.target.call(CoreOps::CpuMinerCtl, KashdOps::DaemonCtl(DaemonCtl::Kill)).await?;
         Ok(())
     }
 
@@ -191,12 +191,12 @@ impl CpuMinerCtl for CoreIpc {
     }
 
     async fn mute(&self, mute: bool) -> DaemonResult<()> {
-        self.target.call(CoreOps::CpuMinerCtl, KaspadOps::DaemonCtl(DaemonCtl::Mute(mute))).await?;
+        self.target.call(CoreOps::CpuMinerCtl, KashdOps::DaemonCtl(DaemonCtl::Mute(mute))).await?;
         Ok(())
     }
 
     async fn toggle_mute(&self) -> DaemonResult<()> {
-        self.target.call(CoreOps::CpuMinerCtl, KaspadOps::DaemonCtl(DaemonCtl::ToggleMute)).await?;
+        self.target.call(CoreOps::CpuMinerCtl, KashdOps::DaemonCtl(DaemonCtl::ToggleMute)).await?;
         Ok(())
     }
 }

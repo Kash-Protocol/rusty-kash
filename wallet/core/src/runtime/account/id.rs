@@ -4,8 +4,8 @@ use crate::encryption::sha256_hash;
 use crate::imports::*;
 use crate::runtime::account::AccountKind;
 use crate::storage::{self, PrvKeyDataId};
-use kaspa_hashes::Hash;
-use kaspa_utils::as_slice::AsSlice;
+use kash_hashes::Hash;
+use kash_utils::as_slice::AsSlice;
 use secp256k1::PublicKey;
 
 #[derive(BorshSerialize)]

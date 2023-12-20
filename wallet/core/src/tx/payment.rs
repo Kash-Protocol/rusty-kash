@@ -1,6 +1,6 @@
 use crate::imports::*;
-use kaspa_consensus_wasm::{TransactionOutput, TransactionOutputInner};
-use kaspa_txscript::pay_to_address_script;
+use kash_consensus_wasm::{TransactionOutput, TransactionOutputInner};
+use kash_txscript::pay_to_address_script;
 
 pub enum PaymentDestination {
     Change,

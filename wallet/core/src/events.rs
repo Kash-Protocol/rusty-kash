@@ -4,7 +4,7 @@ use crate::storage::Hint;
 use crate::storage::TransactionRecord;
 use crate::utxo::context::UtxoContextId;
 
-/// Sync state of the kaspad node
+/// Sync state of the kashd node
 #[derive(Clone, Debug, Serialize)]
 #[serde(rename_all = "kebab-case")]
 #[serde(tag = "sync", content = "state")]
@@ -52,7 +52,7 @@ pub enum Events {
     Connect {
         #[serde(rename = "networkId")]
         network_id: NetworkId,
-        /// Kaspa node RPC url on which connection
+        /// Kash node RPC url on which connection
         /// has been established
         url: Option<String>,
     },
@@ -65,7 +65,7 @@ pub enum Events {
     /// A special event emitted if the connected node
     /// does not have UTXO index enabled
     UtxoIndexNotEnabled {
-        /// Kaspa node RPC url on which connection
+        /// Kash node RPC url on which connection
         /// has been established
         url: Option<String>,
     },
@@ -94,7 +94,7 @@ pub enum Events {
         server_version: String,
         #[serde(rename = "isSynced")]
         is_synced: bool,
-        /// Kaspa node RPC url on which connection
+        /// Kash node RPC url on which connection
         /// has been established
         url: Option<String>,
     },

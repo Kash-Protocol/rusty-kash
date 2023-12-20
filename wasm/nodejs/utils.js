@@ -6,7 +6,7 @@ const {
     Address,
     Encoding,
     NetworkId,
-} = require('./kaspa/kaspa_wasm');
+} = require('./kash/kash_wasm');
 
 /**
  * Helper function to parse command line arguments for running the scripts
@@ -48,7 +48,7 @@ function parseArgs(options = {
         process.exit(0);
     }
 
-    const addressRegex = new RegExp(/(kaspa|kaspatest):\S+/i);
+    const addressRegex = new RegExp(/(kash|kashtest):\S+/i);
     const addressArg = values.address ?? positionals.find((positional) => addressRegex.test(positional)) ?? null;
     const destinationAddress = addressArg === null ? null : new Address(addressArg);
 

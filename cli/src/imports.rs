@@ -1,4 +1,4 @@
-pub use crate::cli::KaspaCli;
+pub use crate::cli::KashCli;
 pub use crate::error::Error;
 pub(crate) use crate::helpers;
 pub use crate::notifier::Notification;
@@ -9,16 +9,16 @@ pub use borsh::{BorshDeserialize, BorshSerialize};
 pub use cfg_if::cfg_if;
 pub use futures::stream::{Stream, StreamExt, TryStreamExt};
 pub use futures::{future::FutureExt, select, Future};
-pub use kaspa_consensus_core::network::{NetworkId, NetworkType};
-pub use kaspa_daemon::DaemonEvent;
-pub use kaspa_utils::hex::*;
-pub use kaspa_wallet_core::derivation::gen0::import::*;
-pub use kaspa_wallet_core::storage::interface::{AccessContext, Interface};
-pub use kaspa_wallet_core::storage::{AccessContextT, AccountKind, IdT, PrvKeyDataId, PrvKeyDataInfo};
-pub use kaspa_wallet_core::tx::PaymentOutputs;
-pub use kaspa_wallet_core::utils::*;
-pub use kaspa_wallet_core::{runtime::wallet::AccountCreateArgs, runtime::Wallet, secret::Secret};
-pub use kaspa_wallet_core::{
+pub use kash_consensus_core::network::{NetworkId, NetworkType};
+pub use kash_daemon::DaemonEvent;
+pub use kash_utils::hex::*;
+pub use kash_wallet_core::derivation::gen0::import::*;
+pub use kash_wallet_core::storage::interface::{AccessContext, Interface};
+pub use kash_wallet_core::storage::{AccessContextT, AccountKind, IdT, PrvKeyDataId, PrvKeyDataInfo};
+pub use kash_wallet_core::tx::PaymentOutputs;
+pub use kash_wallet_core::utils::*;
+pub use kash_wallet_core::{runtime::wallet::AccountCreateArgs, runtime::Wallet, secret::Secret};
+pub use kash_wallet_core::{
     Address, ConnectOptions, ConnectStrategy, DefaultSettings, Events, SettingsStore, SyncState, WalletSettings,
 };
 pub use pad::PadStr;

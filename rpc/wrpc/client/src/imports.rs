@@ -3,7 +3,7 @@ pub use crate::result::Result;
 pub use async_trait::async_trait;
 pub use futures::*;
 pub use js_sys::Function;
-pub use kaspa_notify::{
+pub use kash_notify::{
     error::{Error as NotifyError, Result as NotifyResult},
     events::EVENT_TYPE_ARRAY,
     listener::ListenerId,
@@ -11,7 +11,7 @@ pub use kaspa_notify::{
     scope::*,
     subscriber::{Subscriber, SubscriptionManager},
 };
-pub use kaspa_rpc_core::{
+pub use kash_rpc_core::{
     api::ops::RpcApiOps,
     api::rpc::RpcApi,
     error::RpcResult,

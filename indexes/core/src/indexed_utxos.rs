@@ -1,4 +1,4 @@
-use kaspa_consensus_core::tx::{ScriptPublicKey, TransactionOutpoint, UtxoEntry};
+use kash_consensus_core::tx::{ScriptPublicKey, TransactionOutpoint, UtxoEntry};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
@@ -12,7 +12,7 @@ pub type UtxoSetByScriptPublicKey = HashMap<ScriptPublicKey, CompactUtxoCollecti
 /// A map of balance by script public key
 pub type BalanceByScriptPublicKey = HashMap<ScriptPublicKey, u64>;
 
-// Note: memory optimization compared to go-lang kaspad:
+// Note: memory optimization compared to go-lang kashd:
 // Unlike `consensus_core::tx::UtxoEntry` the utxoindex utilizes a compacted utxo form, where `script_public_key` field is removed.
 // This utxo structure can be utilized in the utxoindex, since utxos are implicitly key'd via its script public key (and outpoint) at all times.
 /// A compacted form of [`UtxoEntry`] without reference to [`ScriptPublicKey`] or [`TransactionOutpoint`]

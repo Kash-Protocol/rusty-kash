@@ -1,7 +1,7 @@
 use crate::imports::*;
 use crate::result::Result;
 use crate::{TransactionOutpoint, TransactionOutpointInner};
-use kaspa_addresses::Address;
+use kash_addresses::Address;
 use workflow_wasm::abi::ref_from_abi;
 
 pub type UtxoEntryId = TransactionOutpointInner;
@@ -299,14 +299,14 @@ impl TryFrom<&JsValue> for UtxoEntryReference {
 
 impl UtxoEntryReference {
     pub fn fake(amount: u64) -> Self {
-        use kaspa_addresses::{Prefix, Version};
+        use kash_addresses::{Prefix, Version};
         let address = Address::new(Prefix::Testnet, Version::PubKey, &[0; 32]);
         Self::fake_with_address(amount, &address)
     }
 
     pub fn fake_with_address(amount: u64, address: &Address) -> Self {
         let outpoint = TransactionOutpoint::fake();
-        let script_public_key = kaspa_txscript::pay_to_address_script(address);
+        let script_public_key = kash_txscript::pay_to_address_script(address);
         let block_daa_score = 0;
         let is_coinbase = true;
 

@@ -1,6 +1,6 @@
 [package]
-name = "kaspa-addresses"
-description = "Kaspa address"
+name = "kash-addresses"
+description = "Kash address"
 version.workspace = true
 edition.workspace = true
 authors.workspace = true

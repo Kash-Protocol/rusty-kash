@@ -1,11 +1,11 @@
 use crate::result::Result;
-use kaspa_addresses::Address;
-use kaspa_consensus_core::constants::*;
-use kaspa_consensus_core::network::NetworkType;
+use kash_addresses::Address;
+use kash_consensus_core::constants::*;
+use kash_consensus_core::network::NetworkType;
 use separator::Separatable;
 use workflow_log::style;
 
-pub fn try_kaspa_str_to_sompi<S: Into<String>>(s: S) -> Result<Option<u64>> {
+pub fn try_kash_str_to_sompi<S: Into<String>>(s: S) -> Result<Option<u64>> {
     let s: String = s.into();
     let amount = s.trim();
     if amount.is_empty() {
@@ -15,33 +15,33 @@ pub fn try_kaspa_str_to_sompi<S: Into<String>>(s: S) -> Result<Option<u64>> {
     Ok(Some(str_to_sompi(amount)?))
 }
 
-pub fn try_kaspa_str_to_sompi_i64<S: Into<String>>(s: S) -> Result<Option<i64>> {
+pub fn try_kash_str_to_sompi_i64<S: Into<String>>(s: S) -> Result<Option<i64>> {
     let s: String = s.into();
     let amount = s.trim();
     if amount.is_empty() {
         return Ok(None);
     }
 
-    let amount = amount.parse::<f64>()? * SOMPI_PER_KASPA as f64;
+    let amount = amount.parse::<f64>()? * SOMPI_PER_KASH as f64;
     Ok(Some(amount as i64))
 }
 
 #[inline]
-pub fn sompi_to_kaspa(sompi: u64) -> f64 {
-    sompi as f64 / SOMPI_PER_KASPA as f64
+pub fn sompi_to_kash(sompi: u64) -> f64 {
+    sompi as f64 / SOMPI_PER_KASH as f64
 }
 
 #[inline]
-pub fn kaspa_to_sompi(kaspa: f64) -> u64 {
-    (kaspa * SOMPI_PER_KASPA as f64) as u64
+pub fn kash_to_sompi(kash: f64) -> u64 {
+    (kash * SOMPI_PER_KASH as f64) as u64
 }
 
 #[inline]
-pub fn sompi_to_kaspa_string(sompi: u64) -> String {
-    sompi_to_kaspa(sompi).separated_string()
+pub fn sompi_to_kash_string(sompi: u64) -> String {
+    sompi_to_kash(sompi).separated_string()
 }
 
-pub fn kaspa_suffix(network_type: &NetworkType) -> &'static str {
+pub fn kash_suffix(network_type: &NetworkType) -> &'static str {
     match network_type {
         NetworkType::Mainnet => "KAS",
         NetworkType::Testnet => "TKAS",
@@ -51,9 +51,9 @@ pub fn kaspa_suffix(network_type: &NetworkType) -> &'static str {
 }
 
 #[inline]
-pub fn sompi_to_kaspa_string_with_suffix(sompi: u64, network_type: &NetworkType) -> String {
-    let kas = sompi_to_kaspa(sompi).separated_string();
-    let suffix = kaspa_suffix(network_type);
+pub fn sompi_to_kash_string_with_suffix(sompi: u64, network_type: &NetworkType) -> String {
+    let kas = sompi_to_kash(sompi).separated_string();
+    let suffix = kash_suffix(network_type);
     format!("{kas} {suffix}")
 }
 
@@ -76,9 +76,9 @@ pub fn format_address_colors(address: &Address, range: Option<usize>) -> String 
 
 fn str_to_sompi(amount: &str) -> Result<u64> {
     let Some(dot_idx) = amount.find('.') else {
-        return Ok(amount.parse::<u64>()? * SOMPI_PER_KASPA);
+        return Ok(amount.parse::<u64>()? * SOMPI_PER_KASH);
     };
-    let integer = amount[..dot_idx].parse::<u64>()? * SOMPI_PER_KASPA;
+    let integer = amount[..dot_idx].parse::<u64>()? * SOMPI_PER_KASH;
     let decimal = &amount[dot_idx + 1..];
     let decimal_len = decimal.len();
     let decimal =

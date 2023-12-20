@@ -1,7 +1,7 @@
 use crate::connection::{Connection, ConnectionId};
 use itertools::Itertools;
-use kaspa_core::{debug, info, warn};
-use kaspa_notify::connection::Connection as ConnectionT;
+use kash_core::{debug, info, warn};
+use kash_notify::connection::Connection as ConnectionT;
 use parking_lot::RwLock;
 use std::{
     collections::{hash_map::Entry::Occupied, HashMap},

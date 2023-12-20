@@ -10,7 +10,7 @@ pub struct TransactionInputInner {
     pub sig_op_count: u8,
 }
 
-/// Represents a Kaspa transaction input
+/// Represents a Kash transaction input
 #[derive(Clone, Debug, Serialize, Deserialize)]
 #[wasm_bindgen(inspectable)]
 pub struct TransactionInput {

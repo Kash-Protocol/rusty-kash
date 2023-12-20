@@ -1,8 +1,8 @@
 use crate::imports::*;
 use crate::result::Result;
 use crate::tx::generator as native;
-use kaspa_consensus_wasm::{PrivateKey, Transaction};
-use kaspa_wrpc_client::wasm::RpcClient;
+use kash_consensus_wasm::{PrivateKey, Transaction};
+use kash_wrpc_client::wasm::RpcClient;
 
 #[wasm_bindgen(inspectable)]
 pub struct PendingTransaction {
@@ -69,7 +69,7 @@ impl PendingTransaction {
     pub fn sign(&self, js_value: JsValue) -> Result<()> {
         if let Ok(keys) = js_value.dyn_into::<Array>() {
             let keys =
-                keys.iter().map(PrivateKey::try_from).collect::<std::result::Result<Vec<_>, kaspa_consensus_wasm::error::Error>>()?;
+                keys.iter().map(PrivateKey::try_from).collect::<std::result::Result<Vec<_>, kash_consensus_wasm::error::Error>>()?;
             self.inner.try_sign_with_keys(keys.iter().map(|key| key.into()).collect())
         } else {
             Err(Error::custom("Please supply an array of keys"))

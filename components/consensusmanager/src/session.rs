@@ -2,7 +2,7 @@
 //!
 //! We use newtypes in order to simplify changing the underlying lock in the future
 
-use kaspa_consensus_core::{
+use kash_consensus_core::{
     acceptance_data::AcceptanceData,
     api::{BlockValidationFutures, ConsensusApi, DynConsensus},
     block::Block,
@@ -16,7 +16,7 @@ use kaspa_consensus_core::{
     tx::{Transaction, TransactionOutpoint, UtxoEntry},
     BlockHashSet, BlueWorkType, ChainPath, Hash,
 };
-use kaspa_utils::sync::rwlock::*;
+use kash_utils::sync::rwlock::*;
 use std::{ops::Deref, sync::Arc};
 
 pub use tokio::task::spawn_blocking;

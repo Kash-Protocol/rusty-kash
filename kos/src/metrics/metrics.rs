@@ -1,6 +1,6 @@
 use super::toolbar::*;
 use crate::imports::*;
-use kaspa_cli_lib::metrics::{Metric, MetricsSnapshot};
+use kash_cli_lib::metrics::{Metric, MetricsSnapshot};
 use std::collections::HashMap;
 use workflow_core::time::{HOURS, MINUTES};
 use workflow_d3::container::*;
@@ -104,7 +104,7 @@ impl Metrics {
         };
 
         let theme = match kind {
-            "kaspa" => GraphThemeOptions::new(font, primary, "rgb(220, 240, 231)", "rgb(17, 187, 125)", primary),
+            "kash" => GraphThemeOptions::new(font, primary, "rgb(220, 240, 231)", "rgb(17, 187, 125)", primary),
             _ => GraphThemeOptions::new(font, primary, "rgb(220, 231, 240)", "rgb(17, 125, 187)", primary),
         };
 
@@ -174,7 +174,7 @@ impl Metrics {
 
 #[wasm_bindgen]
 pub async fn init_metrics() -> Result<()> {
-    kaspa_core::log::set_log_level(LevelFilter::Info);
+    kash_core::log::set_log_level(LevelFilter::Info);
     workflow_log::set_colors_enabled(true);
 
     let metrics = Metrics::try_new().await.unwrap_or_else(|err| {

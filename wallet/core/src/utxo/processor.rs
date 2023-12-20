@@ -1,13 +1,13 @@
 use futures::{select_biased, FutureExt};
-use kaspa_notify::{
+use kash_notify::{
     listener::ListenerId,
     scope::{Scope, UtxosChangedScope, VirtualDaaScoreChangedScope},
 };
-use kaspa_rpc_core::{
+use kash_rpc_core::{
     api::ctl::{RpcCtl, RpcState},
     message::UtxosChangedNotification,
 };
-use kaspa_wrpc_client::KaspaRpcClient;
+use kash_wrpc_client::KashRpcClient;
 use workflow_core::channel::{Channel, DuplexChannel};
 use workflow_core::task::spawn;
 
@@ -15,7 +15,7 @@ use crate::imports::*;
 use crate::result::Result;
 use crate::utxo::{PendingUtxoEntryReference, UtxoContext, UtxoEntryId, UtxoEntryReference};
 use crate::{events::Events, runtime::SyncMonitor};
-use kaspa_rpc_core::{
+use kash_rpc_core::{
     notify::connection::{ChannelConnection, ChannelType},
     Notification,
 };
@@ -86,8 +86,8 @@ impl UtxoProcessor {
         self.rpc_ctl().descriptor()
     }
 
-    pub fn rpc_client(&self) -> Option<Arc<KaspaRpcClient>> {
-        self.rpc_api().clone().downcast_arc::<KaspaRpcClient>().ok()
+    pub fn rpc_client(&self) -> Option<Arc<KashRpcClient>> {
+        self.rpc_api().clone().downcast_arc::<KashRpcClient>().ok()
     }
 
     pub async fn bind_rpc(&self, rpc: Option<Rpc>) -> Result<()> {
@@ -278,14 +278,14 @@ impl UtxoProcessor {
 
             pub async fn init_state_from_server(&self) -> Result<()> {
 
-                let kaspa_rpc_core::GetInfoResponse { is_synced, is_utxo_indexed: has_utxo_index, server_version, .. } = self.rpc_api().get_info().await?;
+                let kash_rpc_core::GetInfoResponse { is_synced, is_utxo_indexed: has_utxo_index, server_version, .. } = self.rpc_api().get_info().await?;
 
                 if !has_utxo_index {
                     self.notify(Events::UtxoIndexNotEnabled { url: self.rpc_url() }).await?;
                     return Err(Error::MissingUtxoIndex);
                 }
 
-                let kaspa_rpc_core::GetBlockDagInfoResponse { virtual_daa_score, network: server_network_id, .. } = self.rpc_api().get_block_dag_info().await?;
+                let kash_rpc_core::GetBlockDagInfoResponse { virtual_daa_score, network: server_network_id, .. } = self.rpc_api().get_block_dag_info().await?;
 
                 let network_id = self.network_id()?;
                 if network_id != server_network_id {
@@ -294,7 +294,7 @@ impl UtxoProcessor {
 
                 self.inner.current_daa_score.store(virtual_daa_score, Ordering::SeqCst);
 
-                log_trace!("Connected to kaspad: '{server_version}' on '{server_network_id}';  SYNC: {is_synced}  DAA: {virtual_daa_score}");
+                log_trace!("Connected to kashd: '{server_version}' on '{server_network_id}';  SYNC: {is_synced}  DAA: {virtual_daa_score}");
 
                 self.sync_proc().track(is_synced).await?;
                 self.notify(Events::ServerStatus { server_version, is_synced, network_id, url: self.rpc_url() }).await?;
@@ -322,7 +322,7 @@ impl UtxoProcessor {
 
                 self.inner.current_daa_score.store(virtual_daa_score, Ordering::SeqCst);
 
-                log_trace!("Connected to kaspad: '{server_version}' on '{server_network_id}';  SYNC: {is_synced}  DAA: {virtual_daa_score}");
+                log_trace!("Connected to kashd: '{server_version}' on '{server_network_id}';  SYNC: {is_synced}  DAA: {virtual_daa_score}");
                 self.sync_proc().track(is_synced).await?;
                 self.notify(Events::ServerStatus { server_version, is_synced, network_id, url: self.rpc_url() }).await?;
 

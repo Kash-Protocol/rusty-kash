@@ -18,4 +18,4 @@ pub use scan::{Scan, ScanExtent};
 pub use settings::*;
 pub use stream::UtxoStream;
 
-pub use kaspa_consensus_wasm::UtxoEntryId;
+pub use kash_consensus_wasm::UtxoEntryId;

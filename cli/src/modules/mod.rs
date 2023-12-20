@@ -47,7 +47,7 @@ pub mod wallet;
 // create-unsigned-tx
 // sign
 
-pub fn register_handlers(cli: &Arc<KaspaCli>) -> Result<()> {
+pub fn register_handlers(cli: &Arc<KashCli>) -> Result<()> {
     register_handlers!(
         cli,
         cli.handlers(),
