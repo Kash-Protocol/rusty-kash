@@ -76,7 +76,7 @@ const { encoding, networkId, destinationAddress: destinationAddressArg } = requi
 
         // transaction generator creates a 
         // sequence of transactions
-        // for a requested amount of KAS.
+        // for a requested amount of KSH.
         // sign and submit these transactions
         while (pending = await generator.next()) {
             await pending.sign([privateKey]);

@@ -117,7 +117,7 @@ impl Account {
                                         if let Some(txid) = txid {
                                             tprintln!(
                                                 ctx_,
-                                                "Scan detected {} KAS at index {}; transfer txid: {}",
+                                                "Scan detected {} KSHat index {}; transfer txid: {}",
                                                 sompi_to_kash_string(balance),
                                                 processed,
                                                 txid
@@ -125,7 +125,7 @@ impl Account {
                                         } else if processed > 0 {
                                             tprintln!(
                                                 ctx_,
-                                                "Scanned {} derivations, found {} KAS",
+                                                "Scanned {} derivations, found {} KSH",
                                                 processed,
                                                 sompi_to_kash_string(balance)
                                             );
@@ -257,13 +257,13 @@ impl Account {
                     if let Some(txid) = txid {
                         tprintln!(
                             ctx_,
-                            "Scan detected {} KAS at index {}; transfer txid: {}",
+                            "Scan detected {} KSHat index {}; transfer txid: {}",
                             sompi_to_kash_string(balance),
                             processed,
                             txid
                         );
                     } else {
-                        tprintln!(ctx_, "Scanned {} derivations, found {} KAS", processed, sompi_to_kash_string(balance));
+                        tprintln!(ctx_, "Scanned {} derivations, found {} KSH", processed, sompi_to_kash_string(balance));
                     }
                 })),
             )
