@@ -9,7 +9,7 @@ pub const LOCK_TIME_THRESHOLD: u64 = 500_000_000_000;
 /// MAX_SCRIPT_PUBLIC_KEY_VERSION is the current latest supported public key script version.
 pub const MAX_SCRIPT_PUBLIC_KEY_VERSION: u16 = 0;
 
-/// SompiPerKash is the number of sompi in one kash (1 KAS).
+/// SompiPerKash is the number of sompi in one kash (1 KSH).
 pub const SOMPI_PER_KASH: u64 = 100_000_000;
 
 /// MaxSompi is the maximum transaction amount allowed in sompi.
