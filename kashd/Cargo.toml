@@ -13,6 +13,8 @@ name = "kashd_lib"
 crate-type = ["cdylib", "lib"]
 
 [dependencies]
+kash-alloc.workspace = true # This changes the global allocator for all of the next dependencies so should be kept first
+
 kash-addresses.workspace = true
 kash-addressmanager.workspace = true
 kash-consensus-core.workspace = true
@@ -50,5 +52,5 @@ tokio = { workspace = true, features = ["rt", "macros", "rt-multi-thread"] }
 workflow-log.workspace = true
 
 [features]
-heap = ["dhat"]
+heap = ["dhat", "kash-alloc/heap"]
 devnet-prealloc = ["kash-consensus/devnet-prealloc"]

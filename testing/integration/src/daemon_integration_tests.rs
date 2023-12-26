@@ -1,4 +1,5 @@
 use kash_addresses::Address;
+use kash_alloc::init_allocator_with_default_settings;
 use kash_consensusmanager::ConsensusManager;
 use kash_core::task::runtime::AsyncRuntime;
 use kash_notify::scope::{Scope, VirtualDaaScoreChangedScope};
@@ -10,6 +11,7 @@ use std::{sync::Arc, time::Duration};
 
 #[tokio::test(flavor = "multi_thread", worker_threads = 1)]
 async fn daemon_sanity_test() {
+    init_allocator_with_default_settings();
     kash_core::log::try_init_logger("INFO");
 
     // let total_fd_limit =  kash_utils::fd_budget::get_limit() / 2 - 128;
@@ -32,6 +34,7 @@ async fn daemon_sanity_test() {
 
 #[tokio::test(flavor = "multi_thread", worker_threads = 1)]
 async fn daemon_mining_test() {
+    init_allocator_with_default_settings();
     kash_core::log::try_init_logger("INFO");
 
     let args = Args {
@@ -103,6 +106,7 @@ async fn daemon_mining_test() {
 // The following test runtime parameters are required for a graceful shutdown of the gRPC server
 #[tokio::test(flavor = "multi_thread", worker_threads = 1)]
 async fn daemon_cleaning_test() {
+    init_allocator_with_default_settings();
     kash_core::log::try_init_logger("info,kash_grpc_core=trace,kash_grpc_server=trace,kash_grpc_client=trace,kash_core=trace");
     let args = Args { devnet: true, ..Default::default() };
     let consensus_manager;
