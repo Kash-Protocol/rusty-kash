@@ -8,6 +8,7 @@ include.workspace = true
 license.workspace = true
 
 [dependencies]
+kash-alloc.workspace = true            # This changes the global allocator for all of the next dependencies so should be kept first
 kash-addresses.workspace = true
 kash-consensus-core.workspace = true
 kash-consensus-notify.workspace = true

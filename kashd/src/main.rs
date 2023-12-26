@@ -4,6 +4,7 @@ extern crate kash_hashes;
 
 use std::sync::Arc;
 
+use kash_alloc::init_allocator_with_default_settings;
 use kash_core::{info, signals::Signals};
 use kash_utils::fd_budget;
 use kashd_lib::{
@@ -18,6 +19,8 @@ static ALLOC: dhat::Alloc = dhat::Alloc;
 pub fn main() {
     #[cfg(feature = "heap")]
     let _profiler = dhat::Profiler::builder().file_name("kashd-heap.json").build();
+
+    init_allocator_with_default_settings();
 
     let args = parse_args();
 
