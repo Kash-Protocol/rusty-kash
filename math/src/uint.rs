@@ -431,6 +431,13 @@ macro_rules! construct_uint {
 
         }
 
+        impl kash_utils::mem_size::MemSizeEstimator for $name {
+            fn estimate_mem_units(&self) -> usize {
+                1
+
+            }
+        }
+
         impl kash_utils::hex::ToHex for $name {
             fn to_hex(&self) -> String {
                 self.to_be_bytes().as_slice().to_hex()
