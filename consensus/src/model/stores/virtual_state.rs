@@ -4,8 +4,8 @@ use kash_consensus_core::{
     block::VirtualStateApproxId, coinbase::BlockRewardData, config::genesis::GenesisBlock, tx::TransactionId,
     utxo::utxo_diff::UtxoDiff, BlockHashMap, BlockHashSet, HashMapCustomHasher,
 };
-use kash_database::prelude::StoreResult;
 use kash_database::prelude::{BatchDbWriter, CachedDbItem, DirectDbWriter};
+use kash_database::prelude::{CachePolicy, StoreResult};
 use kash_database::prelude::{StoreError, DB};
 use kash_database::registry::DatabaseStorePrefixes;
 use kash_hashes::Hash;
@@ -84,10 +84,10 @@ pub struct VirtualStores {
 }
 
 impl VirtualStores {
-    pub fn new(db: Arc<DB>, utxoset_cache_size: u64) -> Self {
+    pub fn new(db: Arc<DB>, utxoset_cache_policy: CachePolicy) -> Self {
         Self {
             state: DbVirtualStateStore::new(db.clone()),
-            utxo_set: DbUtxoSetStore::new(db, utxoset_cache_size, DatabaseStorePrefixes::VirtualUtxoset.into()),
+            utxo_set: DbUtxoSetStore::new(db, utxoset_cache_policy, DatabaseStorePrefixes::VirtualUtxoset.into()),
         }
     }
 }

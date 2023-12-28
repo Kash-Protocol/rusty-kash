@@ -8,11 +8,14 @@ use kash_consensus_notify::root::ConsensusNotificationRoot;
 use kash_consensusmanager::{ConsensusFactory, ConsensusInstance, DynConsensusCtl, SessionLock};
 use kash_core::{debug, time::unix_now, warn};
 use kash_database::{
-    prelude::{BatchDbWriter, CachedDbAccess, CachedDbItem, DirectDbWriter, StoreError, StoreResult, StoreResultExtensions, DB},
+    prelude::{
+        BatchDbWriter, CachePolicy, CachedDbAccess, CachedDbItem, DirectDbWriter, StoreError, StoreResult, StoreResultExtensions, DB,
+    },
     registry::DatabaseStorePrefixes,
 };
 
 use kash_txscript::caches::TxScriptCacheCounters;
+use kash_utils::mem_size::MemSizeEstimator;
 use parking_lot::RwLock;
 use rocksdb::WriteBatch;
 use serde::{Deserialize, Serialize};
@@ -23,6 +26,12 @@ pub struct ConsensusEntry {
     key: u64,
     directory_name: String,
     creation_timestamp: u64,
+}
+
+impl MemSizeEstimator for ConsensusEntry {
+    fn estimate_mem_units(&self) -> usize {
+        1
+    }
 }
 
 impl ConsensusEntry {
@@ -79,7 +88,7 @@ impl MultiConsensusManagementStore {
     pub fn new(db: Arc<DB>) -> Self {
         let mut store = Self {
             db: db.clone(),
-            entries: CachedDbAccess::new(db.clone(), 16, DatabaseStorePrefixes::ConsensusEntries.into()),
+            entries: CachedDbAccess::new(db.clone(), CachePolicy::Count(16), DatabaseStorePrefixes::ConsensusEntries.into()),
             metadata: CachedDbItem::new(db, DatabaseStorePrefixes::MultiConsensusMetadata.into()),
         };
         store.init();

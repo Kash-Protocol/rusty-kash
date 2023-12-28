@@ -5,6 +5,7 @@ use kash_consensus::{
     processes::reachability::tests::StoreValidationExtensions,
 };
 use kash_consensus_core::{api::ConsensusApi, blockhash};
+use kash_database::prelude::CachePolicy;
 use kash_hashes::Hash;
 use rand_distr::{Distribution, Poisson};
 use std::cmp::min;
@@ -43,7 +44,7 @@ async fn test_concurrent_pipeline() {
     }
 
     // Clone with a new cache in order to verify correct writes to the DB itself
-    let store = consensus.reachability_store().read().clone_with_new_cache(10000);
+    let store = consensus.reachability_store().read().clone_with_new_cache(CachePolicy::Count(10_000), CachePolicy::Count(10_000));
 
     // Assert intervals
     store.validate_intervals(blockhash::ORIGIN).unwrap();
@@ -116,7 +117,7 @@ async fn test_concurrent_pipeline_random() {
     }
 
     // Clone with a new cache in order to verify correct writes to the DB itself
-    let store = consensus.reachability_store().read().clone_with_new_cache(10000);
+    let store = consensus.reachability_store().read().clone_with_new_cache(CachePolicy::Count(10_000), CachePolicy::Count(10_000));
 
     // Assert intervals
     store.validate_intervals(blockhash::ORIGIN).unwrap();

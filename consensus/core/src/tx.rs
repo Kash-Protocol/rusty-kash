@@ -2,6 +2,7 @@ mod script_public_key;
 
 use borsh::{BorshDeserialize, BorshSchema, BorshSerialize};
 use kash_utils::hex::ToHex;
+use kash_utils::mem_size::MemSizeEstimator;
 use kash_utils::{serde_bytes, serde_bytes_fixed_ref};
 pub use script_public_key::{scriptvec, ScriptPublicKey, ScriptPublicKeyVersion, ScriptPublicKeys, ScriptVec, SCRIPT_VECTOR_SIZE};
 use serde::{Deserialize, Serialize};
@@ -51,6 +52,12 @@ impl UtxoEntry {
         asset_type: AssetType,
     ) -> Self {
         Self { amount, script_public_key, block_daa_score, is_coinbase, asset_type }
+    }
+}
+
+impl MemSizeEstimator for UtxoEntry {
+    fn estimate_mem_units(&self) -> usize {
+        1
     }
 }
 
