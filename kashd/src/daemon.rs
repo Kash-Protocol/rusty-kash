@@ -30,7 +30,7 @@ use kash_mining::{
 };
 use kash_p2p_flows::{flow_context::FlowContext, service::P2pService};
 
-use kash_perf_monitor::builder::Builder as PerfMonitorBuilder;
+use kash_perf_monitor::{builder::Builder as PerfMonitorBuilder, counters::CountersSnapshot};
 use kash_utxoindex::{api::UtxoIndexProxy, UtxoIndex};
 use kash_wrpc_server::service::{Options as WrpcServerOptions, WebSocketCounters as WrpcServerCounters, WrpcEncoding, WrpcService};
 
@@ -378,8 +378,9 @@ do you confirm? (answer y/n or pass --yes to the Kashd command line to confirm a
         .with_fetch_interval(Duration::from_secs(args.perf_metrics_interval_sec))
         .with_tick_service(tick_service.clone());
     let perf_monitor = if args.perf_metrics {
-        let cb = move |counters| {
-            trace!("[{}] metrics: {:?}", kash_perf_monitor::SERVICE_NAME, counters);
+        let cb = move |counters: CountersSnapshot| {
+            trace!("[{}] {}", kash_perf_monitor::SERVICE_NAME, counters.to_process_metrics_display());
+            trace!("[{}] {}", kash_perf_monitor::SERVICE_NAME, counters.to_io_metrics_display());
             #[cfg(feature = "heap")]
             trace!("[{}] heap stats: {:?}", kash_perf_monitor::SERVICE_NAME, dhat::HeapStats::get());
         };
