@@ -3,6 +3,7 @@ use crate::input::TransactionInput;
 use crate::output::TransactionOutput;
 use crate::result::Result;
 use kash_consensus_core::subnets::{self, SubnetworkId};
+use kash_consensus_core::tx::TransactionKind;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -10,6 +11,7 @@ pub struct TransactionInner {
     pub version: u16,
     pub inputs: Vec<TransactionInput>,
     pub outputs: Vec<TransactionOutput>,
+    pub kind: TransactionKind,
     pub lock_time: u64,
     pub subnetwork_id: SubnetworkId,
     pub gas: u64,
@@ -32,6 +34,7 @@ impl Transaction {
         version: u16,
         inputs: Vec<TransactionInput>,
         outputs: Vec<TransactionOutput>,
+        kind: TransactionKind,
         lock_time: u64,
         subnetwork_id: SubnetworkId,
         gas: u64,
@@ -42,6 +45,7 @@ impl Transaction {
                 version,
                 inputs,
                 outputs,
+                kind,
                 lock_time,
                 subnetwork_id,
                 gas,
@@ -218,7 +222,8 @@ impl TryFrom<&JsValue> for Transaction {
                     .into_iter()
                     .map(|jsv| jsv.try_into())
                     .collect::<std::result::Result<Vec<TransactionOutput>, Error>>()?;
-                Transaction::new(version, inputs, outputs, lock_time, subnetwork_id, gas, payload)
+                let kind = object.get_u32("kind")?.into();
+                Transaction::new(version, inputs, outputs, kind, lock_time, subnetwork_id, gas, payload)
             }
         } else {
             Err("Transaction must be an object".into())
@@ -235,6 +240,7 @@ impl From<cctx::Transaction> for Transaction {
             version: tx.version,
             inputs,
             outputs,
+            kind: tx.kind,
             lock_time: tx.lock_time,
             gas: tx.gas,
             payload: tx.payload,
@@ -256,6 +262,7 @@ impl From<&Transaction> for cctx::Transaction {
             inner.version,
             inputs,
             outputs,
+            inner.kind,
             inner.lock_time,
             inner.subnetwork_id.clone(),
             inner.gas,

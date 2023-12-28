@@ -38,7 +38,7 @@ impl MempoolUtxoSet {
 
         for (i, output) in transaction.tx.outputs.iter().enumerate() {
             let outpoint = TransactionOutpoint::new(transaction_id, i as u32);
-            let entry = UtxoEntry::new(output.value, output.script_public_key.clone(), UNACCEPTED_DAA_SCORE, false);
+            let entry = UtxoEntry::new(output.value, output.script_public_key.clone(), UNACCEPTED_DAA_SCORE, false, output.asset_type);
             self.pool_unspent_outputs.insert(outpoint, entry);
         }
     }

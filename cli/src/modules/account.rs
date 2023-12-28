@@ -117,7 +117,7 @@ impl Account {
                                         if let Some(txid) = txid {
                                             tprintln!(
                                                 ctx_,
-                                                "Scan detected {} KSHat index {}; transfer txid: {}",
+                                                "Scan detected {} KSH at index {}; transfer txid: {}",
                                                 sompi_to_kash_string(balance),
                                                 processed,
                                                 txid
@@ -257,7 +257,7 @@ impl Account {
                     if let Some(txid) = txid {
                         tprintln!(
                             ctx_,
-                            "Scan detected {} KSHat index {}; transfer txid: {}",
+                            "Scan detected {} KSH at index {}; transfer txid: {}",
                             sompi_to_kash_string(balance),
                             processed,
                             txid

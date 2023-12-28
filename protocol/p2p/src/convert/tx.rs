@@ -53,7 +53,7 @@ impl From<&TransactionInput> for protowire::TransactionInput {
 
 impl From<&TransactionOutput> for protowire::TransactionOutput {
     fn from(output: &TransactionOutput) -> Self {
-        Self { value: output.value, script_public_key: Some((&output.script_public_key).into()) }
+        Self { value: output.value, script_public_key: Some((&output.script_public_key).into()), asset_type: output.asset_type.into() }
     }
 }
 
@@ -63,6 +63,7 @@ impl From<&Transaction> for protowire::TransactionMessage {
             version: tx.version as u32,
             inputs: tx.inputs.iter().map(|input| input.into()).collect(),
             outputs: tx.outputs.iter().map(|output| output.into()).collect(),
+            kind: tx.kind.into(),
             lock_time: tx.lock_time,
             subnetwork_id: Some((&tx.subnetwork_id).into()),
             gas: tx.gas,
@@ -103,7 +104,13 @@ impl TryFrom<protowire::UtxoEntry> for UtxoEntry {
     type Error = ConversionError;
 
     fn try_from(value: protowire::UtxoEntry) -> Result<Self, Self::Error> {
-        Ok(Self::new(value.amount, value.script_public_key.try_into_ex()?, value.block_daa_score, value.is_coinbase))
+        Ok(Self::new(
+            value.amount,
+            value.script_public_key.try_into_ex()?,
+            value.block_daa_score,
+            value.is_coinbase,
+            value.asset_type.into(),
+        ))
     }
 }
 
@@ -127,7 +134,7 @@ impl TryFrom<protowire::TransactionOutput> for TransactionOutput {
     type Error = ConversionError;
 
     fn try_from(output: protowire::TransactionOutput) -> Result<Self, Self::Error> {
-        Ok(Self::new(output.value, output.script_public_key.try_into_ex()?))
+        Ok(Self::new(output.value, output.script_public_key.try_into_ex()?, output.asset_type.into()))
     }
 }
 
@@ -139,6 +146,7 @@ impl TryFrom<protowire::TransactionMessage> for Transaction {
             tx.version.try_into()?,
             tx.inputs.into_iter().map(|i| i.try_into()).collect::<Result<Vec<TransactionInput>, Self::Error>>()?,
             tx.outputs.into_iter().map(|i| i.try_into()).collect::<Result<Vec<TransactionOutput>, Self::Error>>()?,
+            tx.kind.into(),
             tx.lock_time,
             tx.subnetwork_id.try_into_ex()?,
             tx.gas,

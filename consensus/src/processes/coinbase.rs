@@ -1,3 +1,5 @@
+use kash_consensus_core::asset_type::AssetType::KSH;
+use kash_consensus_core::tx::TransactionKind::TransferKSH;
 use kash_consensus_core::{
     coinbase::*,
     errors::coinbase::{CoinbaseError, CoinbaseResult},
@@ -105,8 +107,11 @@ impl CoinbaseManager {
         for blue in ghostdag_data.mergeset_blues.iter().filter(|h| !mergeset_non_daa.contains(h)) {
             let reward_data = mergeset_rewards.get(blue).unwrap();
             if reward_data.subsidy + reward_data.total_fees > 0 {
-                outputs
-                    .push(TransactionOutput::new(reward_data.subsidy + reward_data.total_fees, reward_data.script_public_key.clone()));
+                outputs.push(TransactionOutput::new(
+                    reward_data.subsidy + reward_data.total_fees,
+                    reward_data.script_public_key.clone(),
+                    KSH,
+                ));
             }
         }
 
@@ -118,7 +123,7 @@ impl CoinbaseManager {
             red_reward += reward_data.subsidy + reward_data.total_fees;
         }
         if red_reward > 0 {
-            outputs.push(TransactionOutput::new(red_reward, miner_data.script_public_key.clone()));
+            outputs.push(TransactionOutput::new(red_reward, miner_data.script_public_key.clone(), KSH));
         }
 
         // Build the current block's payload
@@ -126,7 +131,7 @@ impl CoinbaseManager {
         let payload = self.serialize_coinbase_payload(&CoinbaseData { blue_score: ghostdag_data.blue_score, subsidy, miner_data })?;
 
         Ok(CoinbaseTransactionTemplate {
-            tx: Transaction::new(constants::TX_VERSION, vec![], outputs, 0, subnets::SUBNETWORK_ID_COINBASE, 0, payload),
+            tx: Transaction::new(constants::TX_VERSION, vec![], outputs, TransferKSH, 0, subnets::SUBNETWORK_ID_COINBASE, 0, payload),
             has_red_reward: red_reward > 0,
         })
     }

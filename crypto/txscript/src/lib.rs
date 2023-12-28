@@ -508,6 +508,8 @@ mod tests {
     use crate::opcodes::codes::{OpBlake2b, OpCheckSig, OpData1, OpData2, OpData32, OpDup, OpEqual, OpPushData1, OpTrue};
 
     use super::*;
+    use kash_consensus_core::asset_type::AssetType;
+    use kash_consensus_core::tx::TransactionKind::TransferKSH;
     use kash_consensus_core::tx::{
         PopulatedTransaction, ScriptPublicKey, Transaction, TransactionId, TransactionOutpoint, TransactionOutput,
     };
@@ -554,10 +556,14 @@ mod tests {
                 sequence: 4294967295,
                 sig_op_count: 0,
             };
-            let output = TransactionOutput { value: 1000000000, script_public_key: ScriptPublicKey::new(0, test.script.into()) };
+            let output = TransactionOutput {
+                value: 1000000000,
+                script_public_key: ScriptPublicKey::new(0, test.script.into()),
+                asset_type: AssetType::KSH,
+            };
 
-            let tx = Transaction::new(1, vec![input.clone()], vec![output.clone()], 0, Default::default(), 0, vec![]);
-            let utxo_entry = UtxoEntry::new(output.value, output.script_public_key.clone(), 0, tx.is_coinbase());
+            let tx = Transaction::new(1, vec![input.clone()], vec![output.clone()], TransferKSH, 0, Default::default(), 0, vec![]);
+            let utxo_entry = UtxoEntry::new(output.value, output.script_public_key.clone(), 0, tx.is_coinbase(), output.asset_type);
 
             let populated_tx = PopulatedTransaction::new(&tx, vec![utxo_entry.clone()]);
 
@@ -924,9 +930,10 @@ mod bitcoind_tests {
 
     use super::*;
     use crate::script_builder::ScriptBuilderError;
-    use kash_consensus_core::constants::MAX_TX_IN_SEQUENCE_NUM;
-    use kash_consensus_core::tx::{
-        PopulatedTransaction, ScriptPublicKey, Transaction, TransactionId, TransactionOutpoint, TransactionOutput,
+    use kash_consensus_core::{
+        asset_type::AssetType::{self, KSH},
+        constants::MAX_TX_IN_SEQUENCE_NUM,
+        tx::{PopulatedTransaction, ScriptPublicKey, Transaction, TransactionId, TransactionOutpoint, TransactionOutput},
     };
 
     #[derive(PartialEq, Eq, Debug, Clone)]
@@ -949,7 +956,7 @@ mod bitcoind_tests {
         Comment((String,)),
     }
 
-    fn create_spending_transaction(sig_script: Vec<u8>, script_public_key: ScriptPublicKey) -> Transaction {
+    fn create_spending_transaction(sig_script: Vec<u8>, script_public_key: ScriptPublicKey, asset_type: AssetType) -> Transaction {
         let coinbase = Transaction::new(
             1,
             vec![TransactionInput::new(
@@ -958,7 +965,8 @@ mod bitcoind_tests {
                 MAX_TX_IN_SEQUENCE_NUM,
                 Default::default(),
             )],
-            vec![TransactionOutput::new(0, script_public_key)],
+            vec![TransactionOutput::new(0, script_public_key, asset_type)],
+            Default::default(),
             Default::default(),
             Default::default(),
             Default::default(),
@@ -973,7 +981,8 @@ mod bitcoind_tests {
                 MAX_TX_IN_SEQUENCE_NUM,
                 Default::default(),
             )],
-            vec![TransactionOutput::new(0, Default::default())],
+            vec![TransactionOutput::new(0, Default::default(), asset_type)],
+            Default::default(),
             Default::default(),
             Default::default(),
             Default::default(),
@@ -1008,8 +1017,8 @@ mod bitcoind_tests {
                 ScriptPublicKey::from_vec(0, opcodes::parse_short_form(script_pub_key).map_err(UnifiedError::ScriptBuilderError)?);
 
             // Create transaction
-            let tx = create_spending_transaction(script_sig, script_pub_key.clone());
-            let entry = UtxoEntry::new(0, script_pub_key.clone(), 0, true);
+            let tx = create_spending_transaction(script_sig, script_pub_key.clone(), KSH);
+            let entry = UtxoEntry::new(0, script_pub_key.clone(), 0, true, KSH);
             let populated_tx = PopulatedTransaction::new(&tx, vec![entry]);
 
             // Run transaction

@@ -1,3 +1,4 @@
+use kash_consensus_core::asset_type::AssetType;
 use kash_consensus_core::tx::{ScriptPublicKey, TransactionOutpoint, UtxoEntry};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
@@ -21,16 +22,22 @@ pub struct CompactUtxoEntry {
     pub amount: u64,
     pub block_daa_score: u64,
     pub is_coinbase: bool,
+    pub asset_type: AssetType,
 }
 impl CompactUtxoEntry {
     /// Creates a new [`CompactUtxoEntry`]
-    pub fn new(amount: u64, block_daa_score: u64, is_coinbase: bool) -> Self {
-        Self { amount, block_daa_score, is_coinbase }
+    pub fn new(amount: u64, block_daa_score: u64, is_coinbase: bool, asset_type: AssetType) -> Self {
+        Self { amount, block_daa_score, is_coinbase, asset_type }
     }
 }
 impl From<UtxoEntry> for CompactUtxoEntry {
     fn from(utxo_entry: UtxoEntry) -> Self {
-        Self { amount: utxo_entry.amount, block_daa_score: utxo_entry.block_daa_score, is_coinbase: utxo_entry.is_coinbase }
+        Self {
+            amount: utxo_entry.amount,
+            block_daa_score: utxo_entry.block_daa_score,
+            is_coinbase: utxo_entry.is_coinbase,
+            asset_type: utxo_entry.asset_type,
+        }
     }
 }
 

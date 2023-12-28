@@ -12,7 +12,9 @@ use std::{
 };
 use wasm_bindgen::prelude::*;
 
+use crate::errors::tx::TxRuleError;
 use crate::{
+    asset_type::AssetType,
     hashing,
     subnets::{self, SubnetworkId},
 };
@@ -36,11 +38,19 @@ pub struct UtxoEntry {
     pub block_daa_score: u64,
     #[wasm_bindgen(js_name = isCoinbase)]
     pub is_coinbase: bool,
+    #[wasm_bindgen(js_name = assetType)]
+    pub asset_type: AssetType,
 }
 
 impl UtxoEntry {
-    pub fn new(amount: u64, script_public_key: ScriptPublicKey, block_daa_score: u64, is_coinbase: bool) -> Self {
-        Self { amount, script_public_key, block_daa_score, is_coinbase }
+    pub fn new(
+        amount: u64,
+        script_public_key: ScriptPublicKey,
+        block_daa_score: u64,
+        is_coinbase: bool,
+        asset_type: AssetType,
+    ) -> Self {
+        Self { amount, script_public_key, block_daa_score, is_coinbase, asset_type }
     }
 }
 
@@ -90,11 +100,129 @@ impl TransactionInput {
 pub struct TransactionOutput {
     pub value: u64,
     pub script_public_key: ScriptPublicKey,
+    pub asset_type: AssetType,
 }
 
 impl TransactionOutput {
-    pub fn new(value: u64, script_public_key: ScriptPublicKey) -> Self {
-        Self { value, script_public_key }
+    pub fn new(value: u64, script_public_key: ScriptPublicKey, asset_type: AssetType) -> Self {
+        Self { value, script_public_key, asset_type }
+    }
+}
+
+/// Defines the kind of a transaction
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, BorshSerialize, BorshDeserialize, BorshSchema)]
+#[serde(rename_all = "camelCase")]
+#[wasm_bindgen(js_name = transactionKind)]
+#[derive(Default)]
+pub enum TransactionKind {
+    /// Regular KSH transfer: KSH -> KSH
+    #[default]
+    TransferKSH,
+    /// Regular KUSD transfer: KUSD -> KUSD
+    TransferKUSD,
+    /// Regular KRV transfer: KRV -> KRV
+    TransferKRV,
+    /// Minting KUSD using KSH: KSH -> KUSD
+    MintKUSD,
+    /// Staking KSH to get KRV: KSH -> KRV
+    StakeKSH,
+    /// Redeeming KSH using KRV: KRV -> KSH
+    RedeemKSH,
+}
+
+impl TransactionKind {
+    /// Returns the types of assets involved in the transaction.
+    /// For each transaction kind, it provides the source (`FromAssetType`) and the destination (`ToAssetType`) asset types.
+    pub fn asset_transfer_types(&self) -> (AssetType, AssetType) {
+        match self {
+            TransactionKind::TransferKSH => (AssetType::KSH, AssetType::KSH),
+            TransactionKind::TransferKUSD => (AssetType::KUSD, AssetType::KUSD),
+            TransactionKind::TransferKRV => (AssetType::KRV, AssetType::KRV),
+            TransactionKind::MintKUSD => (AssetType::KSH, AssetType::KUSD),
+            TransactionKind::StakeKSH => (AssetType::KSH, AssetType::KRV),
+            TransactionKind::RedeemKSH => (AssetType::KRV, AssetType::KSH),
+        }
+    }
+}
+
+impl From<TransactionKind> for u32 {
+    fn from(kind: TransactionKind) -> u32 {
+        // Convert the TransactionKind enum into a u32 value based on its variant
+        match kind {
+            TransactionKind::TransferKSH => 0,
+            TransactionKind::TransferKUSD => 1,
+            TransactionKind::TransferKRV => 2,
+            TransactionKind::MintKUSD => 3,
+            TransactionKind::StakeKSH => 4,
+            TransactionKind::RedeemKSH => 5,
+        }
+    }
+}
+
+impl From<u32> for TransactionKind {
+    fn from(value: u32) -> TransactionKind {
+        // Convert the u32 value into a TransactionKind enum based on its variant
+        match value {
+            0 => TransactionKind::TransferKSH,
+            1 => TransactionKind::TransferKUSD,
+            2 => TransactionKind::TransferKRV,
+            3 => TransactionKind::MintKUSD,
+            4 => TransactionKind::StakeKSH,
+            5 => TransactionKind::RedeemKSH,
+            _ => TransactionKind::TransferKSH, // Handle unknown values gracefully
+        }
+    }
+}
+
+impl From<String> for TransactionKind {
+    fn from(value: String) -> TransactionKind {
+        // Convert the string value into a TransactionKind enum based on its variant
+        match value.as_str() {
+            "TransferKSH" => TransactionKind::TransferKSH,
+            "TransferKUSD" => TransactionKind::TransferKUSD,
+            "TransferKRV" => TransactionKind::TransferKRV,
+            "MintKUSD" => TransactionKind::MintKUSD,
+            "StakeKSH" => TransactionKind::StakeKSH,
+            "RedeemKSH" => TransactionKind::RedeemKSH,
+            _ => TransactionKind::TransferKSH, // Handle unknown values gracefully
+        }
+    }
+}
+
+impl TryFrom<&String> for TransactionKind {
+    type Error = TxRuleError;
+    fn try_from(value: &String) -> Result<TransactionKind, TxRuleError> {
+        // Convert the string value into a TransactionKind enum based on its variant
+        match value.as_str() {
+            "TransferKSH" => Ok(TransactionKind::TransferKSH),
+            "TransferKUSD" => Ok(TransactionKind::TransferKUSD),
+            "TransferKRV" => Ok(TransactionKind::TransferKRV),
+            "MintKUSD" => Ok(TransactionKind::MintKUSD),
+            "StakeKSH" => Ok(TransactionKind::StakeKSH),
+            "RedeemKSH" => Ok(TransactionKind::RedeemKSH),
+            _ => Err(TxRuleError::InvalidTransactionType(value.clone())),
+        }
+    }
+}
+
+impl TryFrom<JsValue> for TransactionKind {
+    type Error = JsValue;
+
+    fn try_from(js_value: JsValue) -> Result<Self, Self::Error> {
+        if let Some(value) = js_value.as_f64() {
+            let value = value as u8;
+            match value {
+                0 => Ok(TransactionKind::TransferKSH),
+                1 => Ok(TransactionKind::TransferKUSD),
+                2 => Ok(TransactionKind::TransferKRV),
+                3 => Ok(TransactionKind::MintKUSD),
+                4 => Ok(TransactionKind::StakeKSH),
+                5 => Ok(TransactionKind::RedeemKSH),
+                _ => Err(JsValue::from_str("Invalid TransactionKind value")),
+            }
+        } else {
+            Err(JsValue::from_str("Invalid TransactionKind value"))
+        }
     }
 }
 
@@ -105,6 +233,7 @@ pub struct Transaction {
     pub version: u16,
     pub inputs: Vec<TransactionInput>,
     pub outputs: Vec<TransactionOutput>,
+    pub kind: TransactionKind,
     pub lock_time: u64,
     pub subnetwork_id: SubnetworkId,
     pub gas: u64,
@@ -122,6 +251,7 @@ impl Transaction {
         version: u16,
         inputs: Vec<TransactionInput>,
         outputs: Vec<TransactionOutput>,
+        kind: TransactionKind,
         lock_time: u64,
         subnetwork_id: SubnetworkId,
         gas: u64,
@@ -131,6 +261,7 @@ impl Transaction {
             version,
             inputs,
             outputs,
+            kind,
             lock_time,
             subnetwork_id,
             gas,
@@ -378,6 +509,7 @@ pub type SignableTransaction = MutableTransaction<Transaction>;
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::tx::TransactionKind::TransferKSH;
     use consensus_core::subnets::SUBNETWORK_ID_COINBASE;
     use smallvec::smallvec;
 
@@ -424,9 +556,10 @@ mod tests {
                 },
             ],
             vec![
-                TransactionOutput { value: 6, script_public_key: script_public_key.clone() },
-                TransactionOutput { value: 7, script_public_key },
+                TransactionOutput { value: 6, script_public_key: script_public_key.clone(), asset_type: AssetType::KSH },
+                TransactionOutput { value: 7, script_public_key, asset_type: AssetType::KSH },
             ],
+            TransferKSH,
             8,
             SUBNETWORK_ID_COINBASE,
             9,
@@ -455,15 +588,15 @@ mod tests {
             198, 0, 0, 0, 251, 255, 255, 255, 32, 0, 0, 0, 0, 0, 0, 0, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47,
             48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 4, 0, 0, 0, 0, 0, 0, 0, 5, 2, 0, 0, 0, 0, 0, 0, 0, 6, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 36, 0, 0, 0, 0, 0, 0, 0, 118, 169, 33, 3, 47, 126, 67, 10, 164, 201, 209, 89, 67, 126, 132, 185,
-            117, 220, 118, 217, 0, 59, 240, 146, 44, 243, 170, 69, 40, 70, 75, 171, 120, 13, 186, 94, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            36, 0, 0, 0, 0, 0, 0, 0, 118, 169, 33, 3, 47, 126, 67, 10, 164, 201, 209, 89, 67, 126, 132, 185, 117, 220, 118, 217, 0,
-            59, 240, 146, 44, 243, 170, 69, 40, 70, 75, 171, 120, 13, 186, 94, 8, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
-            13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42,
-            43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72,
-            73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 69, 146, 193,
-            64, 98, 49, 45, 0, 77, 32, 25, 122, 77, 15, 211, 252, 61, 210, 82, 177, 39, 153, 127, 33, 188, 172, 138, 38, 67, 75, 241,
-            176,
+            117, 220, 118, 217, 0, 59, 240, 146, 44, 243, 170, 69, 40, 70, 75, 171, 120, 13, 186, 94, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 36, 0, 0, 0, 0, 0, 0, 0, 118, 169, 33, 3, 47, 126, 67, 10, 164, 201, 209, 89, 67, 126, 132, 185, 117, 220, 118,
+            217, 0, 59, 240, 146, 44, 243, 170, 69, 40, 70, 75, 171, 120, 13, 186, 94, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0,
+            1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3,
+            4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35,
+            36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65,
+            66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95,
+            96, 97, 98, 99, 69, 146, 193, 64, 98, 49, 45, 0, 77, 32, 25, 122, 77, 15, 211, 252, 61, 210, 82, 177, 39, 153, 127, 33,
+            188, 172, 138, 38, 67, 75, 241, 176,
         ];
         assert_eq!(expected_bts, bts);
         assert_eq!(tx, bincode::deserialize(&bts).unwrap());
@@ -498,13 +631,16 @@ mod tests {
   "outputs": [
     {
       "value": 6,
-      "scriptPublicKey": "000076a921032f7e430aa4c9d159437e84b975dc76d9003bf0922cf3aa4528464bab780dba5e"
+      "scriptPublicKey": "000076a921032f7e430aa4c9d159437e84b975dc76d9003bf0922cf3aa4528464bab780dba5e",
+      "assetType": "KSH"
     },
     {
       "value": 7,
-      "scriptPublicKey": "000076a921032f7e430aa4c9d159437e84b975dc76d9003bf0922cf3aa4528464bab780dba5e"
+      "scriptPublicKey": "000076a921032f7e430aa4c9d159437e84b975dc76d9003bf0922cf3aa4528464bab780dba5e",
+      "assetType": "KSH"
     }
   ],
+  "kind": "transferKSH",
   "lockTime": 8,
   "subnetworkId": "0100000000000000000000000000000000000000",
   "gas": 9,

@@ -6,6 +6,7 @@ use crate::utxo::{TryIntoUtxoEntryReferences, UtxoEntryReference};
 use crate::wasm::tx::generator::*;
 use crate::wasm::wallet::Account;
 use crate::wasm::UtxoContext;
+use kash_consensus_core::tx::TransactionKind;
 
 #[wasm_bindgen]
 extern "C" {
@@ -65,6 +66,7 @@ impl Generator {
         let GeneratorSettings {
             source,
             multiplexer,
+            final_transaction_kind,
             final_transaction_destination,
             change_address,
             final_priority_fee,
@@ -83,6 +85,7 @@ impl Generator {
                     change_address,
                     sig_op_count,
                     minimum_signatures,
+                    final_transaction_kind,
                     final_transaction_destination,
                     final_priority_fee,
                     payload,
@@ -98,6 +101,7 @@ impl Generator {
                     change_address,
                     sig_op_count,
                     minimum_signatures,
+                    final_transaction_kind,
                     final_transaction_destination,
                     final_priority_fee,
                     payload,
@@ -106,7 +110,13 @@ impl Generator {
             }
             GeneratorSource::Account(account) => {
                 let account: Arc<dyn runtime::Account> = account.into();
-                native::GeneratorSettings::try_new_with_account(account, final_transaction_destination, final_priority_fee, None)?
+                native::GeneratorSettings::try_new_with_account(
+                    account,
+                    final_transaction_kind,
+                    final_transaction_destination,
+                    final_priority_fee,
+                    None,
+                )?
             }
         };
 
@@ -157,6 +167,7 @@ enum GeneratorSource {
 struct GeneratorSettings {
     pub source: GeneratorSource,
     pub multiplexer: Option<Multiplexer<Box<Events>>>,
+    pub final_transaction_kind: TransactionKind,
     pub final_transaction_destination: PaymentDestination,
     pub change_address: Option<Address>,
     pub final_priority_fee: Fees,
@@ -168,6 +179,13 @@ struct GeneratorSettings {
 impl TryFrom<GeneratorSettingsObject> for GeneratorSettings {
     type Error = Error;
     fn try_from(args: GeneratorSettingsObject) -> std::result::Result<Self, Self::Error> {
+        // Parsing the final_transaction_input_asset_type
+        let final_transaction_kind = match TransactionKind::try_from(args.get_value("transactionKind")?) {
+            Ok(transaction_kind) => transaction_kind,
+            Err(_err) => {
+                return Err(Error::custom("Invalid transactionKind value"));
+            }
+        };
         // lack of outputs results in a sweep transaction compounding utxos into the change address
 
         let outputs = args.get_value("outputs")?;
@@ -204,6 +222,7 @@ impl TryFrom<GeneratorSettingsObject> for GeneratorSettings {
         let settings = GeneratorSettings {
             source: generator_source,
             multiplexer: None,
+            final_transaction_kind,
             final_transaction_destination,
             change_address,
             final_priority_fee,

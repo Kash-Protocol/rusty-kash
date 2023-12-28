@@ -66,7 +66,7 @@ kash.init_console_panic_hook();
     const changeAddress = addr;
 
     const priorityFee = 1500;
-    const tx = createTransaction(utxoSelection, outputs, changeAddress, priorityFee);
+    const tx = createTransaction("TransferKSH", utxoSelection, outputs, changeAddress, priorityFee);
     const scriptHashes = tx.getScriptHashes();
     console.log("scriptHashes", scriptHashes)
 

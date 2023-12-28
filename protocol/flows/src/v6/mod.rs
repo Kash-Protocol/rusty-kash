@@ -100,8 +100,7 @@ pub fn register(ctx: FlowContext, router: Arc<Router>) -> Vec<Box<dyn Flow>> {
         Box::new(RelayTransactionsFlow::new(
             ctx.clone(),
             router.clone(),
-            router
-                .subscribe_with_capacity(vec![KashdMessagePayloadType::InvTransactions], RelayTransactionsFlow::invs_channel_size()),
+            router.subscribe_with_capacity(vec![KashdMessagePayloadType::InvTransactions], RelayTransactionsFlow::invs_channel_size()),
             router.subscribe_with_capacity(
                 vec![KashdMessagePayloadType::Transaction, KashdMessagePayloadType::TransactionNotFound],
                 RelayTransactionsFlow::txs_channel_size(),

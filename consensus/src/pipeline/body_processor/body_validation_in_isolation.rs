@@ -112,6 +112,8 @@ mod tests {
         errors::RuleError,
         params::MAINNET_PARAMS,
     };
+    use kash_consensus_core::asset_type::AssetType::KSH;
+    use kash_consensus_core::tx::TransactionKind::TransferKSH;
     use kash_consensus_core::{
         api::{BlockValidationFutures, ConsensusApi},
         block::MutableBlock,
@@ -169,7 +171,9 @@ mod tests {
                                 0xba, 0x30, 0xcd, 0x5a, 0x4b, 0x87
                             ),
                         ),
+                        asset_type: KSH,
                     }],
+                    TransferKSH,
                     0,
                     SUBNETWORK_ID_COINBASE,
                     0,
@@ -204,6 +208,7 @@ mod tests {
                         },
                     ],
                     vec![],
+                    TransferKSH,
                     0,
                     SUBNETWORK_ID_NATIVE,
                     0,
@@ -249,6 +254,7 @@ mod tests {
                                     0xac  // OP_CHECKSIG
                                 ),
                             ),
+                            asset_type: KSH,
                         },
                         TransactionOutput {
                             value: 0x108e20f00,
@@ -263,8 +269,10 @@ mod tests {
                                     0xac  // OP_CHECKSIG
                                 ),
                             ),
+                            asset_type: KSH,
                         },
                     ],
+                    TransferKSH,
                     0,
                     SUBNETWORK_ID_NATIVE,
                     0,
@@ -309,6 +317,7 @@ mod tests {
                                     0xac  // OP_CHECKSIG
                                 ),
                             ),
+                            asset_type: KSH,
                         },
                         TransactionOutput {
                             value: 0x11d260c0,
@@ -323,8 +332,10 @@ mod tests {
                                     0xac  // OP_CHECKSIG
                                 ),
                             ),
+                            asset_type: KSH,
                         },
                     ],
+                    TransferKSH,
                     0,
                     SUBNETWORK_ID_NATIVE,
                     0,
@@ -369,7 +380,9 @@ mod tests {
                                 0xac  // OP_CHECKSIG
                             ),
                         ),
+                        asset_type: KSH,
                     }],
+                    TransferKSH,
                     0,
                     SUBNETWORK_ID_NATIVE,
                     0,

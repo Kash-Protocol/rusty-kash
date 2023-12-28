@@ -1,10 +1,9 @@
 use kash_notify::{scope::Scope, subscription::Command};
 
 use crate::protowire::{
-    kashd_request, kashd_response, KashdRequest, KashdResponse, NotifyBlockAddedRequestMessage,
-    NotifyFinalityConflictRequestMessage, NotifyNewBlockTemplateRequestMessage, NotifyPruningPointUtxoSetOverrideRequestMessage,
-    NotifySinkBlueScoreChangedRequestMessage, NotifyUtxosChangedRequestMessage, NotifyVirtualChainChangedRequestMessage,
-    NotifyVirtualDaaScoreChangedRequestMessage,
+    kashd_request, kashd_response, KashdRequest, KashdResponse, NotifyBlockAddedRequestMessage, NotifyFinalityConflictRequestMessage,
+    NotifyNewBlockTemplateRequestMessage, NotifyPruningPointUtxoSetOverrideRequestMessage, NotifySinkBlueScoreChangedRequestMessage,
+    NotifyUtxosChangedRequestMessage, NotifyVirtualChainChangedRequestMessage, NotifyVirtualDaaScoreChangedRequestMessage,
 };
 
 impl KashdRequest {
@@ -24,9 +23,7 @@ impl kashd_request::Payload {
                 kashd_request::Payload::NotifyBlockAddedRequest(NotifyBlockAddedRequestMessage { command: command.into() })
             }
             Scope::NewBlockTemplate(_) => {
-                kashd_request::Payload::NotifyNewBlockTemplateRequest(NotifyNewBlockTemplateRequestMessage {
-                    command: command.into(),
-                })
+                kashd_request::Payload::NotifyNewBlockTemplateRequest(NotifyNewBlockTemplateRequestMessage { command: command.into() })
             }
 
             Scope::VirtualChainChanged(ref scope) => {
@@ -36,14 +33,10 @@ impl kashd_request::Payload {
                 })
             }
             Scope::FinalityConflict(_) => {
-                kashd_request::Payload::NotifyFinalityConflictRequest(NotifyFinalityConflictRequestMessage {
-                    command: command.into(),
-                })
+                kashd_request::Payload::NotifyFinalityConflictRequest(NotifyFinalityConflictRequestMessage { command: command.into() })
             }
             Scope::FinalityConflictResolved(_) => {
-                kashd_request::Payload::NotifyFinalityConflictRequest(NotifyFinalityConflictRequestMessage {
-                    command: command.into(),
-                })
+                kashd_request::Payload::NotifyFinalityConflictRequest(NotifyFinalityConflictRequestMessage { command: command.into() })
             }
             Scope::UtxosChanged(ref scope) => kashd_request::Payload::NotifyUtxosChangedRequest(NotifyUtxosChangedRequestMessage {
                 addresses: scope.addresses.iter().map(|x| x.into()).collect::<Vec<String>>(),

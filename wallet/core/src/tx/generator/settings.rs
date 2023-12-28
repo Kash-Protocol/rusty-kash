@@ -5,6 +5,7 @@ use crate::utxo::{UtxoContext, UtxoEntryReference, UtxoIterator};
 use crate::Events;
 use kash_addresses::Address;
 use kash_consensus_core::network::NetworkType;
+use kash_consensus_core::tx::TransactionKind;
 use std::sync::Arc;
 use workflow_core::channel::Multiplexer;
 
@@ -23,6 +24,8 @@ pub struct GeneratorSettings {
     pub minimum_signatures: u16,
     // change address
     pub change_address: Address,
+    // kind of the final transaction
+    pub final_transaction_kind: TransactionKind,
     // applies only to the final transaction
     pub final_transaction_priority_fee: Fees,
     // final transaction outputs
@@ -34,6 +37,7 @@ pub struct GeneratorSettings {
 impl GeneratorSettings {
     pub fn try_new_with_account(
         account: Arc<dyn Account>,
+        final_transaction_kind: TransactionKind,
         final_transaction_destination: PaymentDestination,
         final_priority_fee: Fees,
         final_transaction_payload: Option<Vec<u8>>,
@@ -54,7 +58,7 @@ impl GeneratorSettings {
             change_address,
             utxo_iterator: Box::new(utxo_iterator),
             utxo_context: Some(account.utxo_context().clone()),
-
+            final_transaction_kind,
             final_transaction_priority_fee: final_priority_fee,
             final_transaction_destination,
             final_transaction_payload,
@@ -68,6 +72,7 @@ impl GeneratorSettings {
         change_address: Address,
         sig_op_count: u8,
         minimum_signatures: u16,
+        final_transaction_kind: TransactionKind,
         final_transaction_destination: PaymentDestination,
         final_priority_fee: Fees,
         final_transaction_payload: Option<Vec<u8>>,
@@ -84,7 +89,7 @@ impl GeneratorSettings {
             change_address,
             utxo_iterator: Box::new(utxo_iterator),
             utxo_context: Some(utxo_context),
-
+            final_transaction_kind,
             final_transaction_priority_fee: final_priority_fee,
             final_transaction_destination,
             final_transaction_payload,
@@ -98,6 +103,7 @@ impl GeneratorSettings {
         change_address: Address,
         sig_op_count: u8,
         minimum_signatures: u16,
+        final_transaction_kind: TransactionKind,
         final_transaction_destination: PaymentDestination,
         final_priority_fee: Fees,
         final_transaction_payload: Option<Vec<u8>>,
@@ -113,7 +119,7 @@ impl GeneratorSettings {
             change_address,
             utxo_iterator: Box::new(utxo_iterator),
             utxo_context: None,
-
+            final_transaction_kind,
             final_transaction_priority_fee: final_priority_fee,
             final_transaction_destination,
             final_transaction_payload,

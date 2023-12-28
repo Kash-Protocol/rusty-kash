@@ -2,6 +2,7 @@ use crate::imports::*;
 use crate::result::Result;
 use crate::{TransactionOutpoint, TransactionOutpointInner};
 use kash_addresses::Address;
+use kash_consensus_core::asset_type::AssetType;
 use workflow_wasm::abi::ref_from_abi;
 
 pub type UtxoEntryId = TransactionOutpointInner;
@@ -283,11 +284,13 @@ impl TryFrom<&JsValue> for UtxoEntryReference {
             let script_public_key = ScriptPublicKey::try_from(utxo_entry.get_value("scriptPublicKey")?)?;
             let block_daa_score = utxo_entry.get_u64("blockDaaScore")?;
             let is_coinbase = utxo_entry.get_bool("isCoinbase")?;
+            let asset_type = AssetType::try_from(object.get_value("assetType")?)?;
 
+            // Construct UtxoEntry
             let utxo_entry = UtxoEntry {
                 address: Some(address),
                 outpoint,
-                entry: cctx::UtxoEntry { amount, script_public_key, block_daa_score, is_coinbase },
+                entry: cctx::UtxoEntry { amount, script_public_key, block_daa_score, is_coinbase, asset_type },
             };
 
             Ok(UtxoEntryReference::from(utxo_entry))
@@ -298,22 +301,26 @@ impl TryFrom<&JsValue> for UtxoEntryReference {
 }
 
 impl UtxoEntryReference {
+    // Creates a fake UtxoEntryReference with specified amount.
     pub fn fake(amount: u64) -> Self {
         use kash_addresses::{Prefix, Version};
         let address = Address::new(Prefix::Testnet, Version::PubKey, &[0; 32]);
         Self::fake_with_address(amount, &address)
     }
 
+    // Creates a fake UtxoEntryReference with specified amount and address.
     pub fn fake_with_address(amount: u64, address: &Address) -> Self {
         let outpoint = TransactionOutpoint::fake();
         let script_public_key = kash_txscript::pay_to_address_script(address);
         let block_daa_score = 0;
         let is_coinbase = true;
+        let asset_type = AssetType::KSH; // Default asset type for fake UtxoEntry
 
+        // Construct UtxoEntry
         let utxo_entry = UtxoEntry {
             address: Some(address.clone()),
             outpoint,
-            entry: cctx::UtxoEntry { amount, script_public_key, block_daa_score, is_coinbase },
+            entry: cctx::UtxoEntry { amount, script_public_key, block_daa_score, is_coinbase, asset_type },
         };
 
         UtxoEntryReference::from(utxo_entry)

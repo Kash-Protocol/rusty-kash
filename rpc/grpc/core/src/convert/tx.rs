@@ -1,5 +1,6 @@
 use crate::protowire;
 use crate::{from, try_from};
+use kash_consensus_core::asset_type::AssetType;
 use kash_rpc_core::{FromRpcHex, RpcError, RpcHash, RpcResult, RpcScriptVec, ToRpcHex};
 use std::str::FromStr;
 
@@ -12,6 +13,7 @@ from!(item: &kash_rpc_core::RpcTransaction, protowire::RpcTransaction, {
         version: item.version.into(),
         inputs: item.inputs.iter().map(protowire::RpcTransactionInput::from).collect(),
         outputs: item.outputs.iter().map(protowire::RpcTransactionOutput::from).collect(),
+        kind: item.kind.into(),
         lock_time: item.lock_time,
         subnetwork_id: item.subnetwork_id.to_string(),
         gas: item.gas,
@@ -35,6 +37,7 @@ from!(item: &kash_rpc_core::RpcTransactionOutput, protowire::RpcTransactionOutpu
         amount: item.value,
         script_public_key: Some((&item.script_public_key).into()),
         verbose_data: item.verbose_data.as_ref().map(|x| x.into()),
+        asset_type: item.asset_type.into(),
     }
 });
 
@@ -48,6 +51,7 @@ from!(item: &kash_rpc_core::RpcUtxoEntry, protowire::RpcUtxoEntry, {
         script_public_key: Some((&item.script_public_key).into()),
         block_daa_score: item.block_daa_score,
         is_coinbase: item.is_coinbase,
+        asset_type: item.asset_type.into(),
     }
 });
 
@@ -106,6 +110,7 @@ try_from!(item: &protowire::RpcTransaction, kash_rpc_core::RpcTransaction, {
             .iter()
             .map(kash_rpc_core::RpcTransactionOutput::try_from)
             .collect::<RpcResult<Vec<kash_rpc_core::RpcTransactionOutput>>>()?,
+        kind: item.kind.into(),
         lock_time: item.lock_time,
         subnetwork_id: kash_rpc_core::RpcSubnetworkId::from_str(&item.subnetwork_id)?,
         gas: item.gas,
@@ -137,6 +142,7 @@ try_from!(item: &protowire::RpcTransactionOutput, kash_rpc_core::RpcTransactionO
             .ok_or_else(|| RpcError::MissingRpcFieldError("RpcTransactionOutput".to_string(), "script_public_key".to_string()))?
             .try_into()?,
         verbose_data: item.verbose_data.as_ref().map(kash_rpc_core::RpcTransactionOutputVerboseData::try_from).transpose()?,
+        asset_type: AssetType::from(item.asset_type),
     }
 });
 
@@ -154,6 +160,7 @@ try_from!(item: &protowire::RpcUtxoEntry, kash_rpc_core::RpcUtxoEntry, {
             .try_into()?,
         block_daa_score: item.block_daa_score,
         is_coinbase: item.is_coinbase,
+        asset_type: AssetType::from(item.asset_type),
     }
 });
 

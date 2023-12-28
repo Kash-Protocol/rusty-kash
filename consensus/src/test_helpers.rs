@@ -1,3 +1,5 @@
+use kash_consensus_core::asset_type::AssetType::KSH;
+use kash_consensus_core::tx::TransactionKind::TransferKSH;
 use kash_consensus_core::{
     block::Block,
     header::Header,
@@ -49,6 +51,7 @@ pub fn generate_random_utxo_from_script_public_key_pool(
         script_public_key_pool.choose(rng).expect("expected_script_public key").clone(),
         rng.gen(),
         rng.gen_bool(0.5),
+        KSH,
     )
 }
 
@@ -58,6 +61,7 @@ pub fn generate_random_utxo(rng: &mut SmallRng) -> UtxoEntry {
         generate_random_p2pk_script_public_key(rng),
         rng.gen(),
         rng.gen_bool(0.5),
+        KSH,
     )
 }
 
@@ -117,6 +121,7 @@ pub fn generate_random_transaction(rng: &mut SmallRng, input_amount: usize, outp
         rng.gen(),
         generate_random_transaction_inputs(rng, input_amount),
         generate_random_transaction_outputs(rng, output_amount),
+        TransferKSH,
         rng.gen(),
         SubnetworkId::from_byte(rng.gen()),
         rng.gen(),
@@ -144,6 +149,7 @@ pub fn generate_random_transaction_output(rng: &mut SmallRng) -> TransactionOutp
     TransactionOutput::new(
         rng.gen_range(1..100_000), //we choose small amounts as to not overflow with large utxosets.
         generate_random_p2pk_script_public_key(rng),
+        KSH,
     )
 }
 

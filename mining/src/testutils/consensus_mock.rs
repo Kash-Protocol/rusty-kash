@@ -18,6 +18,7 @@ use kash_consensus_core::{
 use kash_core::time::unix_now;
 use kash_hashes::ZERO_HASH;
 
+use kash_consensus_core::asset_type::AssetType::KSH;
 use parking_lot::RwLock;
 use std::{collections::HashMap, sync::Arc};
 
@@ -53,7 +54,7 @@ impl ConsensusMock {
         transaction.tx.outputs.iter().enumerate().for_each(|(i, x)| {
             utxos.insert(
                 TransactionOutpoint::new(transaction.id(), i as u32),
-                UtxoEntry::new(x.value, x.script_public_key.clone(), block_daa_score, transaction.tx.is_coinbase()),
+                UtxoEntry::new(x.value, x.script_public_key.clone(), block_daa_score, transaction.tx.is_coinbase(), KSH),
             );
         });
         // Register the transaction

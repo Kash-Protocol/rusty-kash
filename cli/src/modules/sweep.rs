@@ -12,7 +12,7 @@ impl Sweep {
         let (wallet_secret, payment_secret) = ctx.ask_wallet_secret(Some(&account)).await?;
         let abortable = Abortable::default();
         // let ctx_ = ctx.clone();
-        let (summary, _ids) = account
+        let (summaries, _ids) = account
             .sweep(
                 wallet_secret,
                 payment_secret,
@@ -23,7 +23,9 @@ impl Sweep {
             )
             .await?;
 
-        tprintln!(ctx, "Sweep: {summary}");
+        for summary in summaries.iter() {
+            tprintln!(ctx, "Sweep - {summary}");
+        }
 
         Ok(())
     }

@@ -59,9 +59,10 @@ message RpcTransaction {
   uint32 version = 1;
   repeated RpcTransactionInput inputs = 2;
   repeated RpcTransactionOutput outputs = 3;
-  uint64 lockTime = 4;
-  string subnetworkId = 5;
-  uint64 gas = 6;
+  uint32 kind = 4;
+  uint64 lockTime = 5;
+  string subnetworkId = 6;
+  uint64 gas = 7;
   string payload = 8;
   RpcTransactionVerboseData verboseData = 9;
 }
@@ -82,7 +83,8 @@ message RpcScriptPublicKey {
 message RpcTransactionOutput {
   uint64 amount = 1;
   RpcScriptPublicKey scriptPublicKey = 2;
-  RpcTransactionOutputVerboseData verboseData = 3;
+  uint32 assetType = 3;
+  RpcTransactionOutputVerboseData verboseData = 4;
 }
 
 message RpcOutpoint {
@@ -95,6 +97,7 @@ message RpcUtxoEntry {
   RpcScriptPublicKey scriptPublicKey = 2;
   uint64 blockDaaScore = 3;
   bool isCoinbase = 4;
+  uint32 assetType = 5;
 }
 
 message RpcTransactionVerboseData{

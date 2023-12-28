@@ -264,7 +264,9 @@ impl TemplateTransactionSelector for TransactionsSelector {
 mod tests {
     use super::*;
     use itertools::Itertools;
+    use kash_consensus_core::tx::TransactionKind::TransferKSH;
     use kash_consensus_core::{
+        asset_type::AssetType::KSH,
         constants::{MAX_TX_IN_SEQUENCE_NUM, SOMPI_PER_KASH, TX_VERSION},
         mass::transaction_estimated_serialized_size,
         subnets::SUBNETWORK_ID_NATIVE,
@@ -313,8 +315,8 @@ mod tests {
         let signature_script = pay_to_script_hash_signature_script(redeem_script, vec![]).expect("the redeem script is canonical");
 
         let input = TransactionInput::new(previous_outpoint, signature_script, MAX_TX_IN_SEQUENCE_NUM, 1);
-        let output = TransactionOutput::new(value - DEFAULT_MINIMUM_RELAY_TRANSACTION_FEE, script_public_key);
-        let tx = Arc::new(Transaction::new(TX_VERSION, vec![input], vec![output], 0, SUBNETWORK_ID_NATIVE, 0, vec![]));
+        let output = TransactionOutput::new(value - DEFAULT_MINIMUM_RELAY_TRANSACTION_FEE, script_public_key, KSH);
+        let tx = Arc::new(Transaction::new(TX_VERSION, vec![input], vec![output], TransferKSH, 0, SUBNETWORK_ID_NATIVE, 0, vec![]));
         let calculated_mass = transaction_estimated_serialized_size(&tx);
         let calculated_fee = DEFAULT_MINIMUM_RELAY_TRANSACTION_FEE;
 

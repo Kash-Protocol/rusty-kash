@@ -4,12 +4,14 @@ use kash_consensus::consensus::Consensus;
 use kash_consensus::model::stores::virtual_state::VirtualStateStoreReader;
 use kash_consensus::params::Params;
 use kash_consensus_core::api::ConsensusApi;
+use kash_consensus_core::asset_type::AssetType;
 use kash_consensus_core::block::{Block, TemplateBuildMode, TemplateTransactionSelector};
 use kash_consensus_core::coinbase::MinerData;
 use kash_consensus_core::sign::sign;
 use kash_consensus_core::subnets::SUBNETWORK_ID_NATIVE;
 use kash_consensus_core::tx::{
-    MutableTransaction, ScriptPublicKey, ScriptVec, Transaction, TransactionInput, TransactionOutpoint, TransactionOutput, UtxoEntry,
+    MutableTransaction, ScriptPublicKey, ScriptVec, Transaction, TransactionInput, TransactionKind, TransactionOutpoint,
+    TransactionOutput, UtxoEntry,
 };
 use kash_consensus_core::utxo::utxo_view::UtxoView;
 use kash_core::trace;
@@ -167,18 +169,20 @@ impl Miner {
         Some(entry)
     }
 
+    // Creates an unsigned transaction for simulation purposes.
     fn create_unsigned_tx(&self, outpoint: TransactionOutpoint, input_amount: u64, multiple_outputs: bool) -> Transaction {
         Transaction::new(
             0,
             vec![TransactionInput::new(outpoint, vec![], 0, 0)],
             if multiple_outputs && input_amount > 4 {
                 vec![
-                    TransactionOutput::new(input_amount / 2, self.miner_data.script_public_key.clone()),
-                    TransactionOutput::new(input_amount / 2 - 1, self.miner_data.script_public_key.clone()),
+                    TransactionOutput::new(input_amount / 2, self.miner_data.script_public_key.clone(), AssetType::KSH),
+                    TransactionOutput::new(input_amount / 2 - 1, self.miner_data.script_public_key.clone(), AssetType::KSH),
                 ]
             } else {
-                vec![TransactionOutput::new(input_amount - 1, self.miner_data.script_public_key.clone())]
+                vec![TransactionOutput::new(input_amount - 1, self.miner_data.script_public_key.clone(), AssetType::KSH)]
             },
+            TransactionKind::TransferKSH,
             0,
             SUBNETWORK_ID_NATIVE,
             0,

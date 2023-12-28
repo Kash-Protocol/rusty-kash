@@ -58,13 +58,7 @@ impl Interface {
         let _ = self.methods.insert(op, method);
     }
 
-    pub fn set_method_properties(
-        &mut self,
-        op: KashdPayloadOps,
-        tasks: usize,
-        queue_size: usize,
-        routing_policy: KashdRoutingPolicy,
-    ) {
+    pub fn set_method_properties(&mut self, op: KashdPayloadOps, tasks: usize, queue_size: usize, routing_policy: KashdRoutingPolicy) {
         self.methods.entry(op).and_modify(|x| {
             let method: Method<ServerContext, Connection, KashdRequest, KashdResponse> =
                 Method::with_properties(x.method_fn(), tasks, queue_size, routing_policy);
@@ -73,12 +67,7 @@ impl Interface {
         });
     }
 
-    pub async fn call(
-        &self,
-        op: &KashdPayloadOps,
-        connection: Connection,
-        request: KashdRequest,
-    ) -> GrpcServerResult<KashdResponse> {
+    pub async fn call(&self, op: &KashdPayloadOps, connection: Connection, request: KashdRequest) -> GrpcServerResult<KashdResponse> {
         self.methods.get(op).unwrap_or(&self.method_not_implemented).call(self.server_ctx.clone(), connection, request).await
     }
 

@@ -11,6 +11,7 @@ impl From<&Transaction> for RpcTransaction {
             version: item.version,
             inputs: item.inputs.iter().map(RpcTransactionInput::from).collect(),
             outputs: item.outputs.iter().map(RpcTransactionOutput::from).collect(),
+            kind: item.kind,
             lock_time: item.lock_time,
             subnetwork_id: item.subnetwork_id.clone(),
             gas: item.gas,
@@ -26,6 +27,7 @@ impl From<&TransactionOutput> for RpcTransactionOutput {
         Self {
             value: item.value,
             script_public_key: item.script_public_key.clone(),
+            asset_type: item.asset_type,
             // TODO: Implement a populating process inspired from kashd\app\rpc\rpccontext\verbosedata.go
             verbose_data: None,
         }
@@ -62,6 +64,7 @@ impl TryFrom<&RpcTransaction> for Transaction {
                 .iter()
                 .map(kash_consensus_core::tx::TransactionOutput::try_from)
                 .collect::<RpcResult<Vec<kash_consensus_core::tx::TransactionOutput>>>()?,
+            item.kind,
             item.lock_time,
             item.subnetwork_id.clone(),
             item.gas,
@@ -73,7 +76,7 @@ impl TryFrom<&RpcTransaction> for Transaction {
 impl TryFrom<&RpcTransactionOutput> for TransactionOutput {
     type Error = RpcError;
     fn try_from(item: &RpcTransactionOutput) -> RpcResult<Self> {
-        Ok(Self::new(item.value, item.script_public_key.clone()))
+        Ok(Self::new(item.value, item.script_public_key.clone(), item.asset_type))
     }
 }
 

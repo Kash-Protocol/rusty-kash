@@ -16,6 +16,13 @@ use kash_consensus_core::{
     network::{NetworkId, NetworkType},
 };
 
+// The import of `KSH` is used within `#[cfg(feature = "devnet-prealloc")]` blocks.
+// However, `cargo clippy` may not recognize its usage in conditional compilation contexts,
+// leading to a warning about an unused import. The `allow(unused_imports)` directive is
+// used here to prevent this warning.
+#[allow(unused_imports)]
+use kash_consensus_core::asset_type::AssetType::KSH;
+
 use kash_core::kashd_env::version;
 
 use kash_utils::networking::ContextualNetAddress;
@@ -145,7 +152,13 @@ impl Args {
             .map(|i| {
                 (
                     TransactionOutpoint { transaction_id: i.into(), index: 0 },
-                    UtxoEntry { amount: self.prealloc_amount, script_public_key: spk.clone(), block_daa_score: 0, is_coinbase: false },
+                    UtxoEntry {
+                        amount: self.prealloc_amount,
+                        script_public_key: spk.clone(),
+                        block_daa_score: 0,
+                        is_coinbase: false,
+                        asset_type: KSH,
+                    },
                 )
             })
             .collect()

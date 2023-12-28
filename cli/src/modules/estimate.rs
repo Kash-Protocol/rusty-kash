@@ -1,8 +1,9 @@
 use crate::imports::*;
+use kash_consensus_core::tx::TransactionKind;
 use kash_wallet_core::tx::PaymentDestination;
 
 #[derive(Default, Handler)]
-#[help("Estimate the fees for a transaction of a given amount")]
+#[help("Estimate the fees for a transaction of a given amount and transaction kind")]
 pub struct Estimate;
 
 impl Estimate {
@@ -11,19 +12,26 @@ impl Estimate {
 
         let account = ctx.wallet().account()?;
 
-        if argv.is_empty() {
-            tprintln!(ctx, "usage: estimate <amount> [<priority fee>]");
+        // Expecting at least two arguments: amount and transaction kind
+        if argv.len() < 2 {
+            tprintln!(ctx, "usage: estimate <transaction kind> <amount> [<priority fee>]");
             return Ok(());
         }
 
-        let amount_sompi = try_parse_required_nonzero_kash_as_sompi_u64(argv.first())?;
-        let priority_fee_sompi = try_parse_optional_kash_as_sompi_i64(argv.get(1))?.unwrap_or(0);
+        let tx_kind_str = &argv[0];
+        let tx_kind =
+            TransactionKind::try_from(tx_kind_str).map_err(|_| Error::custom(format!("Invalid transaction kind: {}", tx_kind_str)))?;
+
+        let amount_sompi = try_parse_required_nonzero_kash_as_sompi_u64(argv.get(1))?;
+        let priority_fee_sompi = try_parse_optional_kash_as_sompi_i64(argv.get(2))?.unwrap_or(0);
         let abortable = Abortable::default();
 
-        // just use any address for an estimate (change address)
+        // Just use any address for an estimate (change address)
         let change_address = account.change_address()?;
-        let destination = PaymentDestination::PaymentOutputs(PaymentOutputs::from((change_address.clone(), amount_sompi)));
-        let estimate = account.estimate(destination, priority_fee_sompi.into(), None, &abortable).await?;
+        let destination_asset_type = tx_kind.asset_transfer_types().1;
+        let destination =
+            PaymentDestination::PaymentOutputs(PaymentOutputs::from((change_address.clone(), amount_sompi, destination_asset_type)));
+        let estimate = account.estimate(tx_kind, destination, priority_fee_sompi.into(), None, &abortable).await?;
 
         tprintln!(ctx, "Estimate - {estimate}");
 

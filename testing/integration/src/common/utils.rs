@@ -1,4 +1,6 @@
 use itertools::Itertools;
+use kash_consensus_core::asset_type::AssetType::KSH;
+use kash_consensus_core::tx::TransactionKind::TransferKSH;
 use kash_consensus_core::{
     constants::TX_VERSION,
     sign::sign,
@@ -67,9 +69,9 @@ pub fn generate_tx_dag(
                 let total_in = entries.iter().map(|e| e.amount).sum::<u64>();
                 let total_out = total_in - required_fee(num_inputs, num_outputs);
                 let outputs = (0..num_outputs)
-                    .map(|_| TransactionOutput { value: total_out / num_outputs, script_public_key: spk.clone() })
+                    .map(|_| TransactionOutput { value: total_out / num_outputs, script_public_key: spk.clone(), asset_type: KSH })
                     .collect_vec();
-                let unsigned_tx = Transaction::new(TX_VERSION, inputs, outputs, 0, SUBNETWORK_ID_NATIVE, 0, vec![]);
+                let unsigned_tx = Transaction::new(TX_VERSION, inputs, outputs, TransferKSH, 0, SUBNETWORK_ID_NATIVE, 0, vec![]);
                 sign(SignableTransaction::with_entries(unsigned_tx, entries), schnorr_key)
             })
             .collect::<Vec<_>>()

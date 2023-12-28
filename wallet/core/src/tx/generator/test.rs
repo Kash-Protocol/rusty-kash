@@ -6,8 +6,9 @@ use crate::tx::{is_standard_output_amount_dust, Fees, MassCalculator, PaymentDes
 use crate::utxo::UtxoEntryReference;
 use crate::{tx::PaymentOutputs, utils::kash_to_sompi};
 use kash_addresses::Address;
+use kash_consensus_core::asset_type::AssetType::KSH;
 use kash_consensus_core::network::NetworkType;
-use kash_consensus_core::tx::Transaction;
+use kash_consensus_core::tx::{Transaction, TransactionKind};
 use std::cell::RefCell;
 use std::rc::Rc;
 use workflow_log::style;
@@ -260,10 +261,18 @@ where
         .iter()
         .map(|(address, amount)| {
             let sompi: Sompi = (*amount).clone().into();
-            (address.clone()(network_type), sompi.0)
+            (address.clone()(network_type), sompi.0, KSH)
         })
         .collect::<Vec<_>>();
-    make_generator(network_type, head, tail, fees, change_address, PaymentOutputs::from(outputs.as_slice()).into())
+    make_generator(
+        network_type,
+        head,
+        tail,
+        fees,
+        change_address,
+        TransactionKind::TransferKSH,
+        PaymentOutputs::from(outputs.as_slice()).into(),
+    )
 }
 
 fn make_generator<F>(
@@ -272,6 +281,7 @@ fn make_generator<F>(
     tail: &[f64],
     fees: Fees,
     change_address: F,
+    final_transaction_kind: TransactionKind,
     final_transaction_destination: PaymentDestination,
 ) -> Result<Generator>
 where
@@ -296,6 +306,7 @@ where
         sig_op_count,
         minimum_signatures,
         change_address,
+        final_transaction_kind,
         utxo_iterator,
         utxo_context,
         final_transaction_priority_fee: final_priority_fee,
@@ -325,7 +336,9 @@ fn output_address(network_type: NetworkType) -> Address {
 #[test]
 fn test_generator_empty_utxo_noop() -> Result<()> {
     let network_type = NetworkType::Testnet;
-    let generator = make_generator(network_type, &[], &[], Fees::None, change_address, PaymentDestination::Change).unwrap();
+    let generator =
+        make_generator(network_type, &[], &[], Fees::None, change_address, TransactionKind::TransferKSH, PaymentDestination::Change)
+            .unwrap();
     let tx = generator.generate_transaction().unwrap();
     assert!(tx.is_none());
     Ok(())
@@ -334,8 +347,16 @@ fn test_generator_empty_utxo_noop() -> Result<()> {
 #[test]
 fn test_generator_sweep_single_utxo_noop() -> Result<()> {
     let network_type = NetworkType::Testnet;
-    let generator = make_generator(network_type, &[10.0], &[], Fees::None, change_address, PaymentDestination::Change)
-        .expect("single UTXO input: generator");
+    let generator = make_generator(
+        network_type,
+        &[10.0],
+        &[],
+        Fees::None,
+        change_address,
+        TransactionKind::TransferKSH,
+        PaymentDestination::Change,
+    )
+    .expect("single UTXO input: generator");
     let tx = generator.generate_transaction().unwrap();
     assert!(tx.is_none());
     Ok(())
@@ -344,17 +365,25 @@ fn test_generator_sweep_single_utxo_noop() -> Result<()> {
 #[test]
 fn test_generator_sweep_two_utxos() -> Result<()> {
     let network_type = NetworkType::Testnet;
-    make_generator(network_type, &[10.0, 10.0], &[], Fees::None, change_address, PaymentDestination::Change)
-        .expect("merge 2 UTXOs without fees: generator")
-        .harness()
-        .fetch(&Expected {
-            is_final: true,
-            input_count: 2,
-            aggregate_input_value: Kash(20.0).into(),
-            output_count: 1,
-            priority_fees: FeesExpected::None,
-        })
-        .finalize();
+    make_generator(
+        network_type,
+        &[10.0, 10.0],
+        &[],
+        Fees::None,
+        change_address,
+        TransactionKind::TransferKSH,
+        PaymentDestination::Change,
+    )
+    .expect("merge 2 UTXOs without fees: generator")
+    .harness()
+    .fetch(&Expected {
+        is_final: true,
+        input_count: 2,
+        aggregate_input_value: Kash(20.0).into(),
+        output_count: 1,
+        priority_fees: FeesExpected::None,
+    })
+    .finalize();
     Ok(())
 }
 
@@ -367,6 +396,7 @@ fn test_generator_sweep_two_utxos_with_priority_fees_rejection() -> Result<()> {
         &[],
         Fees::sender_pays_all(Kash(5.0)),
         change_address,
+        TransactionKind::TransferKSH,
         PaymentDestination::Change,
     );
     match generator {
@@ -470,7 +500,7 @@ fn test_generator_inputs_903_outputs_2_fees_exclude() -> Result<()> {
         .fetch(&Expected {
             is_final: true,
             input_count: 2,
-            aggregate_input_value: Sompi(9_009_99892258),
+            aggregate_input_value: Sompi(9_009_99892246),
             output_count: 2,
             priority_fees: FeesExpected::sender_pays(Kash(5.0)),
         })
@@ -514,21 +544,21 @@ fn test_generator_1m_utxos_w_1kas_to_990k_sender_pays_fees() -> Result<()> {
         .fetch(&Expected {
             is_final: false,
             input_count: 843,
-            aggregate_input_value: Sompi(710_648_15369544),
+            aggregate_input_value: Sompi(710_648_15362800),
             output_count: 1,
             priority_fees: FeesExpected::None,
         })
         .fetch(&Expected {
             is_final: false,
             input_count: 332,
-            aggregate_input_value: Sompi(279_357_66731392),
+            aggregate_input_value: Sompi(279_357_66728740),
             output_count: 1,
             priority_fees: FeesExpected::None,
         })
         .fetch(&Expected {
             is_final: true,
             input_count: 2,
-            aggregate_input_value: Sompi(990_005_81960862),
+            aggregate_input_value: Sompi(990_005_81951454),
             output_count: 2,
             priority_fees: FeesExpected::sender_pays(Kash(5.0)),
         })

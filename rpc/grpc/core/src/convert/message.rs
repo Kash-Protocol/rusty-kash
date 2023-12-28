@@ -893,10 +893,7 @@ mod tests {
             protowire: protowire::SubmitBlockResponseMessage,
         }
         impl Test {
-            fn new(
-                rpc_core: RpcResult<kash_rpc_core::SubmitBlockResponse>,
-                protowire: protowire::SubmitBlockResponseMessage,
-            ) -> Self {
+            fn new(rpc_core: RpcResult<kash_rpc_core::SubmitBlockResponse>, protowire: protowire::SubmitBlockResponseMessage) -> Self {
                 Self { rpc_core, protowire }
             }
         }

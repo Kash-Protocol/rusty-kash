@@ -12,6 +12,7 @@ use workflow_rpc::client::error::Error as RpcError;
 use workflow_wasm::jserror::*;
 use workflow_wasm::printable::*;
 
+use kash_consensus_core::asset_type::AssetType;
 use thiserror::Error;
 
 #[derive(Debug, Error)]
@@ -222,6 +223,15 @@ pub enum Error {
 
     #[error(transparent)]
     TxScriptError(#[from] kash_txscript_errors::TxScriptError),
+
+    #[error("The transaction kind is not supported")]
+    UnsupportedTransactionKind,
+
+    #[error("Invalid asset type")]
+    InvalidAssetType,
+
+    #[error("UTXOs asset type mismatch: expected {expected}, found {found}")]
+    MismatchedAssetType { expected: AssetType, found: AssetType },
 }
 
 impl From<Aborted> for Error {

@@ -14,6 +14,8 @@ mod tests {
         MiningCounters,
     };
     use kash_addresses::{Address, Prefix, Version};
+    use kash_consensus_core::asset_type::AssetType::KSH;
+    use kash_consensus_core::tx::TransactionKind::TransferKSH;
     use kash_consensus_core::{
         api::ConsensusApi,
         block::TemplateBuildMode,
@@ -920,9 +922,9 @@ mod tests {
         let signature_script = pay_to_script_hash_signature_script(redeem_script, vec![]).expect("the redeem script is canonical");
 
         let input = TransactionInput::new(previous_outpoint, signature_script, MAX_TX_IN_SEQUENCE_NUM, 1);
-        let entry = UtxoEntry::new(SOMPI_PER_KASH, script_public_key.clone(), block_daa_score, true);
-        let output = TransactionOutput::new(SOMPI_PER_KASH - DEFAULT_MINIMUM_RELAY_TRANSACTION_FEE, script_public_key);
-        let transaction = Transaction::new(TX_VERSION, vec![input], vec![output], 0, SUBNETWORK_ID_NATIVE, 0, vec![]);
+        let entry = UtxoEntry::new(SOMPI_PER_KASH, script_public_key.clone(), block_daa_score, true, KSH);
+        let output = TransactionOutput::new(SOMPI_PER_KASH - DEFAULT_MINIMUM_RELAY_TRANSACTION_FEE, script_public_key, KSH);
+        let transaction = Transaction::new(TX_VERSION, vec![input], vec![output], TransferKSH, 0, SUBNETWORK_ID_NATIVE, 0, vec![]);
 
         let mut mutable_tx = MutableTransaction::from_tx(transaction);
         mutable_tx.calculated_fee = Some(DEFAULT_MINIMUM_RELAY_TRANSACTION_FEE);
@@ -939,9 +941,7 @@ mod tests {
     ) -> (Vec<Transaction>, Vec<Transaction>) {
         // Make the funding amounts always different so that funding txs have different ids
         (0..count)
-            .map(|i| {
-                create_parent_and_children_transactions(consensus, vec![500 * SOMPI_PER_KASH, 3_000 * SOMPI_PER_KASH + i as u64])
-            })
+            .map(|i| create_parent_and_children_transactions(consensus, vec![500 * SOMPI_PER_KASH, 3_000 * SOMPI_PER_KASH + i as u64]))
             .unzip()
     }
 
@@ -966,8 +966,8 @@ mod tests {
 
     fn create_transaction_without_input(output_values: Vec<u64>) -> Transaction {
         let (script_public_key, _) = op_true_script();
-        let outputs = output_values.iter().map(|value| TransactionOutput::new(*value, script_public_key.clone())).collect();
-        Transaction::new(TX_VERSION, vec![], outputs, 0, SUBNETWORK_ID_NATIVE, 0, vec![])
+        let outputs = output_values.iter().map(|value| TransactionOutput::new(*value, script_public_key.clone(), KSH)).collect();
+        Transaction::new(TX_VERSION, vec![], outputs, TransferKSH, 0, SUBNETWORK_ID_NATIVE, 0, vec![])
     }
 
     fn contained_by<T: AsRef<Transaction>>(transaction_id: TransactionId, transactions: &[T]) -> bool {
@@ -983,7 +983,7 @@ mod tests {
     }
 
     fn get_dummy_coinbase_tx() -> Transaction {
-        Transaction::new(TX_VERSION, vec![], vec![], 0, SUBNETWORK_ID_NATIVE, 0, vec![])
+        Transaction::new(TX_VERSION, vec![], vec![], TransferKSH, 0, SUBNETWORK_ID_NATIVE, 0, vec![])
     }
 
     fn build_block_transactions<'a>(transactions: impl Iterator<Item = &'a Transaction>) -> Vec<Transaction> {
