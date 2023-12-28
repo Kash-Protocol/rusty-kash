@@ -8,6 +8,7 @@ use kash_consensus_core::{
 use kash_consensus_notify::{root::ConsensusNotificationRoot, service::NotifyService};
 use kash_core::{core::Core, info, trace};
 use kash_core::{kashd_env::version, task::tick::TickService};
+use kash_database::prelude::CachePolicy;
 use kash_grpc_server::service::GrpcService;
 use kash_rpc_service::service::RpcCoreService;
 use kash_txscript::caches::TxScriptCacheCounters;
@@ -273,7 +274,7 @@ do you confirm? (answer y/n or pass --yes to the Kashd command line to confirm a
                     .build()
                     .unwrap();
 
-                let headers_store = DbHeadersStore::new(consensus_db, 0);
+                let headers_store = DbHeadersStore::new(consensus_db, CachePolicy::Empty, CachePolicy::Empty);
 
                 if headers_store.has(config.genesis.hash).unwrap() {
                     info!("Genesis is found in active consensus DB. No action needed.");

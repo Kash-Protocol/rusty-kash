@@ -4,7 +4,7 @@ use kash_consensus_core::tx::{
     ScriptPublicKey, ScriptPublicKeyVersion, ScriptPublicKeys, ScriptVec, TransactionIndexType, TransactionOutpoint,
 };
 use kash_core::debug;
-use kash_database::prelude::{CachedDbAccess, DirectDbWriter, StoreResult, DB};
+use kash_database::prelude::{CachePolicy, CachedDbAccess, DirectDbWriter, StoreResult, DB};
 use kash_database::registry::DatabaseStorePrefixes;
 use kash_hashes::Hash;
 use kash_index_core::indexed_utxos::BalanceByScriptPublicKey;
@@ -149,8 +149,8 @@ pub struct DbUtxoSetByScriptPublicKeyStore {
 }
 
 impl DbUtxoSetByScriptPublicKeyStore {
-    pub fn new(db: Arc<DB>, cache_size: u64) -> Self {
-        Self { db: Arc::clone(&db), access: CachedDbAccess::new(db, cache_size, DatabaseStorePrefixes::UtxoIndex.into()) }
+    pub fn new(db: Arc<DB>, cache_policy: CachePolicy) -> Self {
+        Self { db: Arc::clone(&db), access: CachedDbAccess::new(db, cache_policy, DatabaseStorePrefixes::UtxoIndex.into()) }
     }
 }
 

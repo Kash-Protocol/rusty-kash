@@ -1,5 +1,6 @@
 use kash_consensus_core::asset_type::AssetType;
 use kash_consensus_core::tx::{ScriptPublicKey, TransactionOutpoint, UtxoEntry};
+use kash_utils::mem_size::MemSizeEstimator;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
@@ -24,12 +25,20 @@ pub struct CompactUtxoEntry {
     pub is_coinbase: bool,
     pub asset_type: AssetType,
 }
+
 impl CompactUtxoEntry {
     /// Creates a new [`CompactUtxoEntry`]
     pub fn new(amount: u64, block_daa_score: u64, is_coinbase: bool, asset_type: AssetType) -> Self {
         Self { amount, block_daa_score, is_coinbase, asset_type }
     }
 }
+
+impl MemSizeEstimator for CompactUtxoEntry {
+    fn estimate_mem_units(&self) -> usize {
+        1
+    }
+}
+
 impl From<UtxoEntry> for CompactUtxoEntry {
     fn from(utxo_entry: UtxoEntry) -> Self {
         Self {

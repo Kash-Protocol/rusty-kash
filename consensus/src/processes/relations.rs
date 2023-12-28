@@ -153,15 +153,14 @@ mod tests {
     use super::*;
     use crate::model::stores::relations::{DbRelationsStore, RelationsStoreReader, StagingRelationsStore};
     use kash_core::assert_match;
-    use kash_database::prelude::ConnBuilder;
+    use kash_database::prelude::{CachePolicy, ConnBuilder};
     use kash_database::{create_temp_db, prelude::MemoryWriter};
     use std::sync::Arc;
 
     #[test]
     fn test_delete_level_relations_zero_cache() {
         let (_lifetime, db) = create_temp_db!(ConnBuilder::default().with_files_limit(10));
-        let cache_size = 0;
-        let mut relations = DbRelationsStore::new(db.clone(), 0, cache_size);
+        let mut relations = DbRelationsStore::new(db.clone(), 0, CachePolicy::Empty, CachePolicy::Empty);
         relations.insert(ORIGIN, Default::default()).unwrap();
         relations.insert(1.into(), Arc::new(vec![ORIGIN])).unwrap();
         relations.insert(2.into(), Arc::new(vec![1.into()])).unwrap();
