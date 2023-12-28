@@ -24,7 +24,7 @@ use kash_core::{info, task::service::AsyncService, task::tick::TickService, time
 use kash_database::prelude::ConnBuilder;
 use kash_database::{create_temp_db, load_existing_db};
 use kash_hashes::Hash;
-use kash_perf_monitor::builder::Builder;
+use kash_perf_monitor::{builder::Builder, counters::CountersSnapshot};
 use kash_utils::fd_budget;
 use simulator::network::KashNetworkSimulator;
 use std::{collections::VecDeque, sync::Arc, time::Duration};
@@ -145,8 +145,10 @@ fn main_impl(mut args: Args) {
 
     let stop_perf_monitor = args.perf_metrics.then(|| {
         let ts = Arc::new(TickService::new());
-        let cb = move |counters| {
-            trace!("metrics: {:?}", counters);
+
+        let cb = move |counters: CountersSnapshot| {
+            trace!("[{}] {}", kash_perf_monitor::SERVICE_NAME, counters.to_process_metrics_display());
+            trace!("[{}] {}", kash_perf_monitor::SERVICE_NAME, counters.to_io_metrics_display());
             #[cfg(feature = "heap")]
             trace!("heap stats: {:?}", dhat::HeapStats::get());
         };
