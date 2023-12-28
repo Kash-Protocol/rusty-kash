@@ -137,8 +137,10 @@ mod tests {
     use super::super::errors::TxRuleError;
     use core::str::FromStr;
     use itertools::Itertools;
+    use kash_consensus_core::asset_type::AssetType::KSH;
     use kash_consensus_core::sign::sign;
     use kash_consensus_core::subnets::SubnetworkId;
+    use kash_consensus_core::tx::TransactionKind::TransferKSH;
     use kash_consensus_core::tx::{MutableTransaction, PopulatedTransaction, ScriptVec, TransactionId, UtxoEntry};
     use kash_consensus_core::tx::{ScriptPublicKey, Transaction, TransactionInput, TransactionOutpoint, TransactionOutput};
     use kash_txscript_errors::TxScriptError;
@@ -187,9 +189,18 @@ mod tests {
                 sig_op_count: 1,
             }],
             vec![
-                TransactionOutput { value: 10360487799, script_public_key: ScriptPublicKey::new(0, script_pub_key_2) },
-                TransactionOutput { value: 10518958752, script_public_key: ScriptPublicKey::new(0, script_pub_key_1.clone()) },
+                TransactionOutput {
+                    value: 10360487799,
+                    script_public_key: ScriptPublicKey::new(0, script_pub_key_2),
+                    asset_type: KSH,
+                },
+                TransactionOutput {
+                    value: 10518958752,
+                    script_public_key: ScriptPublicKey::new(0, script_pub_key_1.clone()),
+                    asset_type: KSH,
+                },
             ],
+            TransferKSH,
             0,
             SubnetworkId::from_bytes([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]),
             0,
@@ -203,6 +214,7 @@ mod tests {
                 script_public_key: ScriptPublicKey::new(0, script_pub_key_1),
                 block_daa_score: 32022768,
                 is_coinbase: false,
+                asset_type: KSH,
             }],
         );
 
@@ -249,9 +261,18 @@ mod tests {
                 sig_op_count: 1,
             }],
             vec![
-                TransactionOutput { value: 10360487799, script_public_key: ScriptPublicKey::new(0, script_pub_key_2.clone()) },
-                TransactionOutput { value: 10518958752, script_public_key: ScriptPublicKey::new(0, script_pub_key_1) },
+                TransactionOutput {
+                    value: 10360487799,
+                    script_public_key: ScriptPublicKey::new(0, script_pub_key_2.clone()),
+                    asset_type: KSH,
+                },
+                TransactionOutput {
+                    value: 10518958752,
+                    script_public_key: ScriptPublicKey::new(0, script_pub_key_1),
+                    asset_type: KSH,
+                },
             ],
+            TransferKSH,
             0,
             SubnetworkId::from_bytes([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]),
             0,
@@ -265,6 +286,7 @@ mod tests {
                 script_public_key: ScriptPublicKey::new(0, script_pub_key_2),
                 block_daa_score: 32022768,
                 is_coinbase: false,
+                asset_type: KSH,
             }],
         );
 
@@ -312,9 +334,18 @@ mod tests {
                 sig_op_count: 4,
             }],
             vec![
-                TransactionOutput { value: 10000000000000, script_public_key: ScriptPublicKey::new(0, script_pub_key_2) },
-                TransactionOutput { value: 2792999990000, script_public_key: ScriptPublicKey::new(0, script_pub_key_1.clone()) },
+                TransactionOutput {
+                    value: 10000000000000,
+                    script_public_key: ScriptPublicKey::new(0, script_pub_key_2),
+                    asset_type: KSH,
+                },
+                TransactionOutput {
+                    value: 2792999990000,
+                    script_public_key: ScriptPublicKey::new(0, script_pub_key_1.clone()),
+                    asset_type: KSH,
+                },
             ],
+            TransferKSH,
             0,
             SubnetworkId::from_bytes([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]),
             0,
@@ -328,6 +359,7 @@ mod tests {
                 script_public_key: ScriptPublicKey::new(0, script_pub_key_1),
                 block_daa_score: 36151168,
                 is_coinbase: false,
+                asset_type: KSH,
             }],
         );
         tv.check_scripts(&populated_tx).expect("Signature check failed");
@@ -374,9 +406,18 @@ mod tests {
                 sig_op_count: 4,
             }],
             vec![
-                TransactionOutput { value: 10000000000000, script_public_key: ScriptPublicKey::new(0, script_pub_key_2) },
-                TransactionOutput { value: 2792999990000, script_public_key: ScriptPublicKey::new(0, script_pub_key_1.clone()) },
+                TransactionOutput {
+                    value: 10000000000000,
+                    script_public_key: ScriptPublicKey::new(0, script_pub_key_2),
+                    asset_type: KSH,
+                },
+                TransactionOutput {
+                    value: 2792999990000,
+                    script_public_key: ScriptPublicKey::new(0, script_pub_key_1.clone()),
+                    asset_type: KSH,
+                },
             ],
+            TransferKSH,
             0,
             SubnetworkId::from_bytes([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]),
             0,
@@ -390,6 +431,7 @@ mod tests {
                 script_public_key: ScriptPublicKey::new(0, script_pub_key_1),
                 block_daa_score: 36151168,
                 is_coinbase: false,
+                asset_type: KSH,
             }],
         );
 
@@ -437,9 +479,18 @@ mod tests {
                 sig_op_count: 4,
             }],
             vec![
-                TransactionOutput { value: 10000000000000, script_public_key: ScriptPublicKey::new(0, script_pub_key_2) },
-                TransactionOutput { value: 2792999990000, script_public_key: ScriptPublicKey::new(0, script_pub_key_1.clone()) },
+                TransactionOutput {
+                    value: 10000000000000,
+                    script_public_key: ScriptPublicKey::new(0, script_pub_key_2),
+                    asset_type: KSH,
+                },
+                TransactionOutput {
+                    value: 2792999990000,
+                    script_public_key: ScriptPublicKey::new(0, script_pub_key_1.clone()),
+                    asset_type: KSH,
+                },
             ],
+            TransferKSH,
             0,
             SubnetworkId::from_bytes([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]),
             0,
@@ -453,6 +504,7 @@ mod tests {
                 script_public_key: ScriptPublicKey::new(0, script_pub_key_1),
                 block_daa_score: 36151168,
                 is_coinbase: false,
+                asset_type: KSH,
             }],
         );
 
@@ -500,9 +552,18 @@ mod tests {
                 sig_op_count: 4,
             }],
             vec![
-                TransactionOutput { value: 10000000000000, script_public_key: ScriptPublicKey::new(0, script_pub_key_2) },
-                TransactionOutput { value: 2792999990000, script_public_key: ScriptPublicKey::new(0, script_pub_key_1.clone()) },
+                TransactionOutput {
+                    value: 10000000000000,
+                    script_public_key: ScriptPublicKey::new(0, script_pub_key_2),
+                    asset_type: KSH,
+                },
+                TransactionOutput {
+                    value: 2792999990000,
+                    script_public_key: ScriptPublicKey::new(0, script_pub_key_1.clone()),
+                    asset_type: KSH,
+                },
             ],
+            TransferKSH,
             0,
             SubnetworkId::from_bytes([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]),
             0,
@@ -516,6 +577,7 @@ mod tests {
                 script_public_key: ScriptPublicKey::new(0, script_pub_key_1),
                 block_daa_score: 36151168,
                 is_coinbase: false,
+                asset_type: KSH,
             }],
         );
 
@@ -557,7 +619,12 @@ mod tests {
                 sequence: 0,
                 sig_op_count: 4,
             }],
-            vec![TransactionOutput { value: 2792999990000, script_public_key: ScriptPublicKey::new(0, script_pub_key_1.clone()) }],
+            vec![TransactionOutput {
+                value: 2792999990000,
+                script_public_key: ScriptPublicKey::new(0, script_pub_key_1.clone()),
+                asset_type: KSH,
+            }],
+            TransferKSH,
             0,
             SubnetworkId::from_bytes([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]),
             0,
@@ -571,6 +638,7 @@ mod tests {
                 script_public_key: ScriptPublicKey::new(0, script_pub_key_1),
                 block_daa_score: 36151168,
                 is_coinbase: false,
+                asset_type: KSH,
             }],
         );
 
@@ -622,9 +690,10 @@ mod tests {
                 },
             ],
             vec![
-                TransactionOutput { value: 300, script_public_key: ScriptPublicKey::new(0, script_pub_key.clone()) },
-                TransactionOutput { value: 300, script_public_key: ScriptPublicKey::new(0, script_pub_key.clone()) },
+                TransactionOutput { value: 300, script_public_key: ScriptPublicKey::new(0, script_pub_key.clone()), asset_type: KSH },
+                TransactionOutput { value: 300, script_public_key: ScriptPublicKey::new(0, script_pub_key.clone()), asset_type: KSH },
             ],
+            TransferKSH,
             1615462089000,
             SubnetworkId::from_bytes([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]),
             0,
@@ -637,18 +706,21 @@ mod tests {
                 script_public_key: ScriptPublicKey::new(0, script_pub_key.clone()),
                 block_daa_score: 0,
                 is_coinbase: false,
+                asset_type: KSH,
             },
             UtxoEntry {
                 amount: 200,
                 script_public_key: ScriptPublicKey::new(0, script_pub_key.clone()),
                 block_daa_score: 0,
                 is_coinbase: false,
+                asset_type: KSH,
             },
             UtxoEntry {
                 amount: 300,
                 script_public_key: ScriptPublicKey::new(0, script_pub_key),
                 block_daa_score: 0,
                 is_coinbase: false,
+                asset_type: KSH,
             },
         ];
         let schnorr_key = secp256k1::KeyPair::from_seckey_slice(secp256k1::SECP256K1, &secret_key.secret_bytes()).unwrap();

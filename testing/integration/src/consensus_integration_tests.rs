@@ -30,7 +30,9 @@ use kash_consensus_core::header::Header;
 use kash_consensus_core::network::{NetworkId, NetworkType::Mainnet};
 use kash_consensus_core::subnets::SubnetworkId;
 use kash_consensus_core::trusted::{ExternalGhostdagData, TrustedBlock};
-use kash_consensus_core::tx::{ScriptPublicKey, Transaction, TransactionInput, TransactionOutpoint, TransactionOutput, UtxoEntry};
+use kash_consensus_core::tx::{
+    ScriptPublicKey, Transaction, TransactionInput, TransactionKind, TransactionOutpoint, TransactionOutput, UtxoEntry,
+};
 use kash_consensus_core::{blockhash, hashing, BlockHashMap, BlueWorkType};
 use kash_consensus_notify::root::ConsensusNotificationRoot;
 use kash_consensus_notify::service::NotifyService;
@@ -43,6 +45,7 @@ use kash_hashes::Hash;
 use flate2::read::GzDecoder;
 use futures_util::future::try_join_all;
 use itertools::Itertools;
+use kash_consensus_core::asset_type::AssetType;
 use kash_core::core::Core;
 use kash_core::signals::Shutdown;
 use kash_core::task::runtime::AsyncRuntime;
@@ -755,6 +758,7 @@ struct RPCUTXOEntry {
     ScriptPublicKey: RPCScriptPublicKey,
     BlockDAAScore: u64,
     IsCoinbase: bool,
+    AssetType: AssetType,
 }
 
 #[allow(non_snake_case)]
@@ -1158,6 +1162,7 @@ fn json_line_to_utxo_pairs(line: String) -> Vec<(TransactionOutpoint, UtxoEntry)
                     ),
                     block_daa_score: json_pair.UTXOEntry.BlockDAAScore,
                     is_coinbase: json_pair.UTXOEntry.IsCoinbase,
+                    asset_type: json_pair.UTXOEntry.AssetType,
                 },
             )
         })
@@ -1200,8 +1205,10 @@ fn rpc_block_to_block(rpc_block: RPCBlock) -> Block {
                                 output.ScriptPublicKey.Version,
                                 hex_decode(&output.ScriptPublicKey.Script),
                             ),
+                            asset_type: AssetType::KSH,
                         })
                         .collect(),
+                    TransactionKind::TransferKSH,
                     tx.LockTime,
                     SubnetworkId::from_str(&tx.SubnetworkID).unwrap(),
                     tx.Gas,

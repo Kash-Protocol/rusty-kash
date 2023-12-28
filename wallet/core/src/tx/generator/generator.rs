@@ -60,10 +60,12 @@ use crate::tx::{
     PendingTransactionStream,
 };
 use crate::utxo::{UtxoContext, UtxoEntryReference};
+use kash_consensus_core::asset_type::AssetType;
+use kash_consensus_core::asset_type::AssetType::KSH;
 use kash_consensus_core::constants::UNACCEPTED_DAA_SCORE;
 use kash_consensus_core::subnets::SUBNETWORK_ID_NATIVE;
 use kash_consensus_core::tx as cctx;
-use kash_consensus_core::tx::{Transaction, TransactionInput, TransactionOutpoint, TransactionOutput};
+use kash_consensus_core::tx::{Transaction, TransactionInput, TransactionKind, TransactionOutpoint, TransactionOutput};
 use kash_consensus_wasm::UtxoEntry;
 use kash_txscript::pay_to_address_script;
 use std::collections::VecDeque;
@@ -222,6 +224,8 @@ struct Inner {
     standard_change_output_mass: u64,
     // signature mass per input
     signature_mass_per_input: u64,
+    // final transaction kind
+    final_transaction_kind: TransactionKind,
     // transaction amount (`None` results in consumption of all available UTXOs)
     // `None` is used for sweep transactions
     final_transaction_amount: Option<u64>,
@@ -257,6 +261,7 @@ impl Generator {
             sig_op_count,
             minimum_signatures,
             change_address,
+            final_transaction_kind,
             final_transaction_priority_fee,
             final_transaction_destination,
             final_transaction_payload,
@@ -283,7 +288,7 @@ impl Generator {
                 (
                     outputs
                         .iter()
-                        .map(|output| TransactionOutput::new(output.amount, pay_to_address_script(&output.address)))
+                        .map(|output| TransactionOutput::new(output.amount, pay_to_address_script(&output.address), output.asset_type))
                         .collect(),
                     Some(outputs.iter().map(|output| output.amount).sum()),
                 )
@@ -313,8 +318,8 @@ impl Generator {
             is_done: false,
         });
 
-        let standard_change_output_mass =
-            mass_calculator.calc_mass_for_output(&TransactionOutput::new(0, pay_to_address_script(&change_address)));
+        let standard_change_output_mass = // TODO: This TransactionOutput is only used for mass calculation
+            mass_calculator.calc_mass_for_output(&TransactionOutput::new(0, pay_to_address_script(&change_address), KSH));
         let signature_mass_per_input = mass_calculator.calc_signature_mass(minimum_signatures);
         let final_transaction_outputs_mass = mass_calculator.calc_mass_for_outputs(&final_transaction_outputs);
         let final_transaction_payload = final_transaction_payload.unwrap_or_default();
@@ -339,6 +344,7 @@ impl Generator {
             change_address,
             standard_change_output_mass,
             signature_mass_per_input,
+            final_transaction_kind,
             final_transaction_amount,
             final_transaction_priority_fee,
             final_transaction_outputs,
@@ -624,6 +630,9 @@ impl Generator {
         let (kind, data) = self.generate_transaction_data(&mut context, &mut stage)?;
         context.stage.replace(stage);
 
+        let transaction_kind = self.inner.final_transaction_kind;
+        let output_asset_type = transaction_kind.asset_transfer_types().1;
+
         match (kind, data) {
             (DataKind::NoOp, _) => {
                 context.is_done = true;
@@ -655,7 +664,11 @@ impl Generator {
                 }
 
                 if change_output_value > 0 {
-                    let output = TransactionOutput::new(change_output_value, pay_to_address_script(&self.inner.change_address));
+                    let output = TransactionOutput::new(
+                        change_output_value,
+                        pay_to_address_script(&self.inner.change_address),
+                        output_asset_type,
+                    );
                     final_outputs.push(output);
                 }
 
@@ -669,6 +682,7 @@ impl Generator {
                     0,
                     inputs,
                     final_outputs,
+                    transaction_kind,
                     0,
                     SUBNETWORK_ID_NATIVE,
                     0,
@@ -708,12 +722,17 @@ impl Generator {
 
                 let output_value = aggregate_input_value - transaction_fees;
                 let script_public_key = pay_to_address_script(&self.inner.change_address);
-                let output = TransactionOutput::new(output_value, script_public_key.clone());
-                let tx = Transaction::new(0, inputs, vec![output], 0, SUBNETWORK_ID_NATIVE, 0, vec![]);
+                let output = TransactionOutput::new(output_value, script_public_key.clone(), output_asset_type);
+                let tx = Transaction::new(0, inputs, vec![output], transaction_kind, 0, SUBNETWORK_ID_NATIVE, 0, vec![]);
                 context.number_of_transactions += 1;
 
-                let utxo_entry_reference =
-                    Self::create_batch_utxo_entry_reference(tx.id(), output_value, script_public_key, &self.inner.change_address);
+                let utxo_entry_reference = Self::create_batch_utxo_entry_reference(
+                    tx.id(),
+                    output_value,
+                    script_public_key,
+                    &self.inner.change_address,
+                    output_asset_type,
+                );
 
                 match kind {
                     DataKind::Node => {
@@ -754,8 +773,10 @@ impl Generator {
         amount: u64,
         script_public_key: ScriptPublicKey,
         address: &Address,
+        asset_type: AssetType,
     ) -> UtxoEntryReference {
-        let entry = cctx::UtxoEntry { amount, script_public_key, block_daa_score: UNACCEPTED_DAA_SCORE, is_coinbase: false };
+        let entry =
+            cctx::UtxoEntry { amount, script_public_key, block_daa_score: UNACCEPTED_DAA_SCORE, is_coinbase: false, asset_type };
         let outpoint = TransactionOutpoint::new(txid, 0);
         let utxo = UtxoEntry { address: Some(address.clone()), outpoint: outpoint.into(), entry };
         UtxoEntryReference { utxo: Arc::new(utxo) }

@@ -1,8 +1,6 @@
 use crate::{flow_context::FlowContext, flow_trait::Flow};
 use kash_core::debug;
-use kash_p2p_lib::{
-    common::ProtocolError, dequeue_with_request_id, make_response, pb::kashd_message::Payload, IncomingRoute, Router,
-};
+use kash_p2p_lib::{common::ProtocolError, dequeue_with_request_id, make_response, pb::kashd_message::Payload, IncomingRoute, Router};
 use std::sync::Arc;
 
 pub struct HandleIbdBlockRequests {

@@ -82,6 +82,9 @@ pub enum TxRuleError {
 
     #[error("input {0} sig op count is {1}, but the calculated value is {2}")]
     WrongSigOpCount(usize, u64, u64),
+
+    #[error("invalid transaction type: {0}")]
+    InvalidTransactionType(String),
 }
 
 pub type TxResult<T> = std::result::Result<T, TxRuleError>;

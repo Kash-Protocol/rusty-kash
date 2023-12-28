@@ -92,6 +92,7 @@ mod tests {
         params::DEVNET_PARAMS,
         processes::{transaction_validator::errors::TxRuleError, window::WindowManager},
     };
+    use kash_consensus_core::tx::TransactionKind::TransferKSH;
     use kash_consensus_core::{
         api::ConsensusApi,
         merkle::calc_hash_merkle_root,
@@ -221,6 +222,7 @@ mod tests {
                 TX_VERSION,
                 vec![TransactionInput::new(TransactionOutpoint::new(1.into(), 0), vec![], sequence, 0)],
                 vec![],
+                TransferKSH,
                 lock_time,
                 SUBNETWORK_ID_NATIVE,
                 0,

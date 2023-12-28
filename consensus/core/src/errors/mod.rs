@@ -1,3 +1,4 @@
+pub mod asset_type;
 pub mod block;
 pub mod coinbase;
 pub mod config;

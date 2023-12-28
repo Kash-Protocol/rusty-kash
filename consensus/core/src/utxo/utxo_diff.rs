@@ -224,7 +224,8 @@ impl UtxoDiff {
 
         for (i, output) in transaction.outputs().iter().enumerate() {
             let outpoint = TransactionOutpoint::new(tx_id, i as u32);
-            let entry = UtxoEntry::new(output.value, output.script_public_key.clone(), block_daa_score, is_coinbase);
+            let entry =
+                UtxoEntry::new(output.value, output.script_public_key.clone(), block_daa_score, is_coinbase, output.asset_type);
             self.add_entry(outpoint, entry)?;
         }
         Ok(())
@@ -256,6 +257,7 @@ impl UtxoDiff {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::asset_type::AssetType;
     use crate::tx::{ScriptPublicKey, TransactionId};
     use std::str::FromStr;
 
@@ -263,8 +265,8 @@ mod tests {
     fn test_utxo_diff_rules() {
         let tx_id0 = TransactionId::from_str("0".repeat(64).as_str()).unwrap();
         let outpoint0 = TransactionOutpoint::new(tx_id0, 0);
-        let utxo_entry1 = UtxoEntry::new(10, ScriptPublicKey::default(), 0, true);
-        let utxo_entry2 = UtxoEntry::new(20, ScriptPublicKey::default(), 1, true);
+        let utxo_entry1 = UtxoEntry::new(10, ScriptPublicKey::default(), 0, true, AssetType::KSH);
+        let utxo_entry2 = UtxoEntry::new(20, ScriptPublicKey::default(), 1, true, AssetType::KSH);
 
         struct Test {
             name: &'static str,

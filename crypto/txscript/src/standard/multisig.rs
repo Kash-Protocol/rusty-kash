@@ -72,6 +72,7 @@ mod tests {
     use super::*;
     use crate::{caches::Cache, opcodes::codes::OpData65, pay_to_script_hash_script, TxScriptEngine};
     use core::str::FromStr;
+    use kash_consensus_core::asset_type::AssetType::KSH;
     use kash_consensus_core::{
         hashing::{
             sighash::{calc_ecdsa_signature_hash, calc_schnorr_signature_hash, SigHashReusedValues},
@@ -140,6 +141,7 @@ mod tests {
                 sig_op_count: 4,
             }],
             vec![],
+            TransactionKind::TransferKSH,
             0,
             SubnetworkId::from_bytes([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]),
             0,
@@ -151,6 +153,7 @@ mod tests {
             script_public_key: pay_to_script_hash_script(&script),
             block_daa_score: 36151168,
             is_coinbase: false,
+            asset_type: KSH,
         }];
         let mut tx = MutableTransaction::with_entries(tx, entries);
 

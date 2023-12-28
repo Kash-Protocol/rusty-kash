@@ -1,4 +1,5 @@
 use crate::imports::*;
+use kash_consensus_core::asset_type::AssetType;
 use kash_consensus_wasm::{TransactionOutput, TransactionOutputInner};
 use kash_txscript::pay_to_address_script;
 
@@ -22,6 +23,7 @@ pub struct PaymentOutput {
     #[wasm_bindgen(getter_with_clone)]
     pub address: Address,
     pub amount: u64,
+    pub asset_type: AssetType,
 }
 
 impl TryFrom<JsValue> for PaymentOutput {
@@ -34,12 +36,14 @@ impl TryFrom<JsValue> for PaymentOutput {
             } else {
                 let address = Address::try_from(array.get(0))?;
                 let amount = array.get(1).try_as_u64()?;
-                Ok(Self { address, amount })
+                let asset_type = AssetType::try_from(js_value)?;
+                Ok(Self { address, amount, asset_type })
             }
         } else if let Some(object) = Object::try_from(&js_value) {
             let address = object.get::<Address>("address")?;
             let amount = object.get_u64("amount")?;
-            Ok(Self { address, amount })
+            let asset_type = AssetType::try_from(object.get_value("assetType")?)?;
+            Ok(Self { address, amount, asset_type })
         } else {
             Err(Error::Custom("Invalid payment output".to_string()))
         }
@@ -49,14 +53,18 @@ impl TryFrom<JsValue> for PaymentOutput {
 #[wasm_bindgen]
 impl PaymentOutput {
     #[wasm_bindgen(constructor)]
-    pub fn new(address: Address, amount: u64) -> Self {
-        Self { address, amount }
+    pub fn new(address: Address, amount: u64, asset_type: AssetType) -> Self {
+        Self { address, amount, asset_type }
     }
 }
 
 impl From<PaymentOutput> for TransactionOutput {
     fn from(value: PaymentOutput) -> Self {
-        Self::new_with_inner(TransactionOutputInner { script_public_key: pay_to_address_script(&value.address), value: value.amount })
+        Self::new_with_inner(TransactionOutputInner {
+            script_public_key: pay_to_address_script(&value.address),
+            value: value.amount,
+            asset_type: value.asset_type,
+        })
     }
 }
 
@@ -86,6 +94,12 @@ impl PaymentOutputs {
 impl From<PaymentOutputs> for PaymentDestination {
     fn from(outputs: PaymentOutputs) -> Self {
         Self::PaymentOutputs(outputs)
+    }
+}
+
+impl From<PaymentOutputs> for Vec<TransactionOutput> {
+    fn from(payment_outputs: PaymentOutputs) -> Self {
+        payment_outputs.outputs.into_iter().map(Into::into).collect()
     }
 }
 
@@ -121,34 +135,30 @@ impl TryFrom<JsValue> for PaymentOutputs {
     }
 }
 
-impl From<PaymentOutputs> for Vec<TransactionOutput> {
-    fn from(value: PaymentOutputs) -> Self {
-        value.outputs.into_iter().map(TransactionOutput::from).collect()
+impl From<(Address, u64, AssetType)> for PaymentOutputs {
+    fn from((address, amount, asset_type): (Address, u64, AssetType)) -> Self {
+        PaymentOutputs { outputs: vec![PaymentOutput::new(address, amount, asset_type)] }
     }
 }
 
-impl From<(Address, u64)> for PaymentOutputs {
-    fn from((address, amount): (Address, u64)) -> Self {
-        PaymentOutputs { outputs: vec![PaymentOutput::new(address, amount)] }
+impl From<(&Address, u64, AssetType)> for PaymentOutputs {
+    fn from((address, amount, asset_type): (&Address, u64, AssetType)) -> Self {
+        PaymentOutputs { outputs: vec![PaymentOutput::new(address.clone(), amount, asset_type)] }
     }
 }
 
-impl From<(&Address, u64)> for PaymentOutputs {
-    fn from((address, amount): (&Address, u64)) -> Self {
-        PaymentOutputs { outputs: vec![PaymentOutput::new(address.clone(), amount)] }
-    }
-}
-
-impl From<&[(Address, u64)]> for PaymentOutputs {
-    fn from(outputs: &[(Address, u64)]) -> Self {
-        let outputs = outputs.iter().map(|(address, amount)| PaymentOutput::new(address.clone(), *amount)).collect();
+impl From<&[(Address, u64, AssetType)]> for PaymentOutputs {
+    fn from(outputs: &[(Address, u64, AssetType)]) -> Self {
+        let outputs =
+            outputs.iter().map(|(address, amount, asset_type)| PaymentOutput::new(address.clone(), *amount, *asset_type)).collect();
         PaymentOutputs { outputs }
     }
 }
 
-impl From<&[(&Address, u64)]> for PaymentOutputs {
-    fn from(outputs: &[(&Address, u64)]) -> Self {
-        let outputs = outputs.iter().map(|(address, amount)| PaymentOutput::new((*address).clone(), *amount)).collect();
+impl From<&[(&Address, u64, AssetType)]> for PaymentOutputs {
+    fn from(outputs: &[(&Address, u64, AssetType)]) -> Self {
+        let outputs =
+            outputs.iter().map(|(address, amount, asset_type)| PaymentOutput::new((*address).clone(), *amount, *asset_type)).collect();
         PaymentOutputs { outputs }
     }
 }

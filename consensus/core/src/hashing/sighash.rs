@@ -182,9 +182,11 @@ pub fn calc_ecdsa_signature_hash(
 mod tests {
     use std::{str::FromStr, vec};
 
+    use consensus_core::tx::TransactionKind;
     use smallvec::SmallVec;
 
     use crate::{
+        asset_type::AssetType::KSH,
         hashing::sighash_type::{SIG_HASH_ALL, SIG_HASH_ANY_ONE_CAN_PAY, SIG_HASH_NONE, SIG_HASH_SINGLE},
         subnets::SubnetworkId,
         tx::{PopulatedTransaction, Transaction, TransactionId, TransactionInput, UtxoEntry},
@@ -227,9 +229,18 @@ mod tests {
                 },
             ],
             vec![
-                TransactionOutput { value: 300, script_public_key: ScriptPublicKey::new(0, script_pub_key_2.clone()) },
-                TransactionOutput { value: 300, script_public_key: ScriptPublicKey::new(0, script_pub_key_1.clone()) },
+                TransactionOutput {
+                    value: 300,
+                    script_public_key: ScriptPublicKey::new(0, script_pub_key_2.clone()),
+                    asset_type: KSH,
+                },
+                TransactionOutput {
+                    value: 300,
+                    script_public_key: ScriptPublicKey::new(0, script_pub_key_1.clone()),
+                    asset_type: KSH,
+                },
             ],
+            TransactionKind::TransferKSH,
             1615462089000,
             SUBNETWORK_ID_NATIVE,
             0,
@@ -244,18 +255,21 @@ mod tests {
                     script_public_key: ScriptPublicKey::new(0, script_pub_key_1.clone()),
                     block_daa_score: 0,
                     is_coinbase: false,
+                    asset_type: KSH,
                 },
                 UtxoEntry {
                     amount: 200,
                     script_public_key: ScriptPublicKey::new(0, script_pub_key_2.clone()),
                     block_daa_score: 0,
                     is_coinbase: false,
+                    asset_type: KSH,
                 },
                 UtxoEntry {
                     amount: 300,
                     script_public_key: ScriptPublicKey::new(0, script_pub_key_2.clone()),
                     block_daa_score: 0,
                     is_coinbase: false,
+                    asset_type: KSH,
                 },
             ],
         );
@@ -272,18 +286,21 @@ mod tests {
                     script_public_key: ScriptPublicKey::new(0, script_pub_key_1),
                     block_daa_score: 0,
                     is_coinbase: false,
+                    asset_type: KSH,
                 },
                 UtxoEntry {
                     amount: 200,
                     script_public_key: ScriptPublicKey::new(0, script_pub_key_2.clone()),
                     block_daa_score: 0,
                     is_coinbase: false,
+                    asset_type: KSH,
                 },
                 UtxoEntry {
                     amount: 300,
                     script_public_key: ScriptPublicKey::new(0, script_pub_key_2),
                     block_daa_score: 0,
                     is_coinbase: false,
+                    asset_type: KSH,
                 },
             ],
         );

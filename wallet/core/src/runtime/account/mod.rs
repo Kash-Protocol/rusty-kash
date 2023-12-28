@@ -3,8 +3,8 @@ pub mod kind;
 pub mod variants;
 
 pub use id::*;
-use kash_bip32::ChildNumber;
 use kash_bip32::ExtendedPrivateKey;
+use kash_bip32::{ChildNumber, PrivateKeyBytes};
 pub use kind::*;
 pub use variants::*;
 
@@ -23,6 +23,8 @@ use crate::storage::{self, AccessContextT, AccountData, PrvKeyData, PrvKeyDataId
 use crate::tx::{Fees, Generator, GeneratorSettings, GeneratorSummary, PaymentDestination, PendingTransaction, Signer};
 use crate::utxo::{UtxoContext, UtxoContextBinding};
 use kash_bip32::PrivateKey;
+use kash_consensus_core::asset_type::AssetType;
+use kash_consensus_core::tx::TransactionKind;
 use kash_consensus_wasm::UtxoEntryReference;
 use kash_notify::listener::ListenerId;
 use separator::Separatable;
@@ -202,7 +204,9 @@ pub trait Account: AnySync + Send + Sync + 'static {
         self.utxo_context().clear().await?;
 
         let current_daa_score = self.wallet().current_daa_score().ok_or(Error::NotConnected)?;
-        let balance = Arc::new(AtomicBalance::default());
+        let ksh_balance = Arc::new(AtomicBalance::default());
+        let kusd_balance = Arc::new(AtomicBalance::default());
+        let krv_balance = Arc::new(AtomicBalance::default());
 
         match self.clone().as_derivation_capable() {
             Ok(account) => {
@@ -216,14 +220,18 @@ pub trait Account: AnySync + Send + Sync + 'static {
                 let scans = vec![
                     Scan::new_with_address_manager(
                         derivation.receive_address_manager(),
-                        &balance,
+                        &ksh_balance,
+                        &kusd_balance,
+                        &krv_balance,
                         current_daa_score,
                         window_size,
                         Some(extent),
                     ),
                     Scan::new_with_address_manager(
                         derivation.change_address_manager(),
-                        &balance,
+                        &ksh_balance,
+                        &kusd_balance,
+                        &krv_balance,
                         current_daa_score,
                         window_size,
                         Some(extent),
@@ -239,7 +247,7 @@ pub trait Account: AnySync + Send + Sync + 'static {
                 address_set.insert(self.receive_address()?);
                 address_set.insert(self.change_address()?);
 
-                let scan = Scan::new_with_address_set(address_set, &balance, current_daa_score);
+                let scan = Scan::new_with_address_set(address_set, &ksh_balance, &kusd_balance, &krv_balance, current_daa_score);
                 scan.scan(self.utxo_context()).await?;
             }
         }
@@ -297,32 +305,57 @@ pub trait Account: AnySync + Send + Sync + 'static {
         payment_secret: Option<Secret>,
         abortable: &Abortable,
         notifier: Option<GenerationNotifier>,
-    ) -> Result<(GeneratorSummary, Vec<kash_hashes::Hash>)> {
+    ) -> Result<(Vec<GeneratorSummary>, Vec<kash_hashes::Hash>)> {
         let keydata = self.prv_key_data(wallet_secret).await?;
         let signer = Arc::new(Signer::new(self.clone().as_dyn_arc(), keydata, payment_secret));
-        let settings =
-            GeneratorSettings::try_new_with_account(self.clone().as_dyn_arc(), PaymentDestination::Change, Fees::None, None)?;
-        let generator = Generator::try_new(settings, Some(signer), Some(abortable))?;
 
-        let mut stream = generator.stream();
-        let mut ids = vec![];
-        while let Some(transaction) = stream.try_next().await? {
-            if let Some(notifier) = notifier.as_ref() {
-                notifier(&transaction);
+        let mut all_summaries = Vec::new();
+        let mut all_ids = Vec::new();
+
+        let asset_types = [AssetType::KSH, AssetType::KUSD, AssetType::KRV];
+
+        for asset_type in asset_types.iter() {
+            let tx_kind = match asset_type {
+                AssetType::KSH => TransactionKind::TransferKSH,
+                AssetType::KUSD => TransactionKind::TransferKUSD,
+                AssetType::KRV => TransactionKind::TransferKRV,
+            };
+
+            let settings = GeneratorSettings::try_new_with_account(
+                self.clone().as_dyn_arc(),
+                tx_kind,
+                PaymentDestination::Change,
+                Fees::None,
+                None,
+            )?;
+
+            let generator = Generator::try_new(settings, Some(signer.clone()), Some(abortable))?;
+
+            let mut stream = generator.stream();
+            let mut ids = Vec::new();
+
+            while let Some(transaction) = stream.try_next().await? {
+                if let Some(notifier) = notifier.as_ref() {
+                    notifier(&transaction);
+                }
+
+                transaction.try_sign()?;
+                transaction.log().await?;
+                let id = transaction.try_submit(&self.wallet().rpc_api()).await?;
+                ids.push(id);
+                yield_executor().await;
             }
 
-            transaction.try_sign()?;
-            transaction.log().await?;
-            let id = transaction.try_submit(&self.wallet().rpc_api()).await?;
-            ids.push(id);
-            yield_executor().await;
+            all_summaries.push(generator.summary());
+            all_ids.extend(ids);
         }
 
-        Ok((generator.summary(), ids))
+        Ok((all_summaries, all_ids))
     }
 
     async fn send(
         self: Arc<Self>,
+        asset_type: AssetType,
         destination: PaymentDestination,
         priority_fee_sompi: Fees,
         payload: Option<Vec<u8>>,
@@ -334,7 +367,14 @@ pub trait Account: AnySync + Send + Sync + 'static {
         let keydata = self.prv_key_data(wallet_secret).await?;
         let signer = Arc::new(Signer::new(self.clone().as_dyn_arc(), keydata, payment_secret));
 
-        let settings = GeneratorSettings::try_new_with_account(self.clone().as_dyn_arc(), destination, priority_fee_sompi, payload)?;
+        let tx_kind = match asset_type {
+            AssetType::KSH => TransactionKind::TransferKSH,
+            AssetType::KUSD => TransactionKind::TransferKUSD,
+            AssetType::KRV => TransactionKind::TransferKRV,
+        };
+
+        let settings =
+            GeneratorSettings::try_new_with_account(self.clone().as_dyn_arc(), tx_kind, destination, priority_fee_sompi, payload)?;
 
         let generator = Generator::try_new(settings, Some(signer), Some(abortable))?;
 
@@ -357,12 +397,14 @@ pub trait Account: AnySync + Send + Sync + 'static {
 
     async fn estimate(
         self: Arc<Self>,
+        transaction_kind: TransactionKind,
         destination: PaymentDestination,
         priority_fee_sompi: Fees,
         payload: Option<Vec<u8>>,
         abortable: &Abortable,
     ) -> Result<GeneratorSummary> {
-        let settings = GeneratorSettings::try_new_with_account(self.as_dyn_arc(), destination, priority_fee_sompi, payload)?;
+        let settings =
+            GeneratorSettings::try_new_with_account(self.as_dyn_arc(), transaction_kind, destination, priority_fee_sompi, payload)?;
 
         let generator = Generator::try_new(settings, None, Some(abortable))?;
 
@@ -470,29 +512,27 @@ pub trait DerivationCapableAccount: Account {
                 aggregate_balance += balance;
 
                 if sweep {
-                    let utxos = utxos.into_iter().map(UtxoEntryReference::from).collect::<Vec<_>>();
+                    let asset_types = [AssetType::KSH, AssetType::KUSD, AssetType::KRV];
+                    for asset_type in asset_types.iter() {
+                        let filtered_utxos = utxos
+                            .clone()
+                            .into_iter()
+                            .filter(|utxo| utxo.utxo_entry.asset_type == *asset_type)
+                            .map(UtxoEntryReference::from)
+                            .collect::<Vec<_>>();
 
-                    let settings = GeneratorSettings::try_new_with_iterator(
-                        Box::new(utxos.into_iter()),
-                        change_address.clone(),
-                        1,
-                        1,
-                        PaymentDestination::Change,
-                        Fees::None,
-                        None,
-                        None,
-                    )?;
-
-                    let generator = Generator::try_new(settings, None, Some(abortable))?;
-
-                    let mut stream = generator.stream();
-                    while let Some(transaction) = stream.try_next().await? {
-                        transaction.try_sign_with_keys(keys.clone())?;
-                        let id = transaction.try_submit(&rpc).await?;
-                        if let Some(notifier) = notifier {
-                            notifier(index, balance, Some(id));
-                        }
-                        yield_executor().await;
+                        process_asset_utxos(
+                            *asset_type,
+                            filtered_utxos,
+                            &change_address,
+                            &keys,
+                            &rpc,
+                            abortable,
+                            notifier,
+                            index,
+                            balance,
+                        )
+                        .await?;
                     }
                 } else {
                     if let Some(notifier) = notifier {
@@ -601,6 +641,73 @@ pub fn create_private_keys<'l>(
     Ok(private_keys)
 }
 
+/// Processes UTXOs for a specified asset type, consolidating them into the `change_address`.
+/// This involves signing transactions with provided keys, and submitting them.
+///
+/// # Arguments
+/// * `asset_type`: Type of the asset (KSH, KUSD, KRV).
+/// * `utxos`: Pre-filtered UTXOs to be consolidated for the given asset type.
+/// * `change_address`: Destination address for the consolidated UTXOs.
+/// * `keys`: Keys for transaction signing.
+/// * `rpc`: Interface for blockchain interactions.
+/// * `abortable`: Control for aborting the process.
+/// * `notifier`: Optional notifier for progress updates.
+/// * `index`: Current index in the scanning process.
+/// * `balance`: Aggregate balance of processed UTXOs.
+///
+/// # Returns
+/// Result indicating success or failure of the consolidation process.
+async fn process_asset_utxos(
+    asset_type: AssetType,
+    utxos: Vec<UtxoEntryReference>,
+    change_address: &Address,
+    keys: &[PrivateKeyBytes],
+    rpc: &Arc<DynRpcApi>,
+    abortable: &Abortable,
+    notifier: Option<&ScanNotifier>,
+    index: usize,
+    balance: u64,
+) -> Result<()> {
+    // Verify that all UTXOs are of the correct asset type
+    if let Some(mismatched_utxo_ref) = utxos.iter().find(|utxo_ref| utxo_ref.utxo.entry.asset_type != asset_type) {
+        return Err(Error::MismatchedAssetType { expected: asset_type, found: mismatched_utxo_ref.utxo.entry.asset_type });
+    }
+
+    let tx_type = match asset_type {
+        AssetType::KSH => TransactionKind::TransferKSH,
+        AssetType::KUSD => TransactionKind::TransferKUSD,
+        AssetType::KRV => TransactionKind::TransferKRV,
+    };
+
+    // Check if there are any UTXOs to process
+    if !utxos.is_empty() {
+        let settings = GeneratorSettings::try_new_with_iterator(
+            Box::new(utxos.into_iter()),
+            change_address.clone(),
+            1,
+            1,
+            tx_type,
+            PaymentDestination::Change,
+            Fees::None,
+            None,
+            None,
+        )?;
+
+        let generator = Generator::try_new(settings, None, Some(abortable))?;
+
+        let mut stream = generator.stream();
+        while let Some(transaction) = stream.try_next().await? {
+            transaction.try_sign_with_keys(keys.to_vec())?;
+            let id = transaction.try_submit(rpc).await?;
+            if let Some(notifier) = notifier {
+                notifier(index, balance, Some(id));
+            }
+            yield_executor().await;
+        }
+    }
+    Ok(())
+}
+
 #[cfg(not(target_arch = "wasm32"))]
 #[cfg(test)]
 mod tests {
@@ -616,26 +723,26 @@ mod tests {
 
     fn gen0_receive_addresses() -> Vec<&'static str> {
         vec![
-            "kashtest:qqnapngv3zxp305qf06w6hpzmyxtx2r99jjhs04lu980xdyd2ulwwmx9evrfz",
-            "kashtest:qqfwmv2jm7dsuju9wz27ptdm4e28qh6evfsm66uf2vf4fxmpxfqgym4m2fcyp",
-            "kashtest:qpcerqk4ltxtyprv9096wrlzjx5mnrlw4fqce6hnl3axy7tkvyjxypjc5dyqs",
-            "kashtest:qr9m4h44ghmyz4wagktx8kgmh9zj8h8q0f6tc87wuad5xvzkdlwd6uu9plg2c",
-            "kashtest:qrkxylqkyjtkjr5zs4z5wjmhmj756e84pa05amcw3zn8wdqjvn4tcc2gcqhrw",
-            "kashtest:qp3w5h9hp9ude4vjpllsm4qpe8rcc5dmeealkl0cnxlgtj4ly7rczqxcdamvr",
-            "kashtest:qpqen78dezzj4w7rae4n6kvahlr6wft7jy3lcul78709asxksgxc2kr9fgv6j",
-            "kashtest:qq7upgj3g8klaylc4etwhlmr70t24wu4n4qrlayuw44yd8wx40seje27ah2x7",
-            "kashtest:qqt2jzgzwy04j8np6ne4g0akmq4gj3fha0gqupr2mjj95u5utzxqvv33mzpcu",
-            "kashtest:qpcnt3vscphae5q8h576xkufhtuqvntg0ves8jnthgfaxy8ajek8zz3jcg4de",
-            "kashtest:qz7wzgzvnadgp6v4u6ua9f3hltaa3cv8635mvzlepa63ttt72c6m208g48q0p",
-            "kashtest:qpqtsd4flc0n4g720mjwk67tnc46xv9ns5xs2khyvlvszy584ej4xq9adw9h9",
-            "kashtest:qq4uy92hzh9eauypps060g2k7zv2xv9fsgc5gxkwgsvlhc7tw4a3gk5rnpc0k",
-            "kashtest:qqgfhd3ur2v2xcf35jggre97ar3awl0h62qlmmaaq28dfrhwzgjnxntdugycr",
-            "kashtest:qzuflj6tgzwjujsym9ap6dvqz9zfwnmkta68fjulax09clh8l4rfslj9j9nnt",
-            "kashtest:qz6645a8rrf0hmrdvyr9uj673lrr9zwhjvvrytqpjsjdet23czvc784e84lfe",
-            "kashtest:qz2fvhmk996rmmg44ht0s79gnw647ehu8ncmpf3sf6txhkfmuzuxssceg9sw0",
-            "kashtest:qr9aflwylzdu99z2z25lzljyeszhs7j02zhfdazydgahq2vg6x8w7nfp3juqq",
-            "kashtest:qzen7nh0lmzvujlye5sv3nwgwdyew2zp9nz5we7pay65wrt6kfxd6khwja56q",
-            "kashtest:qq74jrja2mh3wn6853g8ywpfy9nlg0uuzchvpa0cmnvds4tfnpjj5tqgnqm4f",
+            "kashtest:qqnapngv3zxp305qf06w6hpzmyxtx2r99jjhs04lu980xdyd2ulwwgzjc0rzh",
+            "kashtest:qqfwmv2jm7dsuju9wz27ptdm4e28qh6evfsm66uf2vf4fxmpxfqgyg3vt2c05",
+            "kashtest:qpcerqk4ltxtyprv9096wrlzjx5mnrlw4fqce6hnl3axy7tkvyjxyjk04wyt9",
+            "kashtest:qr9m4h44ghmyz4wagktx8kgmh9zj8h8q0f6tc87wuad5xvzkdlwd60cjqugpd",
+            "kashtest:qrkxylqkyjtkjr5zs4z5wjmhmj756e84pa05amcw3zn8wdqjvn4tctwlerhgm",
+            "kashtest:qp3w5h9hp9ude4vjpllsm4qpe8rcc5dmeealkl0cnxlgtj4ly7rcznz0v7m8k",
+            "kashtest:qpqen78dezzj4w7rae4n6kvahlr6wft7jy3lcul78709asxksgxc298jgtv38",
+            "kashtest:qq7upgj3g8klaylc4etwhlmr70t24wu4n4qrlayuw44yd8wx40sej2wfu52dt",
+            "kashtest:qqt2jzgzwy04j8np6ne4g0akmq4gj3fha0gqupr2mjj95u5utzxqvl4x6ppnf",
+            "kashtest:qpcnt3vscphae5q8h576xkufhtuqvntg0ves8jnthgfaxy8ajek8z349et4xv",
+            "kashtest:qz7wzgzvnadgp6v4u6ua9f3hltaa3cv8635mvzlepa63ttt72c6m2url5yqy5",
+            "kashtest:qpqtsd4flc0n4g720mjwk67tnc46xv9ns5xs2khyvlvszy584ej4xnp2vd9us",
+            "kashtest:qq4uy92hzh9eauypps060g2k7zv2xv9fsgc5gxkwgsvlhc7tw4a3g9s5jzcyr",
+            "kashtest:qqgfhd3ur2v2xcf35jggre97ar3awl0h62qlmmaaq28dfrhwzgjnxq06atynk",
+            "kashtest:qzuflj6tgzwjujsym9ap6dvqz9zfwnmkta68fjulax09clh8l4rfsvkjnxnc7",
+            "kashtest:qz6645a8rrf0hmrdvyr9uj673lrr9zwhjvvrytqpjsjdet23czvc753wxklzv",
+            "kashtest:qz2fvhmk996rmmg44ht0s79gnw647ehu8ncmpf3sf6txhkfmuzuxsruwfxs96",
+            "kashtest:qr9aflwylzdu99z2z25lzljyeszhs7j02zhfdazydgahq2vg6x8w7qdks3ut4",
+            "kashtest:qzen7nh0lmzvujlye5sv3nwgwdyew2zp9nz5we7pay65wrt6kfxd69nen7534",
+            "kashtest:qq74jrja2mh3wn6853g8ywpfy9nlg0uuzchvpa0cmnvds4tfnpjj5cyljrm7u",
         ]
     }
 
@@ -666,26 +773,26 @@ mod tests {
 
     fn gen0_change_addresses() -> Vec<&'static str> {
         vec![
-            "kashtest:qrc0xjaq00fq8qzvrudfuk9msag7whnd72nefwq5d07ks4j4d97kzm0x3ertv",
-            "kashtest:qpf00utzmaa2u8w9353ssuazsv7fzs605eg00l9luyvcwzwj9cx0z4m8n9p5j",
-            "kashtest:qrkxek2q6eze7lhg8tq0qw9h890lujvjhtnn5vllrkgj2rgudl6xv3ut9j5mu",
-            "kashtest:qrn0ga4lddypp9w8eygt9vwk92lagr55e2eqjgkfr09az90632jc6namw09ll",
-            "kashtest:qzga696vavxtrg0heunvlta5ghjucptll9cfs5x0m2j05s55vtl36uhpauwuk",
-            "kashtest:qq8ernhu26fgt3ap73jalhzl5u5zuergm9f0dcsa8uy7lmcx875hwl3r894fp",
-            "kashtest:qrauma73jdn0yfwspr7yf39recvjkk3uy5e4309vjc82qq7sxtskjphgwu0sx",
-            "kashtest:qzk7yd3ep4def7sv7yhl8m0mr7p75zclycrv0x0jfm0gmwte23k0u5f9dclzy",
-            "kashtest:qzvm7mnhpkrw52c4p85xd5scrpddxnagzmhmz4v8yt6nawwzgjtavu84ft88x",
-            "kashtest:qq4feppacdug6p6zk2xf4rw400ps92c9h78gctfcdlucvzzjwzyz7j650nw52",
-            "kashtest:qryepg9agerq4wdzpv39xxjdytktga53dphvs6r4fdjc0gfyndhk7ytpnl5tv",
-            "kashtest:qpywh5galz3dd3ndkx96ckpvvf5g8t4adaf0k58y4kgf8w06jt5myjrpluvk6",
-            "kashtest:qq32grys34737mfe5ud5j2v03cjefynuym27q7jsdt28qy72ucv3sv0teqwvm",
-            "kashtest:qper47ahktzf9lv67a5e9rmfk35pq4xneufhu97px6tlzd0d4qkaklx7m3f7w",
-            "kashtest:qqal0t8w2y65a4lm5j5y4maxyy4nuwxj6u364eppj5qpxz9s4l7tknfw0u6r3",
-            "kashtest:qr7p66q7lmdqcf2vnyus38efx3l4apvqvv5sff66n808mtclef2w7vxh3afnn",
-            "kashtest:qqx4xydd58qe5csedz3l3q7v02e49rwqnydc425d6jchv02el2gdv4055vh0y",
-            "kashtest:qzyc9l5azcae7y3yltgnl5k2dzzvngp90a0glsepq0dnz8dvp4jyveezpqse8",
-            "kashtest:qq705x6hl9qdvr03n0t65esevpvzkkt2xj0faxp6luvd2hk2gr76chxw8xhy5",
-            "kashtest:qzufchm3cy2ej6f4cjpxpnt3g7c2gn77c320qhrnrjqqskpn7vnzsaxg6z0kd",
+            "kashtest:qrc0xjaq00fq8qzvrudfuk9msag7whnd72nefwq5d07ks4j4d97kzgt3s6rqe",
+            "kashtest:qpf00utzmaa2u8w9353ssuazsv7fzs605eg00l9luyvcwzwj9cx0zxlsjxpl8",
+            "kashtest:qrkxek2q6eze7lhg8tq0qw9h890lujvjhtnn5vllrkgj2rgudl6xvzcuy35sf",
+            "kashtest:qrn0ga4lddypp9w8eygt9vwk92lagr55e2eqjgkfr09az90632jc6qev0v952",
+            "kashtest:qzga696vavxtrg0heunvlta5ghjucptll9cfs5x0m2j05s55vtl360nkulwhr",
+            "kashtest:qq8ernhu26fgt3ap73jalhzl5u5zuergm9f0dcsa8uy7lmcx875hwv45xx4z5",
+            "kashtest:qrauma73jdn0yfwspr7yf39recvjkk3uy5e4309vjc82qq7sxtskjjnl0l0mn",
+            "kashtest:qzk7yd3ep4def7sv7yhl8m0mr7p75zclycrv0x0jfm0gmwte23k0u8djvmlf3",
+            "kashtest:qzvm7mnhpkrw52c4p85xd5scrpddxnagzmhmz4v8yt6nawwzgjtav0rzgg8vn",
+            "kashtest:qq4feppacdug6p6zk2xf4rw400ps92c9h78gctfcdlucvzzjwzyz7p7rwswll",
+            "kashtest:qryepg9agerq4wdzpv39xxjdytktga53dphvs6r4fdjc0gfyndhk7h0kju5qe",
+            "kashtest:qpywh5galz3dd3ndkx96ckpvvf5g8t4adaf0k58y4kgf8w06jt5myp8k7lva0",
+            "kashtest:qq32grys34737mfe5ud5j2v03cjefynuym27q7jsdt28qy72ucv3sltucrw8w",
+            "kashtest:qper47ahktzf9lv67a5e9rmfk35pq4xneufhu97px6tlzd0d4qkakvzf6jf4m",
+            "kashtest:qqal0t8w2y65a4lm5j5y4maxyy4nuwxj6u364eppj5qpxz9s4l7tkqdewl6gy",
+            "kashtest:qr7p66q7lmdqcf2vnyus38efx3l4apvqvv5sff66n808mtclef2w7lzqs7fcx",
+            "kashtest:qqx4xydd58qe5csedz3l3q7v02e49rwqnydc425d6jchv02el2gdvxtr40hy3",
+            "kashtest:qzyc9l5azcae7y3yltgnl5k2dzzvngp90a0glsepq0dnz8dvp4jyv2a4qrsjj",
+            "kashtest:qq705x6hl9qdvr03n0t65esevpvzkkt2xj0faxp6luvd2hk2gr76cyzex9h0p",
+            "kashtest:qzufchm3cy2ej6f4cjpxpnt3g7c2gn77c320qhrnrjqqskpn7vnzswzlmp0ac",
         ]
     }
 

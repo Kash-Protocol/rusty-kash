@@ -175,6 +175,7 @@ const fn outpoint_estimated_serialized_size() -> u64 {
 
 pub fn transaction_output_serialized_byte_size(output_inner: &TransactionOutput) -> u64 {
     let mut size: u64 = 0;
+    size += 4; // value (u32)
     size += 8; // value (u64)
     size += 2; // output.ScriptPublicKey.Version (u16)
     size += 8; // length of script public key (u64)

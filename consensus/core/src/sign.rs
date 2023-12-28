@@ -106,7 +106,7 @@ pub fn verify(tx: &impl crate::tx::VerifiableTransaction) -> Result<(), Error> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::{subnets::SubnetworkId, tx::*};
+    use crate::{asset_type::AssetType::KSH, subnets::SubnetworkId, tx::*};
     use secp256k1::{rand, Secp256k1};
     use std::str::FromStr;
 
@@ -143,9 +143,10 @@ mod tests {
                 },
             ],
             vec![
-                TransactionOutput { value: 300, script_public_key: ScriptPublicKey::new(0, script_pub_key.clone()) },
-                TransactionOutput { value: 300, script_public_key: ScriptPublicKey::new(0, script_pub_key.clone()) },
+                TransactionOutput { value: 300, script_public_key: ScriptPublicKey::new(0, script_pub_key.clone()), asset_type: KSH },
+                TransactionOutput { value: 300, script_public_key: ScriptPublicKey::new(0, script_pub_key.clone()), asset_type: KSH },
             ],
+            TransactionKind::TransferKSH,
             1615462089000,
             SubnetworkId::from_bytes([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]),
             0,
@@ -158,18 +159,21 @@ mod tests {
                 script_public_key: ScriptPublicKey::new(0, script_pub_key.clone()),
                 block_daa_score: 0,
                 is_coinbase: false,
+                asset_type: KSH,
             },
             UtxoEntry {
                 amount: 200,
                 script_public_key: ScriptPublicKey::new(0, script_pub_key),
                 block_daa_score: 0,
                 is_coinbase: false,
+                asset_type: KSH,
             },
             UtxoEntry {
                 amount: 300,
                 script_public_key: ScriptPublicKey::new(0, script_pub_key2),
                 block_daa_score: 0,
                 is_coinbase: false,
+                asset_type: KSH,
             },
         ];
         let signed_tx = sign_with_multiple(

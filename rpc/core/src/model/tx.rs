@@ -1,7 +1,8 @@
 use borsh::{BorshDeserialize, BorshSchema, BorshSerialize};
 use kash_addresses::Address;
+use kash_consensus_core::asset_type::AssetType;
 use kash_consensus_core::tx::{
-    ScriptPublicKey, ScriptVec, TransactionId, TransactionInput, TransactionOutpoint, TransactionOutput, UtxoEntry,
+    ScriptPublicKey, ScriptVec, TransactionId, TransactionInput, TransactionKind, TransactionOutpoint, TransactionOutput, UtxoEntry,
 };
 use serde::{Deserialize, Serialize};
 
@@ -57,6 +58,7 @@ pub struct RpcTransactionInputVerboseData {}
 pub struct RpcTransactionOutput {
     pub value: u64,
     pub script_public_key: RpcScriptPublicKey,
+    pub asset_type: AssetType,
     pub verbose_data: Option<RpcTransactionOutputVerboseData>,
 }
 
@@ -68,7 +70,7 @@ impl RpcTransactionOutput {
 
 impl From<TransactionOutput> for RpcTransactionOutput {
     fn from(output: TransactionOutput) -> Self {
-        Self { value: output.value, script_public_key: output.script_public_key, verbose_data: None }
+        Self { value: output.value, script_public_key: output.script_public_key, verbose_data: None, asset_type: output.asset_type }
     }
 }
 
@@ -87,6 +89,7 @@ pub struct RpcTransaction {
     pub version: u16,
     pub inputs: Vec<RpcTransactionInput>,
     pub outputs: Vec<RpcTransactionOutput>,
+    pub kind: TransactionKind,
     pub lock_time: u64,
     pub subnetwork_id: RpcSubnetworkId,
     pub gas: u64,

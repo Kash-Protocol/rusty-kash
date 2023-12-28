@@ -4,6 +4,7 @@ use crate::common::{client_notify::ChannelNotify, daemon::Daemon};
 use futures_util::future::try_join_all;
 use kash_addresses::{Address, Prefix, Version};
 use kash_consensus::params::SIMNET_GENESIS;
+use kash_consensus_core::tx::TransactionKind;
 use kash_consensus_core::{constants::MAX_SOMPI, subnets::SubnetworkId, tx::Transaction};
 use kash_core::info;
 use kash_grpc_core::ops::KashdPayloadOps;
@@ -292,7 +293,8 @@ async fn sanity_test() {
                 let rpc_client = client.clone();
                 tst!(op, {
                     // Build an erroneous transaction...
-                    let transaction = Transaction::new(0, vec![], vec![], 0, SubnetworkId::default(), 0, vec![]);
+                    let transaction =
+                        Transaction::new(0, vec![], vec![], TransactionKind::TransferKSH, 0, SubnetworkId::default(), 0, vec![]);
                     let result = rpc_client.submit_transaction((&transaction).into(), false).await;
                     // ...that gets rejected by the consensus
                     assert!(result.is_err());

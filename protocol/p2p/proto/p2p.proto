@@ -26,9 +26,10 @@ message TransactionMessage{
   uint32 version = 1;
   repeated TransactionInput inputs = 2;
   repeated TransactionOutput outputs = 3;
-  uint64 lockTime = 4;
-  SubnetworkId subnetworkId = 5;
-  uint64 gas = 6;
+  uint32 kind = 4;
+  uint64 lockTime = 5;
+  SubnetworkId subnetworkId = 6;
+  uint64 gas = 7;
   bytes payload = 8;
 }
 
@@ -55,6 +56,7 @@ message ScriptPublicKey {
 message TransactionOutput{
   uint64 value = 1;
   ScriptPublicKey scriptPublicKey = 2;
+  uint32 assetType = 3;
 }
 
 message BlockMessage{
@@ -170,6 +172,7 @@ message UtxoEntry {
   ScriptPublicKey scriptPublicKey = 2;
   uint64 blockDaaScore = 3;
   bool isCoinbase = 4;
+  uint32 assetType = 5;
 }
 
 message RequestNextPruningPointUtxoSetChunkMessage {

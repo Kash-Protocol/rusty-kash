@@ -10,9 +10,11 @@ pub fn calc_hash_merkle_root<'a>(txs: impl ExactSizeIterator<Item = &'a Transact
 mod tests {
     use crate::merkle::calc_hash_merkle_root;
     use crate::{
+        asset_type::AssetType::KSH,
         subnets::{SUBNETWORK_ID_COINBASE, SUBNETWORK_ID_NATIVE},
         tx::{scriptvec, ScriptPublicKey, Transaction, TransactionId, TransactionInput, TransactionOutpoint, TransactionOutput},
     };
+    use consensus_core::tx::TransactionKind;
     use kash_hashes::Hash;
 
     #[test]
@@ -30,7 +32,9 @@ mod tests {
                             0xba, 0x30, 0xcd, 0x5a, 0x4b, 0x87,
                         ],
                     ),
+                    asset_type: KSH,
                 }],
+                TransactionKind::TransferKSH,
                 0,
                 SUBNETWORK_ID_COINBASE,
                 0,
@@ -65,6 +69,7 @@ mod tests {
                     },
                 ],
                 vec![],
+                TransactionKind::TransferKSH,
                 0,
                 SUBNETWORK_ID_NATIVE,
                 0,
@@ -110,6 +115,7 @@ mod tests {
                                 0xac, // OP_CHECKSIG
                             ],
                         ),
+                        asset_type: KSH,
                     },
                     TransactionOutput {
                         value: 0x108e20f00,
@@ -124,8 +130,10 @@ mod tests {
                                 0xac, // OP_CHECKSIG
                             ],
                         ),
+                        asset_type: KSH,
                     },
                 ],
+                TransactionKind::TransferKSH,
                 0,
                 SUBNETWORK_ID_NATIVE,
                 0,
@@ -170,6 +178,7 @@ mod tests {
                                 0xac, // OP_CHECKSIG
                             ],
                         ),
+                        asset_type: KSH,
                     },
                     TransactionOutput {
                         value: 0x11d260c0,
@@ -184,8 +193,10 @@ mod tests {
                                 0xac, // OP_CHECKSIG
                             ],
                         ),
+                        asset_type: KSH,
                     },
                 ],
+                TransactionKind::TransferKSH,
                 0,
                 SUBNETWORK_ID_NATIVE,
                 0,
@@ -230,7 +241,9 @@ mod tests {
                             0xac, // OP_CHECKSIG
                         ],
                     ),
+                    asset_type: KSH,
                 }],
+                TransactionKind::TransferKSH,
                 0,
                 SUBNETWORK_ID_NATIVE,
                 0,

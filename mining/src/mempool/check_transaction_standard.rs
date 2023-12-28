@@ -229,6 +229,8 @@ mod tests {
         MiningCounters,
     };
     use kash_addresses::{Address, Prefix, Version};
+    use kash_consensus_core::asset_type::AssetType::KSH;
+    use kash_consensus_core::tx::TransactionKind::TransferKSH;
     use kash_consensus_core::{
         config::params::Params,
         constants::{MAX_TX_IN_SEQUENCE_NUM, SOMPI_PER_KASH, TX_VERSION},
@@ -319,33 +321,33 @@ mod tests {
             // Any value is allowed with a zero relay fee.
             Test {
                 name: "zero value with zero relay fee",
-                tx_out: TransactionOutput::new(0, script_public_key.clone()),
+                tx_out: TransactionOutput::new(0, script_public_key.clone(), KSH),
                 minimum_relay_transaction_fee: 0,
                 is_dust: false,
             },
             // Zero value is dust with any relay fee"
             Test {
                 name: "zero value with very small tx fee",
-                tx_out: TransactionOutput::new(0, script_public_key.clone()),
+                tx_out: TransactionOutput::new(0, script_public_key.clone(), KSH),
                 minimum_relay_transaction_fee: 1,
                 is_dust: true,
             },
             Test {
                 name: "36 byte public key script with value 605",
-                tx_out: TransactionOutput::new(605, script_public_key.clone()),
+                tx_out: TransactionOutput::new(605, script_public_key.clone(), KSH),
                 minimum_relay_transaction_fee: 1000,
                 is_dust: true,
             },
             Test {
                 name: "36 byte public key script with value 606",
-                tx_out: TransactionOutput::new(606, script_public_key.clone()),
+                tx_out: TransactionOutput::new(606, script_public_key.clone(), KSH),
                 minimum_relay_transaction_fee: 1000,
                 is_dust: false,
             },
             // Maximum allowed value is never dust.
             Test {
                 name: "max sompi amount is never dust",
-                tx_out: TransactionOutput::new(MAX_SOMPI, script_public_key.clone()),
+                tx_out: TransactionOutput::new(MAX_SOMPI, script_public_key.clone(), KSH),
                 minimum_relay_transaction_fee: 1000,
                 is_dust: false,
             },
@@ -353,14 +355,14 @@ mod tests {
             // Rust rewrite: caution, this differs from the golang version
             Test {
                 name: "maximum uint64 value",
-                tx_out: TransactionOutput::new(u64::MAX, script_public_key),
+                tx_out: TransactionOutput::new(u64::MAX, script_public_key, KSH),
                 minimum_relay_transaction_fee: u64::MAX,
                 is_dust: false,
             },
             // Unspendable script_public_key due to an invalid public key script.
             Test {
                 name: "unspendable script_public_key",
-                tx_out: TransactionOutput::new(5000, invalid_script_public_key),
+                tx_out: TransactionOutput::new(5000, invalid_script_public_key, KSH),
                 minimum_relay_transaction_fee: 0,
                 is_dust: true,
             },
@@ -393,7 +395,7 @@ mod tests {
 
         let addr = Address::new(Prefix::Testnet, Version::PubKey, &addr_hash);
         let dummy_script_public_key = kash_txscript::pay_to_address_script(&addr);
-        let dummy_tx_out = TransactionOutput::new(SOMPI_PER_KASH, dummy_script_public_key);
+        let dummy_tx_out = TransactionOutput::new(SOMPI_PER_KASH, dummy_script_public_key, KSH);
 
         struct Test {
             name: &'static str,
@@ -415,6 +417,7 @@ mod tests {
                         TX_VERSION,
                         vec![dummy_tx_input.clone()],
                         vec![dummy_tx_out.clone()],
+                        TransferKSH,
                         0,
                         SUBNETWORK_ID_NATIVE,
                         0,
@@ -431,6 +434,7 @@ mod tests {
                         TX_VERSION + 1,
                         vec![dummy_tx_input.clone()],
                         vec![dummy_tx_out.clone()],
+                        TransferKSH,
                         0,
                         SUBNETWORK_ID_NATIVE,
                         0,
@@ -452,7 +456,9 @@ mod tests {
                                 MAX_SCRIPT_PUBLIC_KEY_VERSION,
                                 ScriptVec::from_vec(vec![0u8; MAXIMUM_STANDARD_TRANSACTION_MASS as usize + 1]),
                             ),
+                            KSH,
                         )],
+                        TransferKSH,
                         0,
                         SUBNETWORK_ID_NATIVE,
                         0,
@@ -474,6 +480,7 @@ mod tests {
                             1,
                         )],
                         vec![dummy_tx_out.clone()],
+                        TransferKSH,
                         0,
                         SUBNETWORK_ID_NATIVE,
                         0,
@@ -495,7 +502,9 @@ mod tests {
                                 MAX_SCRIPT_PUBLIC_KEY_VERSION,
                                 ScriptBuilder::new().add_op(OpTrue).unwrap().script().into(),
                             ),
+                            KSH,
                         )],
+                        TransferKSH,
                         0,
                         SUBNETWORK_ID_NATIVE,
                         0,
@@ -511,7 +520,8 @@ mod tests {
                     Transaction::new(
                         TX_VERSION,
                         vec![dummy_tx_input.clone()],
-                        vec![TransactionOutput::new(0, dummy_tx_out.script_public_key)],
+                        vec![TransactionOutput::new(0, dummy_tx_out.script_public_key, KSH)],
+                        TransferKSH,
                         0,
                         SUBNETWORK_ID_NATIVE,
                         0,
@@ -533,7 +543,9 @@ mod tests {
                                 MAX_SCRIPT_PUBLIC_KEY_VERSION,
                                 ScriptBuilder::new().add_op(OpReturn).unwrap().script().into(),
                             ),
+                            KSH,
                         )],
+                        TransferKSH,
                         0,
                         SUBNETWORK_ID_NATIVE,
                         0,

@@ -3,6 +3,8 @@ use std::{collections::HashMap, time::Duration};
 use clap::{Arg, Command};
 use itertools::Itertools;
 use kash_addresses::Address;
+use kash_consensus_core::asset_type::AssetType::KSH;
+use kash_consensus_core::tx::TransactionKind;
 use kash_consensus_core::{
     config::params::{TESTNET11_PARAMS, TESTNET_PARAMS},
     constants::TX_VERSION,
@@ -106,11 +108,8 @@ async fn main() {
         return;
     };
 
-    let kash_addr = Address::new(
-        kash_addresses::Prefix::Testnet,
-        kash_addresses::Version::PubKey,
-        &schnorr_key.x_only_public_key().0.serialize(),
-    );
+    let kash_addr =
+        Address::new(kash_addresses::Prefix::Testnet, kash_addresses::Version::PubKey, &schnorr_key.x_only_public_key().0.serialize());
 
     info!("Using Rothschild with private key {} and address {}", schnorr_key.display_secret(), String::from(&kash_addr));
     let info = rpc_client.get_block_dag_info().await.unwrap();
@@ -327,9 +326,9 @@ fn generate_tx(
         .collect_vec();
 
     let outputs = (0..num_outs)
-        .map(|_| TransactionOutput { value: send_amount / num_outs, script_public_key: script_public_key.clone() })
+        .map(|_| TransactionOutput { value: send_amount / num_outs, script_public_key: script_public_key.clone(), asset_type: KSH })
         .collect_vec();
-    let unsigned_tx = Transaction::new(TX_VERSION, inputs, outputs, 0, SUBNETWORK_ID_NATIVE, 0, vec![]);
+    let unsigned_tx = Transaction::new(TX_VERSION, inputs, outputs, TransactionKind::TransferKSH, 0, SUBNETWORK_ID_NATIVE, 0, vec![]);
     let signed_tx =
         sign(MutableTransaction::with_entries(unsigned_tx, utxos.iter().map(|(_, entry)| entry.clone()).collect_vec()), schnorr_key);
     signed_tx.tx

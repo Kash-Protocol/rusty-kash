@@ -14,9 +14,7 @@ use crate::runtime::AccountKind;
 use crate::Result;
 use kash_bip32::{AddressType, DerivationPath, ExtendedPrivateKey, ExtendedPublicKey, Language, Mnemonic, SecretKeyExt};
 use kash_consensus_core::network::NetworkType;
-use kash_txscript::{
-    extract_script_pub_key_address, multisig_redeem_script, multisig_redeem_script_ecdsa, pay_to_script_hash_script,
-};
+use kash_txscript::{extract_script_pub_key_address, multisig_redeem_script, multisig_redeem_script_ecdsa, pay_to_script_hash_script};
 use std::collections::HashMap;
 use std::sync::{Arc, Mutex, MutexGuard};
 use wasm_bindgen::prelude::*;

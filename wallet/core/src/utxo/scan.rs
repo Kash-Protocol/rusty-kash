@@ -3,6 +3,7 @@ use crate::imports::*;
 use crate::result::Result;
 use crate::runtime::{AtomicBalance, Balance};
 use crate::utxo::{UtxoContext, UtxoEntryReference, UtxoEntryReferenceExtension};
+use kash_consensus_core::asset_type::AssetType;
 use std::cmp::max;
 
 pub const DEFAULT_WINDOW_SIZE: usize = 8;
@@ -22,17 +23,20 @@ enum Provider {
 }
 
 pub struct Scan {
-    provider: Provider, //Arc<AddressManager>,
+    provider: Provider,
     window_size: Option<usize>,
     extent: Option<ScanExtent>,
-    balance: Arc<AtomicBalance>,
+    ksh_balance: Arc<AtomicBalance>,
+    kusd_balance: Arc<AtomicBalance>,
+    krv_balance: Arc<AtomicBalance>,
     current_daa_score: u64,
 }
-
 impl Scan {
     pub fn new_with_address_manager(
         address_manager: Arc<AddressManager>,
-        balance: &Arc<AtomicBalance>,
+        ksh_balance: &Arc<AtomicBalance>,
+        kusd_balance: &Arc<AtomicBalance>,
+        krv_balance: &Arc<AtomicBalance>,
         current_daa_score: u64,
         window_size: Option<usize>,
         extent: Option<ScanExtent>,
@@ -41,16 +45,26 @@ impl Scan {
             provider: Provider::AddressManager(address_manager),
             window_size, //: Some(DEFAULT_WINDOW_SIZE),
             extent,      //: Some(ScanExtent::EmptyWindow),
-            balance: balance.clone(),
+            ksh_balance: ksh_balance.clone(),
+            kusd_balance: kusd_balance.clone(),
+            krv_balance: krv_balance.clone(),
             current_daa_score,
         }
     }
-    pub fn new_with_address_set(addresses: HashSet<Address>, balance: &Arc<AtomicBalance>, current_daa_score: u64) -> Scan {
+    pub fn new_with_address_set(
+        addresses: HashSet<Address>,
+        ksh_balance: &Arc<AtomicBalance>,
+        kusd_balance: &Arc<AtomicBalance>,
+        krv_balance: &Arc<AtomicBalance>,
+        current_daa_score: u64,
+    ) -> Scan {
         Scan {
             provider: Provider::AddressSet(addresses),
             window_size: None,
             extent: None,
-            balance: balance.clone(),
+            ksh_balance: ksh_balance.clone(),
+            kusd_balance: kusd_balance.clone(),
+            krv_balance: krv_balance.clone(),
             current_daa_score,
         }
     }
@@ -70,17 +84,16 @@ impl Scan {
         let mut last_address_index = address_manager.index();
 
         'scan: loop {
-            // scan first up to address index, then in window chunks
+            // Initialize separate balances for each currency
+            let mut ksh_balance = Balance::default();
+            let mut kusd_balance = Balance::default();
+            let mut krv_balance = Balance::default();
+
             let first = cursor;
             let last = if cursor == 0 { max(last_address_index + 1, window_size) } else { cursor + window_size };
             cursor = last;
 
-            // generate address derivations
             let addresses = address_manager.get_range(first..last)?;
-            // register address in the utxo context; NOTE:  during the scan,
-            // before `get_utxos_by_addresses()` is complete we may receive
-            // new transactions  as such utxo context should be aware of the
-            // addresses used before we start interacting with them.
             utxo_context.register_addresses(&addresses).await?;
 
             let ts = Instant::now();
@@ -102,22 +115,33 @@ impl Scan {
                         panic!("Account::scan_address_manager() has received an unknown address: `{address}`");
                     }
                 }
-            }
-            yield_executor().await;
 
-            let balance: Balance = refs.iter().fold(Balance::default(), |mut balance, r| {
-                // let entry_balance = r.as_ref().balance(self.current_daa_score);
-                let entry_balance = r.balance(self.current_daa_score);
-                balance.mature += entry_balance.mature;
-                balance.pending += entry_balance.pending;
-                balance
-            });
+                // Update balance based on asset type
+                let entry_balance = utxo_ref.balance(self.current_daa_score);
+                match utxo_ref.utxo.entry.asset_type {
+                    AssetType::KSH => {
+                        ksh_balance.mature += entry_balance.mature;
+                        ksh_balance.pending += entry_balance.pending;
+                    }
+                    AssetType::KUSD => {
+                        kusd_balance.mature += entry_balance.mature;
+                        kusd_balance.pending += entry_balance.pending;
+                    }
+                    AssetType::KRV => {
+                        krv_balance.mature += entry_balance.mature;
+                        krv_balance.pending += entry_balance.pending;
+                    }
+                }
+            }
             yield_executor().await;
 
             utxo_context.extend(refs, self.current_daa_score).await?;
 
-            if !balance.is_empty() {
-                self.balance.add(balance);
+            // Check if any balance is not empty and update accordingly
+            if !ksh_balance.is_empty() || !kusd_balance.is_empty() || !krv_balance.is_empty() {
+                self.ksh_balance.add(ksh_balance);
+                self.kusd_balance.add(kusd_balance);
+                self.krv_balance.add(krv_balance);
             } else {
                 match &extent {
                     ScanExtent::EmptyWindow => {
@@ -135,7 +159,6 @@ impl Scan {
             yield_executor().await;
         }
 
-        // update address manager with the last used index
         address_manager.set_index(last_address_index)?;
 
         Ok(())
@@ -148,18 +171,39 @@ impl Scan {
         let resp = utxo_context.processor().rpc_api().get_utxos_by_addresses(address_vec).await?;
         let refs: Vec<UtxoEntryReference> = resp.into_iter().map(UtxoEntryReference::from).collect();
 
-        let balance: Balance = refs.iter().fold(Balance::default(), |mut balance, r| {
+        // Initialize separate balances for each currency
+        let mut ksh_balance = Balance::default();
+        let mut kusd_balance = Balance::default();
+        let mut krv_balance = Balance::default();
+
+        for r in refs.iter() {
+            // Update balance based on asset type
             let entry_balance = r.balance(self.current_daa_score);
-            balance.mature += entry_balance.mature;
-            balance.pending += entry_balance.pending;
-            balance
-        });
+            match r.utxo.entry.asset_type {
+                AssetType::KSH => {
+                    ksh_balance.mature += entry_balance.mature;
+                    ksh_balance.pending += entry_balance.pending;
+                }
+                AssetType::KUSD => {
+                    kusd_balance.mature += entry_balance.mature;
+                    kusd_balance.pending += entry_balance.pending;
+                }
+                AssetType::KRV => {
+                    krv_balance.mature += entry_balance.mature;
+                    krv_balance.pending += entry_balance.pending;
+                }
+            }
+        }
         yield_executor().await;
 
         utxo_context.extend(refs, self.current_daa_score).await?;
 
-        if !balance.is_empty() {
-            self.balance.add(balance);
+        // Check if any balance is not empty and update accordingly
+        if !ksh_balance.is_empty() || !kusd_balance.is_empty() || !krv_balance.is_empty() {
+            // Here you need to update the respective balances for KSH, KUSD, KRV
+            self.ksh_balance.add(ksh_balance);
+            self.kusd_balance.add(kusd_balance);
+            self.krv_balance.add(krv_balance);
         }
 
         Ok(())

@@ -66,7 +66,7 @@ const { networkId, encoding } = require("./utils").parseArgs();
 
         const changeAddress = address;
         console.info(changeAddress);
-        const tx = createTransaction(utxos, outputs, changeAddress, 0n, 0, 1, 1);
+        const tx = createTransaction("TransferKSH", utxos, outputs, changeAddress, 0n, 0, 1, 1);
 
         console.info(tx);
 

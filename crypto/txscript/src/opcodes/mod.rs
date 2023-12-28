@@ -977,12 +977,13 @@ mod test {
     use crate::opcodes::{OpCodeExecution, OpCodeImplementation};
     use crate::{opcodes, pay_to_address_script, TxScriptEngine, TxScriptError, LOCK_TIME_THRESHOLD};
     use kash_addresses::{Address, Prefix, Version};
+    use kash_consensus_core::asset_type::AssetType;
     use kash_consensus_core::constants::{SOMPI_PER_KASH, TX_VERSION};
     use kash_consensus_core::hashing::sighash::SigHashReusedValues;
     use kash_consensus_core::subnets::SUBNETWORK_ID_NATIVE;
     use kash_consensus_core::tx::{
-        PopulatedTransaction, ScriptPublicKey, Transaction, TransactionInput, TransactionOutpoint, TransactionOutput, UtxoEntry,
-        VerifiableTransaction,
+        PopulatedTransaction, ScriptPublicKey, Transaction, TransactionInput, TransactionKind, TransactionOutpoint, TransactionOutput,
+        UtxoEntry, VerifiableTransaction,
     };
 
     struct TestCase<'a> {
@@ -2720,18 +2721,19 @@ mod test {
 
         let addr = Address::new(Prefix::Testnet, Version::PubKey, &addr_hash);
         let dummy_script_public_key = pay_to_address_script(&addr);
-        let dummy_tx_out = TransactionOutput::new(SOMPI_PER_KASH, dummy_script_public_key);
+        let dummy_tx_out = TransactionOutput::new(SOMPI_PER_KASH, dummy_script_public_key, AssetType::KSH);
 
         let tx = VerifiableTransactionMock(Transaction::new(
             TX_VERSION + 1,
             vec![dummy_tx_input.clone()],
             vec![dummy_tx_out.clone()],
+            TransactionKind::TransferKSH,
             lock_time,
             SUBNETWORK_ID_NATIVE,
             0,
             vec![],
         ));
-        let utxo_entry = UtxoEntry::new(0, ScriptPublicKey::default(), 0, false);
+        let utxo_entry = UtxoEntry::new(0, ScriptPublicKey::default(), 0, false, AssetType::KSH);
         (tx, dummy_tx_input, utxo_entry)
     }
 

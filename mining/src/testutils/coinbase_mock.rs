@@ -1,3 +1,5 @@
+use kash_consensus_core::asset_type::AssetType::KSH;
+use kash_consensus_core::tx::TransactionKind::TransferKSH;
 use kash_consensus_core::{
     coinbase::{CoinbaseData, CoinbaseTransactionTemplate, MinerData},
     constants::{SOMPI_PER_KASH, TX_VERSION},
@@ -18,12 +20,12 @@ impl CoinbaseManagerMock {
 
     pub(super) fn expected_coinbase_transaction(&self, miner_data: MinerData) -> CoinbaseTransactionTemplate {
         const SUBSIDY: u64 = 500 * SOMPI_PER_KASH;
-        let output = TransactionOutput::new(SUBSIDY, miner_data.script_public_key.clone());
+        let output = TransactionOutput::new(SUBSIDY, miner_data.script_public_key.clone(), KSH);
 
         let payload = self.serialize_coinbase_payload(&CoinbaseData { blue_score: 1, subsidy: SUBSIDY, miner_data });
 
         CoinbaseTransactionTemplate {
-            tx: Transaction::new(TX_VERSION, vec![], vec![output], 0, SUBNETWORK_ID_COINBASE, 0, payload),
+            tx: Transaction::new(TX_VERSION, vec![], vec![output], TransferKSH, 0, SUBNETWORK_ID_COINBASE, 0, payload),
             has_red_reward: false,
         }
     }

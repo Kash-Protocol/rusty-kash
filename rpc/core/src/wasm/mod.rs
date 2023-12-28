@@ -31,7 +31,12 @@ impl From<TransactionInput> for RpcTransactionInput {
 impl From<TransactionOutput> for RpcTransactionOutput {
     fn from(output: TransactionOutput) -> Self {
         let inner = output.inner();
-        RpcTransactionOutput { value: inner.value, script_public_key: inner.script_public_key.clone(), verbose_data: None }
+        RpcTransactionOutput {
+            value: inner.value,
+            script_public_key: inner.script_public_key.clone(),
+            verbose_data: None,
+            asset_type: inner.asset_type,
+        }
     }
 }
 
@@ -53,6 +58,7 @@ impl From<&Transaction> for RpcTransaction {
             version: inner.version,
             inputs,
             outputs,
+            kind: inner.kind,
             lock_time: inner.lock_time,
             subnetwork_id: inner.subnetwork_id.clone(),
             gas: inner.gas,
@@ -70,6 +76,7 @@ impl From<SignableTransaction> for RpcTransaction {
             version: tx.version,
             inputs: RpcTransactionInput::from_transaction_inputs(tx.inputs),
             outputs: RpcTransactionOutput::from_transaction_outputs(tx.outputs),
+            kind: tx.kind,
             lock_time: tx.lock_time,
             subnetwork_id: tx.subnetwork_id,
             gas: tx.gas,

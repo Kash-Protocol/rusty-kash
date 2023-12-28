@@ -17,7 +17,13 @@ pub fn utxo_set_into_rpc(item: &UtxoSetByScriptPublicKey, prefix: Option<Prefix>
                 .map(|(outpoint, entry)| RpcUtxosByAddressesEntry {
                     address: address.clone(),
                     outpoint: *outpoint,
-                    utxo_entry: UtxoEntry::new(entry.amount, script_public_key.clone(), entry.block_daa_score, entry.is_coinbase),
+                    utxo_entry: UtxoEntry::new(
+                        entry.amount,
+                        script_public_key.clone(),
+                        entry.block_daa_score,
+                        entry.is_coinbase,
+                        entry.asset_type,
+                    ),
                 })
                 .collect::<Vec<_>>()
         })

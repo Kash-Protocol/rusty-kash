@@ -86,7 +86,9 @@ pub fn extract_script_pub_key_address(script_public_key: &ScriptPublicKey, prefi
 pub mod test_helpers {
     use super::*;
     use crate::{opcodes::codes::OpTrue, MAX_TX_IN_SEQUENCE_NUM};
+    use kash_consensus_core::tx::TransactionKind;
     use kash_consensus_core::{
+        asset_type::AssetType::KSH,
         constants::TX_VERSION,
         subnets::SUBNETWORK_ID_NATIVE,
         tx::{Transaction, TransactionInput, TransactionOutpoint, TransactionOutput},
@@ -108,8 +110,8 @@ pub mod test_helpers {
         let signature_script = pay_to_script_hash_signature_script(redeem_script, vec![]).expect("the script is canonical");
         let previous_outpoint = TransactionOutpoint::new(tx_to_spend.id(), 0);
         let input = TransactionInput::new(previous_outpoint, signature_script, MAX_TX_IN_SEQUENCE_NUM, 1);
-        let output = TransactionOutput::new(tx_to_spend.outputs[0].value - fee, script_public_key);
-        Transaction::new(TX_VERSION, vec![input], vec![output], 0, SUBNETWORK_ID_NATIVE, 0, vec![])
+        let output = TransactionOutput::new(tx_to_spend.outputs[0].value - fee, script_public_key, KSH);
+        Transaction::new(TX_VERSION, vec![input], vec![output], TransactionKind::TransferKSH, 0, SUBNETWORK_ID_NATIVE, 0, vec![])
     }
 }
 

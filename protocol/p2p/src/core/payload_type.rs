@@ -76,9 +76,7 @@ impl From<&KashdMessagePayload> for KashdMessagePayloadType {
                 KashdMessagePayloadType::RequestNextPruningPointUtxoSetChunk
             }
             KashdMessagePayload::DonePruningPointUtxoSetChunks(_) => KashdMessagePayloadType::DonePruningPointUtxoSetChunks,
-            KashdMessagePayload::IbdBlockLocatorHighestHashNotFound(_) => {
-                KashdMessagePayloadType::IbdBlockLocatorHighestHashNotFound
-            }
+            KashdMessagePayload::IbdBlockLocatorHighestHashNotFound(_) => KashdMessagePayloadType::IbdBlockLocatorHighestHashNotFound,
             KashdMessagePayload::BlockWithTrustedData(_) => KashdMessagePayloadType::BlockWithTrustedData,
             KashdMessagePayload::DoneBlocksWithTrustedData(_) => KashdMessagePayloadType::DoneBlocksWithTrustedData,
             KashdMessagePayload::RequestPruningPointAndItsAnticone(_) => KashdMessagePayloadType::RequestPruningPointAndItsAnticone,
