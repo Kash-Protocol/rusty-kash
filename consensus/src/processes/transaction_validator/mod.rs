@@ -10,7 +10,6 @@ use kash_txscript::{
     caches::{Cache, TxScriptCacheCounters},
     SigCacheKey,
 };
-pub use tx_validation_in_isolation::*;
 
 #[derive(Clone)]
 pub struct TransactionValidator {
