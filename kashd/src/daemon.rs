@@ -31,7 +31,7 @@ use kash_p2p_flows::{flow_context::FlowContext, service::P2pService};
 
 use kash_perf_monitor::builder::Builder as PerfMonitorBuilder;
 use kash_utxoindex::{api::UtxoIndexProxy, UtxoIndex};
-use kash_wrpc_server::service::{Options as WrpcServerOptions, ServerCounters as WrpcServerCounters, WrpcEncoding, WrpcService};
+use kash_wrpc_server::service::{Options as WrpcServerOptions, WebSocketCounters as WrpcServerCounters, WrpcEncoding, WrpcService};
 
 /// Desired soft FD limit that needs to be configured
 /// for the kashd process.

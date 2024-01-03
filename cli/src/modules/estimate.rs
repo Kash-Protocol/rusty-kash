@@ -19,8 +19,8 @@ impl Estimate {
         }
 
         let tx_action_str = &argv[0];
-        let tx_action =
-            TransactionAction::try_from(tx_action_str).map_err(|_| Error::custom(format!("Invalid transaction action: {}", tx_action_str)))?;
+        let tx_action = TransactionAction::try_from(tx_action_str)
+            .map_err(|_| Error::custom(format!("Invalid transaction action: {}", tx_action_str)))?;
 
         let amount_sompi = try_parse_required_nonzero_kash_as_sompi_u64(argv.get(1))?;
         let priority_fee_sompi = try_parse_optional_kash_as_sompi_i64(argv.get(2))?.unwrap_or(0);

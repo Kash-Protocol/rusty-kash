@@ -2,7 +2,7 @@ use criterion::{black_box, criterion_group, criterion_main, Criterion};
 use kash_consensus_core::asset_type::AssetType::KSH;
 use kash_consensus_core::subnets::SUBNETWORK_ID_COINBASE;
 use kash_consensus_core::tx::{
-    ScriptPublicKey, Transaction, TransactionId, TransactionInput, TransactionAction, TransactionOutpoint, TransactionOutput,
+    ScriptPublicKey, Transaction, TransactionAction, TransactionId, TransactionInput, TransactionOutpoint, TransactionOutput,
 };
 use smallvec::smallvec;
 use std::time::{Duration, Instant};

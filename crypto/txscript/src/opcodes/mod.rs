@@ -982,8 +982,8 @@ mod test {
     use kash_consensus_core::hashing::sighash::SigHashReusedValues;
     use kash_consensus_core::subnets::SUBNETWORK_ID_NATIVE;
     use kash_consensus_core::tx::{
-        PopulatedTransaction, ScriptPublicKey, Transaction, TransactionInput, TransactionAction, TransactionOutpoint, TransactionOutput,
-        UtxoEntry, VerifiableTransaction,
+        PopulatedTransaction, ScriptPublicKey, Transaction, TransactionAction, TransactionInput, TransactionOutpoint,
+        TransactionOutput, UtxoEntry, VerifiableTransaction,
     };
 
     struct TestCase<'a> {

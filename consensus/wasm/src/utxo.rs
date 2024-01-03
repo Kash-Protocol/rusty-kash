@@ -102,6 +102,12 @@ impl UtxoEntryReference {
     }
 }
 
+impl std::hash::Hash for UtxoEntryReference {
+    fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
+        self.id().hash(state);
+    }
+}
+
 impl AsRef<UtxoEntry> for UtxoEntryReference {
     fn as_ref(&self) -> &UtxoEntry {
         &self.utxo
@@ -255,7 +261,7 @@ impl TryFrom<JsValue> for UtxoEntries {
     type Error = Error;
     fn try_from(js_value: JsValue) -> std::result::Result<Self, Self::Error> {
         if !js_value.is_array() {
-            return Err("Data type spplied to UtxoEntries must be an Array".into());
+            return Err("Data type supplied to UtxoEntries must be an Array".into());
         }
 
         Ok(Self(Arc::new(js_value.try_into_utxo_entry_references()?)))
@@ -302,15 +308,15 @@ impl TryFrom<&JsValue> for UtxoEntryReference {
 
 impl UtxoEntryReference {
     // Creates a fake UtxoEntryReference with specified amount.
-    pub fn fake(amount: u64) -> Self {
+    pub fn simulated(amount: u64) -> Self {
         use kash_addresses::{Prefix, Version};
-        let address = Address::new(Prefix::Testnet, Version::PubKey, &[0; 32]);
-        Self::fake_with_address(amount, &address)
+        let address = Address::new(Prefix::Testnet, Version::PubKey, &rand::random::<[u8; 32]>());
+        Self::simulated_with_address(amount, &address)
     }
 
     // Creates a fake UtxoEntryReference with specified amount and address.
-    pub fn fake_with_address(amount: u64, address: &Address) -> Self {
-        let outpoint = TransactionOutpoint::fake();
+    pub fn simulated_with_address(amount: u64, address: &Address) -> Self {
+        let outpoint = TransactionOutpoint::simulated();
         let script_public_key = kash_txscript::pay_to_address_script(address);
         let block_daa_score = 0;
         let is_coinbase = true;

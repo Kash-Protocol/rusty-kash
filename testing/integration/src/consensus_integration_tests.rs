@@ -31,7 +31,7 @@ use kash_consensus_core::network::{NetworkId, NetworkType::Mainnet};
 use kash_consensus_core::subnets::SubnetworkId;
 use kash_consensus_core::trusted::{ExternalGhostdagData, TrustedBlock};
 use kash_consensus_core::tx::{
-    ScriptPublicKey, Transaction, TransactionInput, TransactionAction, TransactionOutpoint, TransactionOutput, UtxoEntry,
+    ScriptPublicKey, Transaction, TransactionAction, TransactionInput, TransactionOutpoint, TransactionOutput, UtxoEntry,
 };
 use kash_consensus_core::{blockhash, hashing, BlockHashMap, BlueWorkType};
 use kash_consensus_notify::root::ConsensusNotificationRoot;

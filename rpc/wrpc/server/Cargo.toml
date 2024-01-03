@@ -22,7 +22,6 @@ kash-rpc-core.workspace = true
 kash-rpc-macros.workspace = true
 kash-rpc-service.workspace = true
 kash-utils.workspace = true
-kash-wrpc-core.workspace = true
 log.workspace = true
 num_cpus.workspace = true
 paste.workspace = true

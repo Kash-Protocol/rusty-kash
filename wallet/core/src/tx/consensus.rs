@@ -1,3 +1,8 @@
+//!
+//! Helpers for obtaining consensus parameters based
+//! on the network type or address prefix.
+//!
+
 use kash_addresses::{Address, Prefix};
 use kash_consensus_core::{
     config::params::{Params, DEVNET_PARAMS, MAINNET_PARAMS, SIMNET_PARAMS, TESTNET_PARAMS},

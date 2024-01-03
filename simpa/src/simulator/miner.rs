@@ -10,7 +10,7 @@ use kash_consensus_core::coinbase::MinerData;
 use kash_consensus_core::sign::sign;
 use kash_consensus_core::subnets::SUBNETWORK_ID_NATIVE;
 use kash_consensus_core::tx::{
-    MutableTransaction, ScriptPublicKey, ScriptVec, Transaction, TransactionInput, TransactionAction, TransactionOutpoint,
+    MutableTransaction, ScriptPublicKey, ScriptVec, Transaction, TransactionAction, TransactionInput, TransactionOutpoint,
     TransactionOutput, UtxoEntry,
 };
 use kash_consensus_core::utxo::utxo_view::UtxoView;

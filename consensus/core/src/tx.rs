@@ -1,9 +1,9 @@
 mod script_public_key;
 
 use borsh::{BorshDeserialize, BorshSchema, BorshSerialize};
+use kash_utils::hex::ToHex;
 use kash_utils::{serde_bytes, serde_bytes_fixed_ref};
 pub use script_public_key::{scriptvec, ScriptPublicKey, ScriptPublicKeyVersion, ScriptPublicKeys, ScriptVec, SCRIPT_VECTOR_SIZE};
-
 use serde::{Deserialize, Serialize};
 use std::{
     fmt::Display,
@@ -78,7 +78,7 @@ impl Display for TransactionOutpoint {
 }
 
 /// Represents a Kash transaction input
-#[derive(Debug, Serialize, Deserialize, Clone, PartialEq, Eq, BorshSerialize, BorshDeserialize, BorshSchema)]
+#[derive(Serialize, Deserialize, Clone, PartialEq, Eq, BorshSerialize, BorshDeserialize, BorshSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct TransactionInput {
     pub previous_outpoint: TransactionOutpoint,
@@ -91,6 +91,17 @@ pub struct TransactionInput {
 impl TransactionInput {
     pub fn new(previous_outpoint: TransactionOutpoint, signature_script: Vec<u8>, sequence: u64, sig_op_count: u8) -> Self {
         Self { previous_outpoint, signature_script, sequence, sig_op_count }
+    }
+}
+
+impl std::fmt::Debug for TransactionInput {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("TransactionInput")
+            .field("previous_outpoint", &self.previous_outpoint)
+            .field("signature_script", &self.signature_script.to_hex())
+            .field("sequence", &self.sequence)
+            .field("sig_op_count", &self.sig_op_count)
+            .finish()
     }
 }
 
@@ -112,7 +123,7 @@ impl TransactionOutput {
 /// Defines the kind of a transaction
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, BorshSerialize, BorshDeserialize, BorshSchema)]
 #[serde(rename_all = "camelCase")]
-#[wasm_bindgen(js_name = transactionAction)]
+#[wasm_bindgen(js_name = TransactionAction)]
 #[derive(Default)]
 pub enum TransactionAction {
     /// Regular KSH transfer: KSH -> KSH
@@ -227,7 +238,7 @@ impl TryFrom<JsValue> for TransactionAction {
 }
 
 /// Represents a Kash transaction
-#[derive(Debug, Clone, PartialEq, Eq, Default, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Default, Serialize, Deserialize, BorshSerialize, BorshDeserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Transaction {
     pub version: u16,

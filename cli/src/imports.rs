@@ -1,5 +1,6 @@
 pub use crate::cli::KashCli;
 pub use crate::error::Error;
+pub use crate::extensions::*;
 pub(crate) use crate::helpers;
 pub use crate::notifier::Notification;
 pub use crate::result::Result;
@@ -13,14 +14,9 @@ pub use kash_consensus_core::network::{NetworkId, NetworkType};
 pub use kash_daemon::DaemonEvent;
 pub use kash_utils::hex::*;
 pub use kash_wallet_core::derivation::gen0::import::*;
-pub use kash_wallet_core::storage::interface::{AccessContext, Interface};
-pub use kash_wallet_core::storage::{AccessContextT, AccountKind, IdT, PrvKeyDataId, PrvKeyDataInfo};
-pub use kash_wallet_core::tx::PaymentOutputs;
+pub use kash_wallet_core::prelude::*;
+pub use kash_wallet_core::settings::{DefaultSettings, SettingsStore, WalletSettings};
 pub use kash_wallet_core::utils::*;
-pub use kash_wallet_core::{runtime::wallet::AccountCreateArgs, runtime::Wallet, secret::Secret};
-pub use kash_wallet_core::{
-    Address, ConnectOptions, ConnectStrategy, DefaultSettings, Events, SettingsStore, SyncState, WalletSettings,
-};
 pub use pad::PadStr;
 pub use regex::Regex;
 pub use separator::Separatable;

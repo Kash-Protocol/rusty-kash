@@ -1,3 +1,7 @@
+//!
+//! Message signing and verification functions.
+//!
+
 use kash_hashes::{Hash, PersonalMessageSigningHash};
 use secp256k1::{Error, XOnlyPublicKey};
 
