@@ -1,5 +1,6 @@
 use crate::imports::*;
-use kash_cli_lib::metrics::{metrics::MetricsSinkFn, Metrics as Inner};
+use kash_cli_lib::modules::metrics::Metrics as Inner;
+use kash_metrics_core::MetricsSinkFn;
 
 pub struct Metrics {
     inner: Arc<Inner>,

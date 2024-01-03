@@ -1,8 +1,13 @@
+//!
+//! Primitives for declaring transaction payment destinations.
+//!
+
 use crate::imports::*;
 use kash_consensus_core::asset_type::AssetType;
 use kash_consensus_wasm::{TransactionOutput, TransactionOutputInner};
 use kash_txscript::pay_to_address_script;
 
+#[derive(Clone, Debug, Serialize, Deserialize, BorshSerialize, BorshDeserialize)]
 pub enum PaymentDestination {
     Change,
     PaymentOutputs(PaymentOutputs),
@@ -17,7 +22,7 @@ impl PaymentDestination {
     }
 }
 
-#[derive(Debug)]
+#[derive(Clone, Debug, Serialize, Deserialize, BorshSerialize, BorshDeserialize)]
 #[wasm_bindgen(inspectable)]
 pub struct PaymentOutput {
     #[wasm_bindgen(getter_with_clone)]
@@ -74,7 +79,7 @@ impl From<PaymentOutput> for PaymentDestination {
     }
 }
 
-#[derive(Debug)]
+#[derive(Clone, Debug, Serialize, Deserialize, BorshSerialize, BorshDeserialize)]
 #[wasm_bindgen]
 pub struct PaymentOutputs {
     #[wasm_bindgen(skip)]
@@ -106,7 +111,7 @@ impl From<PaymentOutputs> for Vec<TransactionOutput> {
 #[wasm_bindgen]
 impl PaymentOutputs {
     #[wasm_bindgen(constructor)]
-    pub fn constructor(output_array: JsValue) -> crate::Result<PaymentOutputs> {
+    pub fn constructor(output_array: JsValue) -> crate::result::Result<PaymentOutputs> {
         let mut outputs = vec![];
         let iterator = js_sys::try_iter(&output_array)?.ok_or("need to pass iterable JS values!")?;
         for x in iterator {

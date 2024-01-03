@@ -1,7 +1,12 @@
+//!
+//! Address scanner implementation, responsible for
+//! aggregating UTXOs from multiple addresses and
+//! building corresponding balances.
+//!
+
 use crate::derivation::AddressManager;
 use crate::imports::*;
-use crate::result::Result;
-use crate::runtime::{AtomicBalance, Balance};
+use crate::utxo::balance::AtomicBalance;
 use crate::utxo::{UtxoContext, UtxoEntryReference, UtxoEntryReferenceExtension};
 use kash_consensus_core::asset_type::AssetType;
 use std::cmp::max;
@@ -84,11 +89,6 @@ impl Scan {
         let mut last_address_index = address_manager.index();
 
         'scan: loop {
-            // Initialize separate balances for each currency
-            let mut ksh_balance = Balance::default();
-            let mut kusd_balance = Balance::default();
-            let mut krv_balance = Balance::default();
-
             let first = cursor;
             let last = if cursor == 0 { max(last_address_index + 1, window_size) } else { cursor + window_size };
             cursor = last;
@@ -104,44 +104,45 @@ impl Scan {
             }
             yield_executor().await;
 
-            let refs: Vec<UtxoEntryReference> = resp.into_iter().map(UtxoEntryReference::from).collect();
-            for utxo_ref in refs.iter() {
-                if let Some(address) = utxo_ref.utxo.address.as_ref() {
-                    if let Some(utxo_address_index) = address_manager.inner().address_to_index_map.get(address) {
-                        if last_address_index < *utxo_address_index {
-                            last_address_index = *utxo_address_index;
+            if !resp.is_empty() {
+                let refs: Vec<UtxoEntryReference> = resp.into_iter().map(UtxoEntryReference::from).collect();
+                for utxo_ref in refs.iter() {
+                    if let Some(address) = utxo_ref.utxo.address.as_ref() {
+                        if let Some(utxo_address_index) = address_manager.inner().address_to_index_map.get(address) {
+                            if last_address_index < *utxo_address_index {
+                                last_address_index = *utxo_address_index;
+                            }
+                        } else {
+                            panic!("Account::scan_address_manager() has received an unknown address: `{address}`");
                         }
-                    } else {
-                        panic!("Account::scan_address_manager() has received an unknown address: `{address}`");
                     }
                 }
+                // Initialize separate balances for each currency
+                let mut ksh_balance = Balance::default();
+                let mut kusd_balance = Balance::default();
+                let mut krv_balance = Balance::default();
 
-                // Update balance based on asset type
-                let entry_balance = utxo_ref.balance(self.current_daa_score);
-                match utxo_ref.utxo.entry.asset_type {
-                    AssetType::KSH => {
-                        ksh_balance.mature += entry_balance.mature;
-                        ksh_balance.pending += entry_balance.pending;
+                // Process each UTXO reference and accumulate balances for each asset type
+                refs.iter().for_each(|utxo_ref| {
+                    let entry_balance = utxo_ref.balance(self.current_daa_score);
+                    match utxo_ref.utxo.entry.asset_type {
+                        AssetType::KSH => update_balance(&mut ksh_balance, entry_balance),
+                        AssetType::KUSD => update_balance(&mut kusd_balance, entry_balance),
+                        AssetType::KRV => update_balance(&mut krv_balance, entry_balance),
                     }
-                    AssetType::KUSD => {
-                        kusd_balance.mature += entry_balance.mature;
-                        kusd_balance.pending += entry_balance.pending;
-                    }
-                    AssetType::KRV => {
-                        krv_balance.mature += entry_balance.mature;
-                        krv_balance.pending += entry_balance.pending;
-                    }
+                });
+
+                utxo_context.extend_from_scan(refs, self.current_daa_score).await?;
+
+                if !ksh_balance.is_empty() {
+                    self.ksh_balance.add(ksh_balance);
                 }
-            }
-            yield_executor().await;
-
-            utxo_context.extend(refs, self.current_daa_score).await?;
-
-            // Check if any balance is not empty and update accordingly
-            if !ksh_balance.is_empty() || !kusd_balance.is_empty() || !krv_balance.is_empty() {
-                self.ksh_balance.add(ksh_balance);
-                self.kusd_balance.add(kusd_balance);
-                self.krv_balance.add(krv_balance);
+                if !kusd_balance.is_empty() {
+                    self.kusd_balance.add(kusd_balance);
+                }
+                if !krv_balance.is_empty() {
+                    self.krv_balance.add(krv_balance);
+                }
             } else {
                 match &extent {
                     ScanExtent::EmptyWindow => {
@@ -171,41 +172,44 @@ impl Scan {
         let resp = utxo_context.processor().rpc_api().get_utxos_by_addresses(address_vec).await?;
         let refs: Vec<UtxoEntryReference> = resp.into_iter().map(UtxoEntryReference::from).collect();
 
-        // Initialize separate balances for each currency
-        let mut ksh_balance = Balance::default();
-        let mut kusd_balance = Balance::default();
-        let mut krv_balance = Balance::default();
+        // Structs to hold the balances for each asset type
+        let mut ksh_total_balance = Balance::default();
+        let mut kusd_total_balance = Balance::default();
+        let mut krv_total_balance = Balance::default();
 
+        // Process each UTXO reference and accumulate balances for each asset type
         for r in refs.iter() {
-            // Update balance based on asset type
             let entry_balance = r.balance(self.current_daa_score);
             match r.utxo.entry.asset_type {
-                AssetType::KSH => {
-                    ksh_balance.mature += entry_balance.mature;
-                    ksh_balance.pending += entry_balance.pending;
-                }
-                AssetType::KUSD => {
-                    kusd_balance.mature += entry_balance.mature;
-                    kusd_balance.pending += entry_balance.pending;
-                }
-                AssetType::KRV => {
-                    krv_balance.mature += entry_balance.mature;
-                    krv_balance.pending += entry_balance.pending;
-                }
+                AssetType::KSH => update_balance(&mut ksh_total_balance, entry_balance),
+                AssetType::KUSD => update_balance(&mut kusd_total_balance, entry_balance),
+                AssetType::KRV => update_balance(&mut krv_total_balance, entry_balance),
             }
         }
         yield_executor().await;
 
-        utxo_context.extend(refs, self.current_daa_score).await?;
+        utxo_context.extend_from_scan(refs, self.current_daa_score).await?;
 
-        // Check if any balance is not empty and update accordingly
-        if !ksh_balance.is_empty() || !kusd_balance.is_empty() || !krv_balance.is_empty() {
-            // Here you need to update the respective balances for KSH, KUSD, KRV
-            self.ksh_balance.add(ksh_balance);
-            self.kusd_balance.add(kusd_balance);
-            self.krv_balance.add(krv_balance);
+        // Update the Scan struct balances
+        if !ksh_total_balance.is_empty() {
+            self.ksh_balance.add(ksh_total_balance);
+        }
+        if !kusd_total_balance.is_empty() {
+            self.kusd_balance.add(kusd_total_balance);
+        }
+        if !krv_total_balance.is_empty() {
+            self.krv_balance.add(krv_total_balance);
         }
 
         Ok(())
     }
+}
+
+// Function to update balance
+fn update_balance(total_balance: &mut Balance, entry_balance: Balance) {
+    total_balance.mature += entry_balance.mature;
+    total_balance.pending += entry_balance.pending;
+    total_balance.mature_utxo_count += entry_balance.mature_utxo_count;
+    total_balance.pending_utxo_count += entry_balance.pending_utxo_count;
+    total_balance.stasis_utxo_count += entry_balance.stasis_utxo_count;
 }

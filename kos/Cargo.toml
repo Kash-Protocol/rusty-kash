@@ -1,4 +1,3 @@
-
 [package]
 name = "kash-os"
 description = "Kash Node & Wallet Manager"
@@ -35,6 +34,7 @@ kash-cli.workspace = true
 kash-consensus-core.workspace = true
 kash-core.workspace = true
 kash-daemon.workspace = true
+kash-metrics-core.workspace = true
 kash-rpc-core.workspace = true
 kash-wallet-core.workspace = true
 nw-sys.workspace = true

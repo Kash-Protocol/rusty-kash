@@ -2,7 +2,7 @@ use borsh::{BorshDeserialize, BorshSchema, BorshSerialize};
 use kash_addresses::Address;
 use kash_consensus_core::asset_type::AssetType;
 use kash_consensus_core::tx::{
-    ScriptPublicKey, ScriptVec, TransactionId, TransactionInput, TransactionAction, TransactionOutpoint, TransactionOutput, UtxoEntry,
+    ScriptPublicKey, ScriptVec, TransactionAction, TransactionId, TransactionInput, TransactionOutpoint, TransactionOutput, UtxoEntry,
 };
 use serde::{Deserialize, Serialize};
 

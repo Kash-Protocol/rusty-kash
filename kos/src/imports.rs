@@ -15,7 +15,7 @@ pub use kash_daemon::{
     CpuMiner, CpuMinerConfig, CpuMinerCtl, DaemonEvent, DaemonKind, DaemonStatus, Daemons, Kashd, KashdConfig, KashdCtl,
     Result as DaemonResult,
 };
-pub use kash_wallet_core::{DefaultSettings, SettingsStore, SettingsStoreT};
+pub use kash_wallet_core::settings::{DefaultSettings, SettingsStore, SettingsStoreT};
 pub use nw_sys::prelude::*;
 pub use regex::Regex;
 pub use serde::{Deserialize, Serialize};

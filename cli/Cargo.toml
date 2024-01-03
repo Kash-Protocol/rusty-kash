@@ -36,6 +36,7 @@ kash-bip32.workspace = true
 kash-consensus-core.workspace = true
 kash-core.workspace = true
 kash-daemon.workspace = true
+kash-metrics-core.workspace = true
 kash-rpc-core.workspace = true
 kash-utils.workspace = true
 kash-wallet-core.workspace = true

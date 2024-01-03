@@ -27,8 +27,8 @@ kash-txscript.workspace = true
 kash-utils.workspace = true
 kash-utils-tower.workspace = true
 kash-utxoindex.workspace = true
-kash-wrpc-core.workspace = true
 
 async-trait.workspace = true
 log.workspace = true
 tokio.workspace = true
+workflow-rpc.workspace = true

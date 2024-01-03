@@ -1,4 +1,8 @@
-use crate::Result;
+//!
+//! Traits for derivation managers.
+//!
+
+use crate::result::Result;
 use async_trait::async_trait;
 use kash_bip32::ExtendedPublicKey;
 use std::{collections::HashMap, sync::Arc};

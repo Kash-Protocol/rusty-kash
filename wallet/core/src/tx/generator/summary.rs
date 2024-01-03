@@ -1,9 +1,18 @@
+//!
+//! [`GeneratorSummary`] is a struct that holds the summary
+//! of a [`Generator`](crate::tx::Generator) output after transaction generation.
+//! The summary includes total amount, total fees consumed,
+//! total UTXOs consumed etc.
+//!
+
 use crate::utils::*;
+use borsh::{BorshDeserialize, BorshSerialize};
 use kash_consensus_core::network::NetworkType;
 use kash_consensus_core::tx::TransactionId;
+use serde::{Deserialize, Serialize};
 use std::fmt;
 
-#[derive(Debug, Clone)]
+#[derive(Clone, Debug, Serialize, Deserialize, BorshSerialize, BorshDeserialize)]
 pub struct GeneratorSummary {
     pub network_type: NetworkType,
     pub aggregated_utxos: usize,

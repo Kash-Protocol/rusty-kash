@@ -1,5 +1,5 @@
 use crate::imports::*;
-use kash_cli_lib::metrics::MetricsSnapshot;
+use kash_metrics_core::MetricsSnapshot;
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash, BorshDeserialize, BorshSerialize, Serialize, Deserialize)]
 pub enum MetricsOps {
