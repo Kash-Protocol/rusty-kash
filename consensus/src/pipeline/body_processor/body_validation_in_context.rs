@@ -92,7 +92,7 @@ mod tests {
         params::DEVNET_PARAMS,
         processes::{transaction_validator::errors::TxRuleError, window::WindowManager},
     };
-    use kash_consensus_core::tx::TransactionKind::TransferKSH;
+    use kash_consensus_core::tx::TransactionAction::TransferKSH;
     use kash_consensus_core::{
         api::ConsensusApi,
         merkle::calc_hash_merkle_root,

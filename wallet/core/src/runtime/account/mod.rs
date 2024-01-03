@@ -24,7 +24,7 @@ use crate::tx::{Fees, Generator, GeneratorSettings, GeneratorSummary, PaymentDes
 use crate::utxo::{UtxoContext, UtxoContextBinding};
 use kash_bip32::PrivateKey;
 use kash_consensus_core::asset_type::AssetType;
-use kash_consensus_core::tx::TransactionKind;
+use kash_consensus_core::tx::TransactionAction;
 use kash_consensus_wasm::UtxoEntryReference;
 use kash_notify::listener::ListenerId;
 use separator::Separatable;
@@ -315,15 +315,15 @@ pub trait Account: AnySync + Send + Sync + 'static {
         let asset_types = [AssetType::KSH, AssetType::KUSD, AssetType::KRV];
 
         for asset_type in asset_types.iter() {
-            let tx_kind = match asset_type {
-                AssetType::KSH => TransactionKind::TransferKSH,
-                AssetType::KUSD => TransactionKind::TransferKUSD,
-                AssetType::KRV => TransactionKind::TransferKRV,
+            let tx_action = match asset_type {
+                AssetType::KSH => TransactionAction::TransferKSH,
+                AssetType::KUSD => TransactionAction::TransferKUSD,
+                AssetType::KRV => TransactionAction::TransferKRV,
             };
 
             let settings = GeneratorSettings::try_new_with_account(
                 self.clone().as_dyn_arc(),
-                tx_kind,
+                tx_action,
                 PaymentDestination::Change,
                 Fees::None,
                 None,
@@ -367,14 +367,14 @@ pub trait Account: AnySync + Send + Sync + 'static {
         let keydata = self.prv_key_data(wallet_secret).await?;
         let signer = Arc::new(Signer::new(self.clone().as_dyn_arc(), keydata, payment_secret));
 
-        let tx_kind = match asset_type {
-            AssetType::KSH => TransactionKind::TransferKSH,
-            AssetType::KUSD => TransactionKind::TransferKUSD,
-            AssetType::KRV => TransactionKind::TransferKRV,
+        let tx_action = match asset_type {
+            AssetType::KSH => TransactionAction::TransferKSH,
+            AssetType::KUSD => TransactionAction::TransferKUSD,
+            AssetType::KRV => TransactionAction::TransferKRV,
         };
 
         let settings =
-            GeneratorSettings::try_new_with_account(self.clone().as_dyn_arc(), tx_kind, destination, priority_fee_sompi, payload)?;
+            GeneratorSettings::try_new_with_account(self.clone().as_dyn_arc(), tx_action, destination, priority_fee_sompi, payload)?;
 
         let generator = Generator::try_new(settings, Some(signer), Some(abortable))?;
 
@@ -397,14 +397,14 @@ pub trait Account: AnySync + Send + Sync + 'static {
 
     async fn estimate(
         self: Arc<Self>,
-        transaction_kind: TransactionKind,
+        transaction_action: TransactionAction,
         destination: PaymentDestination,
         priority_fee_sompi: Fees,
         payload: Option<Vec<u8>>,
         abortable: &Abortable,
     ) -> Result<GeneratorSummary> {
         let settings =
-            GeneratorSettings::try_new_with_account(self.as_dyn_arc(), transaction_kind, destination, priority_fee_sompi, payload)?;
+            GeneratorSettings::try_new_with_account(self.as_dyn_arc(), transaction_action, destination, priority_fee_sompi, payload)?;
 
         let generator = Generator::try_new(settings, None, Some(abortable))?;
 
@@ -674,9 +674,9 @@ async fn process_asset_utxos(
     }
 
     let tx_type = match asset_type {
-        AssetType::KSH => TransactionKind::TransferKSH,
-        AssetType::KUSD => TransactionKind::TransferKUSD,
-        AssetType::KRV => TransactionKind::TransferKRV,
+        AssetType::KSH => TransactionAction::TransferKSH,
+        AssetType::KUSD => TransactionAction::TransferKUSD,
+        AssetType::KRV => TransactionAction::TransferKRV,
     };
 
     // Check if there are any UTXOs to process

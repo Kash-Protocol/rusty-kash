@@ -140,7 +140,7 @@ mod tests {
     use kash_consensus_core::asset_type::AssetType::KSH;
     use kash_consensus_core::sign::sign;
     use kash_consensus_core::subnets::SubnetworkId;
-    use kash_consensus_core::tx::TransactionKind::TransferKSH;
+    use kash_consensus_core::tx::TransactionAction::TransferKSH;
     use kash_consensus_core::tx::{MutableTransaction, PopulatedTransaction, ScriptVec, TransactionId, UtxoEntry};
     use kash_consensus_core::tx::{ScriptPublicKey, Transaction, TransactionInput, TransactionOutpoint, TransactionOutput};
     use kash_txscript_errors::TxScriptError;

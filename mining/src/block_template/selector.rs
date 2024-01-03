@@ -264,7 +264,7 @@ impl TemplateTransactionSelector for TransactionsSelector {
 mod tests {
     use super::*;
     use itertools::Itertools;
-    use kash_consensus_core::tx::TransactionKind::TransferKSH;
+    use kash_consensus_core::tx::TransactionAction::TransferKSH;
     use kash_consensus_core::{
         asset_type::AssetType::KSH,
         constants::{MAX_TX_IN_SEQUENCE_NUM, SOMPI_PER_KASH, TX_VERSION},

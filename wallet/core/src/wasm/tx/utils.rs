@@ -6,14 +6,14 @@ use crate::wasm::tx::generator::*;
 use crate::wasm::tx::mass::MassCalculator;
 use kash_addresses::Address;
 use kash_consensus_core::subnets::SUBNETWORK_ID_NATIVE;
-use kash_consensus_core::tx::TransactionKind;
+use kash_consensus_core::tx::TransactionAction;
 use kash_consensus_wasm::*;
 use workflow_core::runtime::is_web;
 
 /// Create a basic transaction without any mass limit checks.
 #[wasm_bindgen(js_name=createTransaction)]
 pub fn create_transaction_js(
-    transaction_kind: TransactionKind,
+    transaction_action: TransactionAction,
     utxo_entry_source: JsValue,
     outputs: JsValue,
     change_address: JsValue,
@@ -66,7 +66,7 @@ pub fn create_transaction_js(
     // TODO - Calculate mass and fees
 
     let outputs: Vec<TransactionOutput> = outputs.into();
-    let transaction = Transaction::new(0, inputs, outputs, transaction_kind, 0, SUBNETWORK_ID_NATIVE, 0, payload)?;
+    let transaction = Transaction::new(0, inputs, outputs, transaction_action, 0, SUBNETWORK_ID_NATIVE, 0, payload)?;
     let _fee = mc.calc_minimum_transaction_relay_fee(&transaction, minimum_signatures);
     let mtx = SignableTransaction::new(transaction, entries.into());
 

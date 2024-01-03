@@ -982,7 +982,7 @@ mod test {
     use kash_consensus_core::hashing::sighash::SigHashReusedValues;
     use kash_consensus_core::subnets::SUBNETWORK_ID_NATIVE;
     use kash_consensus_core::tx::{
-        PopulatedTransaction, ScriptPublicKey, Transaction, TransactionInput, TransactionKind, TransactionOutpoint, TransactionOutput,
+        PopulatedTransaction, ScriptPublicKey, Transaction, TransactionInput, TransactionAction, TransactionOutpoint, TransactionOutput,
         UtxoEntry, VerifiableTransaction,
     };
 
@@ -2727,7 +2727,7 @@ mod test {
             TX_VERSION + 1,
             vec![dummy_tx_input.clone()],
             vec![dummy_tx_out.clone()],
-            TransactionKind::TransferKSH,
+            TransactionAction::TransferKSH,
             lock_time,
             SUBNETWORK_ID_NATIVE,
             0,

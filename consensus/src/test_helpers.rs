@@ -1,5 +1,5 @@
 use kash_consensus_core::asset_type::AssetType::KSH;
-use kash_consensus_core::tx::TransactionKind::TransferKSH;
+use kash_consensus_core::tx::TransactionAction::TransferKSH;
 use kash_consensus_core::{
     block::Block,
     header::Header,

@@ -509,7 +509,7 @@ mod tests {
 
     use super::*;
     use kash_consensus_core::asset_type::AssetType;
-    use kash_consensus_core::tx::TransactionKind::TransferKSH;
+    use kash_consensus_core::tx::TransactionAction::TransferKSH;
     use kash_consensus_core::tx::{
         PopulatedTransaction, ScriptPublicKey, Transaction, TransactionId, TransactionOutpoint, TransactionOutput,
     };

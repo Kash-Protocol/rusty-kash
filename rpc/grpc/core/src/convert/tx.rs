@@ -13,7 +13,7 @@ from!(item: &kash_rpc_core::RpcTransaction, protowire::RpcTransaction, {
         version: item.version.into(),
         inputs: item.inputs.iter().map(protowire::RpcTransactionInput::from).collect(),
         outputs: item.outputs.iter().map(protowire::RpcTransactionOutput::from).collect(),
-        kind: item.kind.into(),
+        action: item.action.into(),
         lock_time: item.lock_time,
         subnetwork_id: item.subnetwork_id.to_string(),
         gas: item.gas,
@@ -110,7 +110,7 @@ try_from!(item: &protowire::RpcTransaction, kash_rpc_core::RpcTransaction, {
             .iter()
             .map(kash_rpc_core::RpcTransactionOutput::try_from)
             .collect::<RpcResult<Vec<kash_rpc_core::RpcTransactionOutput>>>()?,
-        kind: item.kind.into(),
+        action: item.action.into(),
         lock_time: item.lock_time,
         subnetwork_id: kash_rpc_core::RpcSubnetworkId::from_str(&item.subnetwork_id)?,
         gas: item.gas,

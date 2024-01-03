@@ -11,7 +11,7 @@ impl From<&Transaction> for RpcTransaction {
             version: item.version,
             inputs: item.inputs.iter().map(RpcTransactionInput::from).collect(),
             outputs: item.outputs.iter().map(RpcTransactionOutput::from).collect(),
-            kind: item.kind,
+            action: item.action,
             lock_time: item.lock_time,
             subnetwork_id: item.subnetwork_id.clone(),
             gas: item.gas,
@@ -64,7 +64,7 @@ impl TryFrom<&RpcTransaction> for Transaction {
                 .iter()
                 .map(kash_consensus_core::tx::TransactionOutput::try_from)
                 .collect::<RpcResult<Vec<kash_consensus_core::tx::TransactionOutput>>>()?,
-            item.kind,
+            item.action,
             item.lock_time,
             item.subnetwork_id.clone(),
             item.gas,

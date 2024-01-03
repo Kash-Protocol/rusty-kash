@@ -112,9 +112,9 @@ impl TransactionOutput {
 /// Defines the kind of a transaction
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, BorshSerialize, BorshDeserialize, BorshSchema)]
 #[serde(rename_all = "camelCase")]
-#[wasm_bindgen(js_name = transactionKind)]
+#[wasm_bindgen(js_name = transactionAction)]
 #[derive(Default)]
-pub enum TransactionKind {
+pub enum TransactionAction {
     /// Regular KSH transfer: KSH -> KSH
     #[default]
     TransferKSH,
@@ -130,98 +130,98 @@ pub enum TransactionKind {
     RedeemKSH,
 }
 
-impl TransactionKind {
+impl TransactionAction {
     /// Returns the types of assets involved in the transaction.
-    /// For each transaction kind, it provides the source (`FromAssetType`) and the destination (`ToAssetType`) asset types.
+    /// For each transaction action, it provides the source (`FromAssetType`) and the destination (`ToAssetType`) asset types.
     pub fn asset_transfer_types(&self) -> (AssetType, AssetType) {
         match self {
-            TransactionKind::TransferKSH => (AssetType::KSH, AssetType::KSH),
-            TransactionKind::TransferKUSD => (AssetType::KUSD, AssetType::KUSD),
-            TransactionKind::TransferKRV => (AssetType::KRV, AssetType::KRV),
-            TransactionKind::MintKUSD => (AssetType::KSH, AssetType::KUSD),
-            TransactionKind::StakeKSH => (AssetType::KSH, AssetType::KRV),
-            TransactionKind::RedeemKSH => (AssetType::KRV, AssetType::KSH),
+            TransactionAction::TransferKSH => (AssetType::KSH, AssetType::KSH),
+            TransactionAction::TransferKUSD => (AssetType::KUSD, AssetType::KUSD),
+            TransactionAction::TransferKRV => (AssetType::KRV, AssetType::KRV),
+            TransactionAction::MintKUSD => (AssetType::KSH, AssetType::KUSD),
+            TransactionAction::StakeKSH => (AssetType::KSH, AssetType::KRV),
+            TransactionAction::RedeemKSH => (AssetType::KRV, AssetType::KSH),
         }
     }
 }
 
-impl From<TransactionKind> for u32 {
-    fn from(kind: TransactionKind) -> u32 {
-        // Convert the TransactionKind enum into a u32 value based on its variant
-        match kind {
-            TransactionKind::TransferKSH => 0,
-            TransactionKind::TransferKUSD => 1,
-            TransactionKind::TransferKRV => 2,
-            TransactionKind::MintKUSD => 3,
-            TransactionKind::StakeKSH => 4,
-            TransactionKind::RedeemKSH => 5,
+impl From<TransactionAction> for u32 {
+    fn from(action: TransactionAction) -> u32 {
+        // Convert the TransactionAction enum into a u32 value based on its variant
+        match action {
+            TransactionAction::TransferKSH => 0,
+            TransactionAction::TransferKUSD => 1,
+            TransactionAction::TransferKRV => 2,
+            TransactionAction::MintKUSD => 3,
+            TransactionAction::StakeKSH => 4,
+            TransactionAction::RedeemKSH => 5,
         }
     }
 }
 
-impl From<u32> for TransactionKind {
-    fn from(value: u32) -> TransactionKind {
-        // Convert the u32 value into a TransactionKind enum based on its variant
+impl From<u32> for TransactionAction {
+    fn from(value: u32) -> TransactionAction {
+        // Convert the u32 value into a TransactionAction enum based on its variant
         match value {
-            0 => TransactionKind::TransferKSH,
-            1 => TransactionKind::TransferKUSD,
-            2 => TransactionKind::TransferKRV,
-            3 => TransactionKind::MintKUSD,
-            4 => TransactionKind::StakeKSH,
-            5 => TransactionKind::RedeemKSH,
-            _ => TransactionKind::TransferKSH, // Handle unknown values gracefully
+            0 => TransactionAction::TransferKSH,
+            1 => TransactionAction::TransferKUSD,
+            2 => TransactionAction::TransferKRV,
+            3 => TransactionAction::MintKUSD,
+            4 => TransactionAction::StakeKSH,
+            5 => TransactionAction::RedeemKSH,
+            _ => TransactionAction::TransferKSH, // Handle unknown values gracefully
         }
     }
 }
 
-impl From<String> for TransactionKind {
-    fn from(value: String) -> TransactionKind {
-        // Convert the string value into a TransactionKind enum based on its variant
+impl From<String> for TransactionAction {
+    fn from(value: String) -> TransactionAction {
+        // Convert the string value into a TransactionAction enum based on its variant
         match value.as_str() {
-            "TransferKSH" => TransactionKind::TransferKSH,
-            "TransferKUSD" => TransactionKind::TransferKUSD,
-            "TransferKRV" => TransactionKind::TransferKRV,
-            "MintKUSD" => TransactionKind::MintKUSD,
-            "StakeKSH" => TransactionKind::StakeKSH,
-            "RedeemKSH" => TransactionKind::RedeemKSH,
-            _ => TransactionKind::TransferKSH, // Handle unknown values gracefully
+            "TransferKSH" => TransactionAction::TransferKSH,
+            "TransferKUSD" => TransactionAction::TransferKUSD,
+            "TransferKRV" => TransactionAction::TransferKRV,
+            "MintKUSD" => TransactionAction::MintKUSD,
+            "StakeKSH" => TransactionAction::StakeKSH,
+            "RedeemKSH" => TransactionAction::RedeemKSH,
+            _ => TransactionAction::TransferKSH, // Handle unknown values gracefully
         }
     }
 }
 
-impl TryFrom<&String> for TransactionKind {
+impl TryFrom<&String> for TransactionAction {
     type Error = TxRuleError;
-    fn try_from(value: &String) -> Result<TransactionKind, TxRuleError> {
-        // Convert the string value into a TransactionKind enum based on its variant
+    fn try_from(value: &String) -> Result<TransactionAction, TxRuleError> {
+        // Convert the string value into a TransactionAction enum based on its variant
         match value.as_str() {
-            "TransferKSH" => Ok(TransactionKind::TransferKSH),
-            "TransferKUSD" => Ok(TransactionKind::TransferKUSD),
-            "TransferKRV" => Ok(TransactionKind::TransferKRV),
-            "MintKUSD" => Ok(TransactionKind::MintKUSD),
-            "StakeKSH" => Ok(TransactionKind::StakeKSH),
-            "RedeemKSH" => Ok(TransactionKind::RedeemKSH),
+            "TransferKSH" => Ok(TransactionAction::TransferKSH),
+            "TransferKUSD" => Ok(TransactionAction::TransferKUSD),
+            "TransferKRV" => Ok(TransactionAction::TransferKRV),
+            "MintKUSD" => Ok(TransactionAction::MintKUSD),
+            "StakeKSH" => Ok(TransactionAction::StakeKSH),
+            "RedeemKSH" => Ok(TransactionAction::RedeemKSH),
             _ => Err(TxRuleError::InvalidTransactionType(value.clone())),
         }
     }
 }
 
-impl TryFrom<JsValue> for TransactionKind {
+impl TryFrom<JsValue> for TransactionAction {
     type Error = JsValue;
 
     fn try_from(js_value: JsValue) -> Result<Self, Self::Error> {
         if let Some(value) = js_value.as_f64() {
             let value = value as u8;
             match value {
-                0 => Ok(TransactionKind::TransferKSH),
-                1 => Ok(TransactionKind::TransferKUSD),
-                2 => Ok(TransactionKind::TransferKRV),
-                3 => Ok(TransactionKind::MintKUSD),
-                4 => Ok(TransactionKind::StakeKSH),
-                5 => Ok(TransactionKind::RedeemKSH),
-                _ => Err(JsValue::from_str("Invalid TransactionKind value")),
+                0 => Ok(TransactionAction::TransferKSH),
+                1 => Ok(TransactionAction::TransferKUSD),
+                2 => Ok(TransactionAction::TransferKRV),
+                3 => Ok(TransactionAction::MintKUSD),
+                4 => Ok(TransactionAction::StakeKSH),
+                5 => Ok(TransactionAction::RedeemKSH),
+                _ => Err(JsValue::from_str("Invalid TransactionAction value")),
             }
         } else {
-            Err(JsValue::from_str("Invalid TransactionKind value"))
+            Err(JsValue::from_str("Invalid TransactionAction value"))
         }
     }
 }
@@ -233,7 +233,7 @@ pub struct Transaction {
     pub version: u16,
     pub inputs: Vec<TransactionInput>,
     pub outputs: Vec<TransactionOutput>,
-    pub kind: TransactionKind,
+    pub action: TransactionAction,
     pub lock_time: u64,
     pub subnetwork_id: SubnetworkId,
     pub gas: u64,
@@ -251,7 +251,7 @@ impl Transaction {
         version: u16,
         inputs: Vec<TransactionInput>,
         outputs: Vec<TransactionOutput>,
-        kind: TransactionKind,
+        action: TransactionAction,
         lock_time: u64,
         subnetwork_id: SubnetworkId,
         gas: u64,
@@ -261,7 +261,7 @@ impl Transaction {
             version,
             inputs,
             outputs,
-            kind,
+            action,
             lock_time,
             subnetwork_id,
             gas,
@@ -509,7 +509,7 @@ pub type SignableTransaction = MutableTransaction<Transaction>;
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::tx::TransactionKind::TransferKSH;
+    use crate::tx::TransactionAction::TransferKSH;
     use consensus_core::subnets::SUBNETWORK_ID_COINBASE;
     use smallvec::smallvec;
 
@@ -640,7 +640,7 @@ mod tests {
       "assetType": "KSH"
     }
   ],
-  "kind": "transferKSH",
+  "action": "transferKSH",
   "lockTime": 8,
   "subnetworkId": "0100000000000000000000000000000000000000",
   "gas": 9,

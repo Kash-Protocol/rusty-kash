@@ -224,8 +224,8 @@ pub enum Error {
     #[error(transparent)]
     TxScriptError(#[from] kash_txscript_errors::TxScriptError),
 
-    #[error("The transaction kind is not supported")]
-    UnsupportedTransactionKind,
+    #[error("The transaction action is not supported")]
+    UnsupportedTransactionAction,
 
     #[error("Invalid asset type")]
     InvalidAssetType,

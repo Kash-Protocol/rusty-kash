@@ -26,7 +26,7 @@ message TransactionMessage{
   uint32 version = 1;
   repeated TransactionInput inputs = 2;
   repeated TransactionOutput outputs = 3;
-  uint32 kind = 4;
+  uint32 action = 4;
   uint64 lockTime = 5;
   SubnetworkId subnetworkId = 6;
   uint64 gas = 7;

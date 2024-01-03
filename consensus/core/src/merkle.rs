@@ -14,7 +14,7 @@ mod tests {
         subnets::{SUBNETWORK_ID_COINBASE, SUBNETWORK_ID_NATIVE},
         tx::{scriptvec, ScriptPublicKey, Transaction, TransactionId, TransactionInput, TransactionOutpoint, TransactionOutput},
     };
-    use consensus_core::tx::TransactionKind;
+    use consensus_core::tx::TransactionAction;
     use kash_hashes::Hash;
 
     #[test]
@@ -34,7 +34,7 @@ mod tests {
                     ),
                     asset_type: KSH,
                 }],
-                TransactionKind::TransferKSH,
+                TransactionAction::TransferKSH,
                 0,
                 SUBNETWORK_ID_COINBASE,
                 0,
@@ -69,7 +69,7 @@ mod tests {
                     },
                 ],
                 vec![],
-                TransactionKind::TransferKSH,
+                TransactionAction::TransferKSH,
                 0,
                 SUBNETWORK_ID_NATIVE,
                 0,
@@ -133,7 +133,7 @@ mod tests {
                         asset_type: KSH,
                     },
                 ],
-                TransactionKind::TransferKSH,
+                TransactionAction::TransferKSH,
                 0,
                 SUBNETWORK_ID_NATIVE,
                 0,
@@ -196,7 +196,7 @@ mod tests {
                         asset_type: KSH,
                     },
                 ],
-                TransactionKind::TransferKSH,
+                TransactionAction::TransferKSH,
                 0,
                 SUBNETWORK_ID_NATIVE,
                 0,
@@ -243,7 +243,7 @@ mod tests {
                     ),
                     asset_type: KSH,
                 }],
-                TransactionKind::TransferKSH,
+                TransactionAction::TransferKSH,
                 0,
                 SUBNETWORK_ID_NATIVE,
                 0,

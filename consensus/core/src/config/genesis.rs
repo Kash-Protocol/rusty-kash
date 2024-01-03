@@ -1,4 +1,4 @@
-use crate::tx::TransactionKind;
+use crate::tx::TransactionAction;
 use crate::{block::Block, header::Header, subnets::SUBNETWORK_ID_COINBASE, tx::Transaction};
 use kash_hashes::{Hash, ZERO_HASH};
 use kash_muhash::EMPTY_MUHASH;
@@ -23,7 +23,7 @@ impl GenesisBlock {
             0,
             Vec::new(),
             Vec::new(),
-            TransactionKind::TransferKSH,
+            TransactionAction::TransferKSH,
             0,
             SUBNETWORK_ID_COINBASE,
             0,

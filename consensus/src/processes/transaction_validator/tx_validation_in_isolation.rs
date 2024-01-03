@@ -149,7 +149,7 @@ fn check_transaction_output_value_ranges(tx: &Transaction) -> TxResult<()> {
 #[cfg(test)]
 mod tests {
     use kash_consensus_core::asset_type::AssetType::KSH;
-    use kash_consensus_core::tx::TransactionKind::TransferKSH;
+    use kash_consensus_core::tx::TransactionAction::TransferKSH;
     use kash_consensus_core::{
         subnets::{SUBNETWORK_ID_COINBASE, SUBNETWORK_ID_NATIVE},
         tx::{scriptvec, ScriptPublicKey, Transaction, TransactionId, TransactionInput, TransactionOutpoint, TransactionOutput},

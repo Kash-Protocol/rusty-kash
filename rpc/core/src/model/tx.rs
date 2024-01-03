@@ -2,7 +2,7 @@ use borsh::{BorshDeserialize, BorshSchema, BorshSerialize};
 use kash_addresses::Address;
 use kash_consensus_core::asset_type::AssetType;
 use kash_consensus_core::tx::{
-    ScriptPublicKey, ScriptVec, TransactionId, TransactionInput, TransactionKind, TransactionOutpoint, TransactionOutput, UtxoEntry,
+    ScriptPublicKey, ScriptVec, TransactionId, TransactionInput, TransactionAction, TransactionOutpoint, TransactionOutput, UtxoEntry,
 };
 use serde::{Deserialize, Serialize};
 
@@ -89,7 +89,7 @@ pub struct RpcTransaction {
     pub version: u16,
     pub inputs: Vec<RpcTransactionInput>,
     pub outputs: Vec<RpcTransactionOutput>,
-    pub kind: TransactionKind,
+    pub action: TransactionAction,
     pub lock_time: u64,
     pub subnetwork_id: RpcSubnetworkId,
     pub gas: u64,

@@ -134,7 +134,7 @@ impl ConsensusConverter {
                 version: transaction.version,
                 inputs: transaction.inputs.iter().map(|x| self.get_transaction_input(x)).collect(),
                 outputs: transaction.outputs.iter().map(|x| self.get_transaction_output(x)).collect(),
-                kind: transaction.kind,
+                action: transaction.action,
                 lock_time: transaction.lock_time,
                 subnetwork_id: transaction.subnetwork_id.clone(),
                 gas: transaction.gas,

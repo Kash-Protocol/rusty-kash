@@ -1026,7 +1026,7 @@ mod test {
     use kash_bip32::{ChildNumber, ExtendedPrivateKey, SecretKey};
     use kash_consensus_core::asset_type::AssetType;
     use kash_consensus_core::subnets::SUBNETWORK_ID_NATIVE;
-    use kash_consensus_core::tx::TransactionKind;
+    use kash_consensus_core::tx::TransactionAction;
     use kash_consensus_wasm::{sign_transaction, SignableTransaction, Transaction, TransactionInput, TransactionOutput};
     use kash_txscript::pay_to_address_script;
     use workflow_rpc::client::ConnectOptions;
@@ -1096,7 +1096,7 @@ mod test {
             0,
             inputs,
             vec![TransactionOutput::new(1000, &pay_to_address_script(&to_address), AssetType::KSH)],
-            TransactionKind::TransferKSH,
+            TransactionAction::TransferKSH,
             0,
             SUBNETWORK_ID_NATIVE,
             0,
