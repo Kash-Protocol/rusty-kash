@@ -52,7 +52,7 @@ impl std::fmt::Debug for PendingTransaction {
             .field("aggregate_input_value", &self.inner.aggregate_input_value)
             .field("mass", &self.inner.mass)
             .field("fees", &self.inner.fees)
-            .field("kind", &self.inner.kind)
+            .field("action", &self.inner.kind)
             .field("transaction", &transaction)
             .finish()
     }

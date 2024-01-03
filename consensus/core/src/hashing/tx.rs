@@ -76,7 +76,7 @@ mod tests {
         subnets::{self, SubnetworkId},
         tx::{scriptvec, ScriptPublicKey},
     };
-    use consensus_core::tx::TransactionKind;
+    use consensus_core::tx::TransactionAction;
     use std::str::FromStr;
 
     #[test]
@@ -94,7 +94,7 @@ mod tests {
                     0,
                     Vec::new(),
                     Vec::new(),
-                    TransactionKind::TransferKSH,
+                    TransactionAction::TransferKSH,
                     0,
                     SubnetworkId::from_byte(0),
                     0,
@@ -113,7 +113,7 @@ mod tests {
                 1,
                 inputs.clone(),
                 Vec::new(),
-                TransactionKind::TransferKSH,
+                TransactionAction::TransferKSH,
                 0,
                 SubnetworkId::from_byte(0),
                 0,
@@ -131,7 +131,7 @@ mod tests {
                 1,
                 inputs.clone(),
                 outputs.clone(),
-                TransactionKind::TransferKSH,
+                TransactionAction::TransferKSH,
                 0,
                 SubnetworkId::from_byte(0),
                 0,
@@ -147,7 +147,7 @@ mod tests {
                 2,
                 inputs,
                 outputs.clone(),
-                TransactionKind::TransferKSH,
+                TransactionAction::TransferKSH,
                 54,
                 SubnetworkId::from_byte(0),
                 3,
@@ -170,7 +170,7 @@ mod tests {
                 2,
                 inputs.clone(),
                 outputs.clone(),
-                TransactionKind::TransferKSH,
+                TransactionAction::TransferKSH,
                 54,
                 SubnetworkId::from_byte(0),
                 3,
@@ -186,7 +186,7 @@ mod tests {
                 2,
                 inputs.clone(),
                 outputs.clone(),
-                TransactionKind::TransferKSH,
+                TransactionAction::TransferKSH,
                 54,
                 subnets::SUBNETWORK_ID_COINBASE,
                 3,
@@ -202,7 +202,7 @@ mod tests {
                 2,
                 inputs.clone(),
                 outputs.clone(),
-                TransactionKind::TransferKSH,
+                TransactionAction::TransferKSH,
                 54,
                 subnets::SUBNETWORK_ID_REGISTRY,
                 3,

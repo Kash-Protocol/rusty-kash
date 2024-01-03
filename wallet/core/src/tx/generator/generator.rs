@@ -65,7 +65,7 @@ use kash_consensus_core::asset_type::AssetType::KSH;
 use kash_consensus_core::constants::UNACCEPTED_DAA_SCORE;
 use kash_consensus_core::subnets::SUBNETWORK_ID_NATIVE;
 use kash_consensus_core::tx as cctx;
-use kash_consensus_core::tx::{Transaction, TransactionInput, TransactionKind, TransactionOutpoint, TransactionOutput};
+use kash_consensus_core::tx::{Transaction, TransactionInput, TransactionAction, TransactionOutpoint, TransactionOutput};
 use kash_consensus_wasm::UtxoEntry;
 use kash_txscript::pay_to_address_script;
 use std::collections::VecDeque;
@@ -224,8 +224,8 @@ struct Inner {
     standard_change_output_mass: u64,
     // signature mass per input
     signature_mass_per_input: u64,
-    // final transaction kind
-    final_transaction_kind: TransactionKind,
+    // final transaction action
+    final_transaction_action: TransactionAction,
     // transaction amount (`None` results in consumption of all available UTXOs)
     // `None` is used for sweep transactions
     final_transaction_amount: Option<u64>,
@@ -261,7 +261,7 @@ impl Generator {
             sig_op_count,
             minimum_signatures,
             change_address,
-            final_transaction_kind,
+            final_transaction_action,
             final_transaction_priority_fee,
             final_transaction_destination,
             final_transaction_payload,
@@ -344,7 +344,7 @@ impl Generator {
             change_address,
             standard_change_output_mass,
             signature_mass_per_input,
-            final_transaction_kind,
+            final_transaction_action,
             final_transaction_amount,
             final_transaction_priority_fee,
             final_transaction_outputs,
@@ -630,8 +630,8 @@ impl Generator {
         let (kind, data) = self.generate_transaction_data(&mut context, &mut stage)?;
         context.stage.replace(stage);
 
-        let transaction_kind = self.inner.final_transaction_kind;
-        let output_asset_type = transaction_kind.asset_transfer_types().1;
+        let transaction_action = self.inner.final_transaction_action;
+        let output_asset_type = transaction_action.asset_transfer_types().1;
 
         match (kind, data) {
             (DataKind::NoOp, _) => {
@@ -682,7 +682,7 @@ impl Generator {
                     0,
                     inputs,
                     final_outputs,
-                    transaction_kind,
+                    transaction_action,
                     0,
                     SUBNETWORK_ID_NATIVE,
                     0,
@@ -723,7 +723,7 @@ impl Generator {
                 let output_value = aggregate_input_value - transaction_fees;
                 let script_public_key = pay_to_address_script(&self.inner.change_address);
                 let output = TransactionOutput::new(output_value, script_public_key.clone(), output_asset_type);
-                let tx = Transaction::new(0, inputs, vec![output], transaction_kind, 0, SUBNETWORK_ID_NATIVE, 0, vec![]);
+                let tx = Transaction::new(0, inputs, vec![output], transaction_action, 0, SUBNETWORK_ID_NATIVE, 0, vec![]);
                 context.number_of_transactions += 1;
 
                 let utxo_entry_reference = Self::create_batch_utxo_entry_reference(

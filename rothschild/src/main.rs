@@ -4,7 +4,7 @@ use clap::{Arg, Command};
 use itertools::Itertools;
 use kash_addresses::Address;
 use kash_consensus_core::asset_type::AssetType::KSH;
-use kash_consensus_core::tx::TransactionKind;
+use kash_consensus_core::tx::TransactionAction;
 use kash_consensus_core::{
     config::params::{TESTNET11_PARAMS, TESTNET_PARAMS},
     constants::TX_VERSION,
@@ -328,7 +328,7 @@ fn generate_tx(
     let outputs = (0..num_outs)
         .map(|_| TransactionOutput { value: send_amount / num_outs, script_public_key: script_public_key.clone(), asset_type: KSH })
         .collect_vec();
-    let unsigned_tx = Transaction::new(TX_VERSION, inputs, outputs, TransactionKind::TransferKSH, 0, SUBNETWORK_ID_NATIVE, 0, vec![]);
+    let unsigned_tx = Transaction::new(TX_VERSION, inputs, outputs, TransactionAction::TransferKSH, 0, SUBNETWORK_ID_NATIVE, 0, vec![]);
     let signed_tx =
         sign(MutableTransaction::with_entries(unsigned_tx, utxos.iter().map(|(_, entry)| entry.clone()).collect_vec()), schnorr_key);
     signed_tx.tx

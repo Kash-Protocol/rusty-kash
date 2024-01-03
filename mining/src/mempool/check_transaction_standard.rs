@@ -230,7 +230,7 @@ mod tests {
     };
     use kash_addresses::{Address, Prefix, Version};
     use kash_consensus_core::asset_type::AssetType::KSH;
-    use kash_consensus_core::tx::TransactionKind::TransferKSH;
+    use kash_consensus_core::tx::TransactionAction::TransferKSH;
     use kash_consensus_core::{
         config::params::Params,
         constants::{MAX_TX_IN_SEQUENCE_NUM, SOMPI_PER_KASH, TX_VERSION},

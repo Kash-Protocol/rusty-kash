@@ -141,7 +141,7 @@ mod tests {
                 sig_op_count: 4,
             }],
             vec![],
-            TransactionKind::TransferKSH,
+            TransactionAction::TransferKSH,
             0,
             SubnetworkId::from_bytes([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]),
             0,

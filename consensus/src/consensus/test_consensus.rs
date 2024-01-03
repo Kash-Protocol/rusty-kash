@@ -12,7 +12,7 @@ use kash_database::utils::DbLifetime;
 use kash_hashes::Hash;
 use parking_lot::RwLock;
 
-use kash_consensus_core::tx::TransactionKind::TransferKSH;
+use kash_consensus_core::tx::TransactionAction::TransferKSH;
 use kash_database::create_temp_db;
 use kash_database::prelude::ConnBuilder;
 use std::future::Future;

@@ -31,7 +31,7 @@ use kash_consensus_core::network::{NetworkId, NetworkType::Mainnet};
 use kash_consensus_core::subnets::SubnetworkId;
 use kash_consensus_core::trusted::{ExternalGhostdagData, TrustedBlock};
 use kash_consensus_core::tx::{
-    ScriptPublicKey, Transaction, TransactionInput, TransactionKind, TransactionOutpoint, TransactionOutput, UtxoEntry,
+    ScriptPublicKey, Transaction, TransactionInput, TransactionAction, TransactionOutpoint, TransactionOutput, UtxoEntry,
 };
 use kash_consensus_core::{blockhash, hashing, BlockHashMap, BlueWorkType};
 use kash_consensus_notify::root::ConsensusNotificationRoot;
@@ -1208,7 +1208,7 @@ fn rpc_block_to_block(rpc_block: RPCBlock) -> Block {
                             asset_type: AssetType::KSH,
                         })
                         .collect(),
-                    TransactionKind::TransferKSH,
+                    TransactionAction::TransferKSH,
                     tx.LockTime,
                     SubnetworkId::from_str(&tx.SubnetworkID).unwrap(),
                     tx.Gas,

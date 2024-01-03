@@ -2,7 +2,7 @@ use criterion::{black_box, criterion_group, criterion_main, Criterion};
 use kash_consensus_core::asset_type::AssetType::KSH;
 use kash_consensus_core::subnets::SUBNETWORK_ID_COINBASE;
 use kash_consensus_core::tx::{
-    ScriptPublicKey, Transaction, TransactionId, TransactionInput, TransactionKind, TransactionOutpoint, TransactionOutput,
+    ScriptPublicKey, Transaction, TransactionId, TransactionInput, TransactionAction, TransactionOutpoint, TransactionOutput,
 };
 use smallvec::smallvec;
 use std::time::{Duration, Instant};
@@ -47,7 +47,7 @@ fn serialize_benchmark(c: &mut Criterion) {
             TransactionOutput { value: 300, script_public_key: script_public_key.clone(), asset_type: KSH },
             TransactionOutput { value: 300, script_public_key, asset_type: KSH },
         ],
-        TransactionKind::TransferKSH,
+        TransactionAction::TransferKSH,
         0,
         SUBNETWORK_ID_COINBASE,
         0,
@@ -110,7 +110,7 @@ fn deserialize_benchmark(c: &mut Criterion) {
             TransactionOutput { value: 300, script_public_key: script_public_key.clone(), asset_type: KSH },
             TransactionOutput { value: 300, script_public_key, asset_type: KSH },
         ],
-        TransactionKind::TransferKSH,
+        TransactionAction::TransferKSH,
         0,
         SUBNETWORK_ID_COINBASE,
         0,

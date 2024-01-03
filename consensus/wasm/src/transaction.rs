@@ -3,7 +3,7 @@ use crate::input::TransactionInput;
 use crate::output::TransactionOutput;
 use crate::result::Result;
 use kash_consensus_core::subnets::{self, SubnetworkId};
-use kash_consensus_core::tx::TransactionKind;
+use kash_consensus_core::tx::TransactionAction;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -11,7 +11,7 @@ pub struct TransactionInner {
     pub version: u16,
     pub inputs: Vec<TransactionInput>,
     pub outputs: Vec<TransactionOutput>,
-    pub kind: TransactionKind,
+    pub action: TransactionAction,
     pub lock_time: u64,
     pub subnetwork_id: SubnetworkId,
     pub gas: u64,
@@ -34,7 +34,7 @@ impl Transaction {
         version: u16,
         inputs: Vec<TransactionInput>,
         outputs: Vec<TransactionOutput>,
-        kind: TransactionKind,
+        action: TransactionAction,
         lock_time: u64,
         subnetwork_id: SubnetworkId,
         gas: u64,
@@ -45,7 +45,7 @@ impl Transaction {
                 version,
                 inputs,
                 outputs,
-                kind,
+                action,
                 lock_time,
                 subnetwork_id,
                 gas,
@@ -240,7 +240,7 @@ impl From<cctx::Transaction> for Transaction {
             version: tx.version,
             inputs,
             outputs,
-            kind: tx.kind,
+            action: tx.action,
             lock_time: tx.lock_time,
             gas: tx.gas,
             payload: tx.payload,
@@ -262,7 +262,7 @@ impl From<&Transaction> for cctx::Transaction {
             inner.version,
             inputs,
             outputs,
-            inner.kind,
+            inner.action,
             inner.lock_time,
             inner.subnetwork_id.clone(),
             inner.gas,

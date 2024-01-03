@@ -182,7 +182,7 @@ pub fn calc_ecdsa_signature_hash(
 mod tests {
     use std::{str::FromStr, vec};
 
-    use consensus_core::tx::TransactionKind;
+    use consensus_core::tx::TransactionAction;
     use smallvec::SmallVec;
 
     use crate::{
@@ -240,7 +240,7 @@ mod tests {
                     asset_type: KSH,
                 },
             ],
-            TransactionKind::TransferKSH,
+            TransactionAction::TransferKSH,
             1615462089000,
             SUBNETWORK_ID_NATIVE,
             0,

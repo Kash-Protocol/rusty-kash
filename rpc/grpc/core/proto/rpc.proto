@@ -59,7 +59,7 @@ message RpcTransaction {
   uint32 version = 1;
   repeated RpcTransactionInput inputs = 2;
   repeated RpcTransactionOutput outputs = 3;
-  uint32 kind = 4;
+  uint32 action = 4;
   uint64 lockTime = 5;
   string subnetworkId = 6;
   uint64 gas = 7;

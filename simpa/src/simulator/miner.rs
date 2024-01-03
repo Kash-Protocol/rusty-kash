@@ -10,7 +10,7 @@ use kash_consensus_core::coinbase::MinerData;
 use kash_consensus_core::sign::sign;
 use kash_consensus_core::subnets::SUBNETWORK_ID_NATIVE;
 use kash_consensus_core::tx::{
-    MutableTransaction, ScriptPublicKey, ScriptVec, Transaction, TransactionInput, TransactionKind, TransactionOutpoint,
+    MutableTransaction, ScriptPublicKey, ScriptVec, Transaction, TransactionInput, TransactionAction, TransactionOutpoint,
     TransactionOutput, UtxoEntry,
 };
 use kash_consensus_core::utxo::utxo_view::UtxoView;
@@ -182,7 +182,7 @@ impl Miner {
             } else {
                 vec![TransactionOutput::new(input_amount - 1, self.miner_data.script_public_key.clone(), AssetType::KSH)]
             },
-            TransactionKind::TransferKSH,
+            TransactionAction::TransferKSH,
             0,
             SUBNETWORK_ID_NATIVE,
             0,
