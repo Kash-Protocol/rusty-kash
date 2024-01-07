@@ -8,6 +8,7 @@ use kash_core::trace;
 use kash_database::prelude::{CachePolicy, StoreResult, DB};
 use kash_index_core::indexed_utxos::BalanceByScriptPublicKey;
 
+use crate::model::{AssetCirculatingSupply, AssetCirculatingSupplyDiffs};
 use crate::{
     model::UtxoSetByScriptPublicKey,
     stores::{
@@ -71,11 +72,15 @@ impl Store {
         res
     }
 
-    pub fn get_circulating_supply(&self) -> StoreResult<u64> {
+    pub fn get_circulating_supply(&self) -> StoreResult<AssetCirculatingSupply> {
         self.circulating_supply_store.get()
     }
 
-    pub fn update_circulating_supply(&mut self, circulating_supply_diff: u64, try_reset_on_err: bool) -> StoreResult<u64> {
+    pub fn update_circulating_supply(
+        &mut self,
+        circulating_supply_diff: AssetCirculatingSupplyDiffs,
+        try_reset_on_err: bool,
+    ) -> StoreResult<AssetCirculatingSupply> {
         let res = self.circulating_supply_store.update_circulating_supply(circulating_supply_diff);
         if try_reset_on_err && res.is_err() {
             self.delete_all()?;
@@ -83,7 +88,11 @@ impl Store {
         res
     }
 
-    pub fn insert_circulating_supply(&mut self, circulating_supply: u64, try_reset_on_err: bool) -> StoreResult<()> {
+    pub fn insert_circulating_supply(
+        &mut self,
+        circulating_supply: AssetCirculatingSupply,
+        try_reset_on_err: bool,
+    ) -> StoreResult<()> {
         let res = self.circulating_supply_store.insert(circulating_supply);
         if try_reset_on_err && res.is_err() {
             self.delete_all()?;
