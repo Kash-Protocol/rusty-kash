@@ -1,3 +1,4 @@
+use kash_consensus_core::asset_type::AssetType;
 use kash_consensus_core::{
     tx::{TransactionOutpoint, UtxoEntry},
     utxo::utxo_diff::UtxoDiff,
@@ -6,12 +7,12 @@ use kash_consensus_core::{
 use kash_hashes::Hash;
 use kash_utils::hashmap::NestedHashMapExtensions;
 
-use crate::model::{CirculatingSupplyDiff, CompactUtxoEntry, UtxoChanges, UtxoSetByScriptPublicKey};
+use crate::model::{AssetCirculatingSupplyDiffs, CompactUtxoEntry, UtxoChanges, UtxoSetByScriptPublicKey};
 
 /// A struct holding all changes to the utxoindex with on-the-fly conversions and processing.
 pub struct UtxoIndexChanges {
     pub utxo_changes: UtxoChanges,
-    pub supply_change: CirculatingSupplyDiff,
+    pub supply_change: AssetCirculatingSupplyDiffs,
     pub tips: BlockHashSet,
 }
 
@@ -20,7 +21,7 @@ impl UtxoIndexChanges {
     pub fn new() -> Self {
         Self {
             utxo_changes: UtxoChanges::new(UtxoSetByScriptPublicKey::new(), UtxoSetByScriptPublicKey::new()),
-            supply_change: 0,
+            supply_change: AssetCirculatingSupplyDiffs::default(),
             tips: BlockHashSet::new(),
         }
     }
@@ -32,8 +33,13 @@ impl UtxoIndexChanges {
         for (transaction_outpoint, utxo_entry) in to_add.into_iter() {
             if to_remove.remove(&transaction_outpoint).is_some() {
                 continue;
-            }; // We try and remove from `utxo_diff.remove`, if we do, discard utxo.
-            self.supply_change += utxo_entry.amount as CirculatingSupplyDiff; // TODO: Using `virtual_state.mergeset_rewards` might be a better way to extract this.
+            }
+
+            match utxo_entry.asset_type {
+                AssetType::KSH => self.supply_change.ksh_supply_diff += utxo_entry.amount as i64,
+                AssetType::KUSD => self.supply_change.kusd_supply_diff += utxo_entry.amount as i64,
+                AssetType::KRV => self.supply_change.krv_supply_diff += utxo_entry.amount as i64,
+            }; // TODO: Using `virtual_state.mergeset_rewards` might be a better way to extract this.
 
             self.utxo_changes.added.insert_into_nested(
                 utxo_entry.script_public_key,
@@ -43,7 +49,11 @@ impl UtxoIndexChanges {
         }
 
         for (transaction_outpoint, utxo_entry) in to_remove.into_iter() {
-            self.supply_change -= utxo_entry.amount as CirculatingSupplyDiff; // TODO: Using `virtual_state.mergeset_rewards` might be a better way to extract this.
+            match utxo_entry.asset_type {
+                AssetType::KSH => self.supply_change.ksh_supply_diff -= utxo_entry.amount as i64,
+                AssetType::KUSD => self.supply_change.kusd_supply_diff -= utxo_entry.amount as i64,
+                AssetType::KRV => self.supply_change.krv_supply_diff -= utxo_entry.amount as i64,
+            } // TODO: Using `virtual_state.mergeset_rewards` might be a better way to extract this.
 
             self.utxo_changes.removed.insert_into_nested(
                 utxo_entry.script_public_key,
@@ -58,7 +68,11 @@ impl UtxoIndexChanges {
     /// Note: This is meant to be used when resyncing.
     pub fn add_utxos_from_vector(&mut self, utxo_vector: Vec<(TransactionOutpoint, UtxoEntry)>) {
         for (transaction_outpoint, utxo_entry) in utxo_vector.into_iter() {
-            self.supply_change += utxo_entry.amount as CirculatingSupplyDiff;
+            match utxo_entry.asset_type {
+                AssetType::KSH => self.supply_change.ksh_supply_diff += utxo_entry.amount as i64,
+                AssetType::KUSD => self.supply_change.kusd_supply_diff += utxo_entry.amount as i64,
+                AssetType::KRV => self.supply_change.krv_supply_diff += utxo_entry.amount as i64,
+            }
 
             self.utxo_changes.added.insert_into_nested(
                 utxo_entry.script_public_key,

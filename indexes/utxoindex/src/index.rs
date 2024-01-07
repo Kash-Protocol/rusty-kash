@@ -1,7 +1,8 @@
+use crate::model::AssetCirculatingSupply;
 use crate::{
     api::UtxoIndexApi,
     errors::{UtxoIndexError, UtxoIndexResult},
-    model::{CirculatingSupply, UtxoChanges, UtxoSetByScriptPublicKey},
+    model::{UtxoChanges, UtxoSetByScriptPublicKey},
     stores::store_manager::Store,
     update_container::UtxoIndexChanges,
     IDENT,
@@ -44,7 +45,7 @@ impl UtxoIndex {
 
 impl UtxoIndexApi for UtxoIndex {
     /// Retrieve circulating supply from the utxoindex db.
-    fn get_circulating_supply(&self) -> StoreResult<u64> {
+    fn get_circulating_supply(&self) -> StoreResult<AssetCirculatingSupply> {
         trace!("[{0}] retrieving circulating supply", IDENT);
 
         self.store.get_circulating_supply()
@@ -87,12 +88,7 @@ impl UtxoIndexApi for UtxoIndex {
         // Commit changed utxo state to db
         self.store.update_utxo_state(&utxoindex_changes.utxo_changes.added, &utxoindex_changes.utxo_changes.removed, false)?;
 
-        // Commit circulating supply change (if monotonic) to db.
-        if utxoindex_changes.supply_change > 0 {
-            //we force monotonic here
-            let _circulating_supply =
-                self.store.update_circulating_supply(utxoindex_changes.supply_change as CirculatingSupply, false)?;
-        }
+        let _circulating_supply = self.store.update_circulating_supply(utxoindex_changes.supply_change, false)?;
 
         // Commit new consensus virtual tips.
         self.store.set_tips(utxoindex_changes.tips, false)?; //we expect new tips with every virtual!
@@ -141,7 +137,7 @@ impl UtxoIndexApi for UtxoIndex {
         let session = futures::executor::block_on(consensus.session_blocking());
 
         let consensus_tips = session.get_virtual_parents();
-        let mut circulating_supply: CirculatingSupply = 0;
+        let mut circulating_supply = AssetCirculatingSupply::default();
 
         //Initial batch is without specified seek and none-skipping.
         let mut virtual_utxo_batch = session.get_virtual_utxos(None, RESYNC_CHUNK_SIZE, false);
@@ -149,15 +145,12 @@ impl UtxoIndexApi for UtxoIndex {
         trace!("[{0}] resyncing with batch of {1} utxos from consensus db", IDENT, current_chunk_size);
         // While loop stops resync attempts from an empty utxo db, and unneeded processing when the utxo state size happens to be a multiple of [`RESYNC_CHUNK_SIZE`]
         while current_chunk_size > 0 {
-            // Potential optimization TODO: iterating virtual utxos into an [UtxoIndexChanges] struct is a bit of overhead (i.e. a potentially unneeded loop),
-            // but some form of pre-iteration is done to extract and commit circulating supply separately.
-
             let mut utxoindex_changes = UtxoIndexChanges::new(); //reset changes.
 
             let next_outpoint_from = Some(virtual_utxo_batch.last().expect("expected a last outpoint").0);
             utxoindex_changes.add_utxos_from_vector(virtual_utxo_batch);
 
-            circulating_supply += utxoindex_changes.supply_change as CirculatingSupply;
+            circulating_supply += utxoindex_changes.supply_change;
 
             self.store.update_utxo_state(&utxoindex_changes.utxo_changes.added, &utxoindex_changes.utxo_changes.removed, true)?;
 
@@ -170,9 +163,6 @@ impl UtxoIndexApi for UtxoIndex {
             trace!("[{0}] resyncing with batch of {1} utxos from consensus db", IDENT, current_chunk_size);
         }
 
-        // Commit to the the remaining stores.
-
-        trace!("[{0}] committing circulating supply {1} from consensus db", IDENT, circulating_supply);
         self.store.insert_circulating_supply(circulating_supply, true)?;
 
         trace!("[{0}] committing consensus tips {consensus_tips:?} from consensus db", IDENT);
@@ -213,7 +203,8 @@ impl ConsensusResetHandler for UtxoIndexConsensusResetHandler {
 
 #[cfg(test)]
 mod tests {
-    use crate::{api::UtxoIndexApi, model::CirculatingSupply, testutils::virtual_change_emulator::VirtualChangeEmulator, UtxoIndex};
+    use crate::model::AssetCirculatingSupply;
+    use crate::{api::UtxoIndexApi, testutils::virtual_change_emulator::VirtualChangeEmulator, UtxoIndex};
     use kash_consensus::{
         config::Config,
         consensus::test_consensus::TestConsensus,
@@ -223,6 +214,7 @@ mod tests {
         },
         params::DEVNET_PARAMS,
     };
+    use kash_consensus_core::asset_type::AssetType;
     use kash_consensus_core::{
         api::ConsensusApi,
         utxo::{utxo_collection::UtxoCollection, utxo_diff::UtxoDiff},
@@ -278,10 +270,15 @@ mod tests {
         // Test the sync from scratch via consensus db.
         let consensus_utxos = tc.get_virtual_utxos(None, usize::MAX, false); // `usize::MAX` to ensure to get all.
         let mut i = 0;
-        let mut consensus_supply: CirculatingSupply = 0;
+        let mut consensus_supply: AssetCirculatingSupply = AssetCirculatingSupply::default();
         let consensus_utxo_set_size = consensus_utxos.len();
         for (tx_outpoint, utxo_entry) in consensus_utxos.into_iter() {
-            consensus_supply += utxo_entry.amount;
+            match utxo_entry.asset_type {
+                AssetType::KSH => consensus_supply.ksh_supply += utxo_entry.amount,
+                AssetType::KUSD => consensus_supply.kusd_supply += utxo_entry.amount,
+                AssetType::KRV => consensus_supply.kusd_supply += utxo_entry.amount,
+            }
+
             let indexed_utxos = utxoindex
                 .read()
                 .get_utxos_by_script_public_keys(HashSet::from_iter(vec![utxo_entry.script_public_key.clone()]))

@@ -440,7 +440,9 @@ async fn sanity_test() {
                 let rpc_client = client.clone();
                 tst!(op, {
                     let response = rpc_client.get_coin_supply_call(GetCoinSupplyRequest {}).await.unwrap();
-                    assert_eq!(response.circulating_sompi, 0);
+                    assert_eq!(response.ksh_circulating_sompi, 0);
+                    assert_eq!(response.kusd_circulating_sompi, 0);
+                    assert_eq!(response.krv_circulating_sompi, 0);
                     assert_eq!(response.max_sompi, MAX_SOMPI);
                 })
             }
