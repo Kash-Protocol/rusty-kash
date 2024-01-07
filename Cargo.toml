@@ -57,7 +57,7 @@ members = [
 ]
 
 [workspace.package]
-version = "0.13.2"
+version = "0.13.3"
 authors = ["Kash developers"]
 license = "MIT/Apache-2.0"
 repository = "https://github.com/Kash-Protocol/rusty-kash"
@@ -77,58 +77,58 @@ include = [
 mimalloc = { version = "0.1.39", default-features = false, features = [
     'override',
 ] }
-# kash-testing-integration = { version = "0.13.2", path = "testing/integration" }
-kash-addresses = { version = "0.13.2", path = "crypto/addresses" }
-kash-addressmanager = { version = "0.13.2", path = "components/addressmanager" }
-kash-bip32 = { version = "0.13.2", path = "wallet/bip32" }
-kash-cli = { version = "0.13.2", path = "cli" }
-kash-connectionmanager = { version = "0.13.2", path = "components/connectionmanager" }
-kash-consensus = { version = "0.13.2", path = "consensus" }
-kash-consensus-core = { version = "0.13.2", path = "consensus/core" }
-kash-consensus-notify = { version = "0.13.2", path = "consensus/notify" }
-kash-consensus-wasm = { version = "0.13.2", path = "consensus/wasm" }
-kash-consensusmanager = { version = "0.13.2", path = "components/consensusmanager" }
-kash-core = { version = "0.13.2", path = "core" }
-kash-daemon = { version = "0.13.2", path = "daemon" }
-kash-database = { version = "0.13.2", path = "database" }
-kash-grpc-client = { version = "0.13.2", path = "rpc/grpc/client" }
-kash-grpc-core = { version = "0.13.2", path = "rpc/grpc/core" }
-kash-grpc-server = { version = "0.13.2", path = "rpc/grpc/server" }
-kash-hashes = { version = "0.13.2", path = "crypto/hashes" }
-kash-index-core = { version = "0.13.2", path = "indexes/core" }
-kash-index-processor = { version = "0.13.2", path = "indexes/processor" }
-kash-math = { version = "0.13.2", path = "math" }
-kash-merkle = { version = "0.13.2", path = "crypto/merkle" }
-kash-metrics-core = { version = "0.13.2", path = "metrics/core" }
-kash-mining = { version = "0.13.2", path = "mining" }
-kash-mining-errors = { version = "0.13.2", path = "mining/errors" }
-kash-muhash = { version = "0.13.2", path = "crypto/muhash" }
-kash-notify = { version = "0.13.2", path = "notify" }
-kash-os = { version = "0.13.2", path = "kash-os" }
-kash-p2p-flows = { version = "0.13.2", path = "protocol/flows" }
-kash-p2p-lib = { version = "0.13.2", path = "protocol/p2p" }
-kash-perf-monitor = { version = "0.13.2", path = "metrics/perf_monitor" }
-kash-pow = { version = "0.13.2", path = "consensus/pow" }
-kash-rpc-core = { version = "0.13.2", path = "rpc/core" }
-kash-rpc-macros = { version = "0.13.2", path = "rpc/macros" }
-kash-rpc-service = { version = "0.13.2", path = "rpc/service" }
-kash-txscript = { version = "0.13.2", path = "crypto/txscript" }
-kash-txscript-errors = { version = "0.13.2", path = "crypto/txscript/errors" }
-kash-utils = { version = "0.13.2", path = "utils" }
-kash-utils-tower = { version = "0.13.2", path = "utils/tower" }
-kash-utxoindex = { version = "0.13.2", path = "indexes/utxoindex" }
-kash-wallet = { version = "0.13.2", path = "wallet/native" }
-kash-wallet-cli-wasm = { version = "0.13.2", path = "wallet/wasm" }
-kash-wallet-core = { version = "0.13.2", path = "wallet/core" }
-kash-wallet-macros = { version = "0.13.2", path = "wallet/macros" }
-kash-wasm = { version = "0.13.2", path = "wasm" }
-kash-wrpc-client = { version = "0.13.2", path = "rpc/wrpc/client" }
-kash-wrpc-core = { version = "0.13.2", path = "rpc/wrpc/core" }
-kash-wrpc-proxy = { version = "0.13.2", path = "rpc/wrpc/proxy" }
-kash-wrpc-server = { version = "0.13.2", path = "rpc/wrpc/server" }
-kash-wrpc-wasm = { version = "0.13.2", path = "rpc/wrpc/wasm" }
-kashd = { version = "0.13.2", path = "kashd" }
-kash-alloc = { version = "0.13.2", path = "utils/alloc" }
+# kash-testing-integration = { version = "0.13.3", path = "testing/integration" }
+kash-addresses = { version = "0.13.3", path = "crypto/addresses" }
+kash-addressmanager = { version = "0.13.3", path = "components/addressmanager" }
+kash-bip32 = { version = "0.13.3", path = "wallet/bip32" }
+kash-cli = { version = "0.13.3", path = "cli" }
+kash-connectionmanager = { version = "0.13.3", path = "components/connectionmanager" }
+kash-consensus = { version = "0.13.3", path = "consensus" }
+kash-consensus-core = { version = "0.13.3", path = "consensus/core" }
+kash-consensus-notify = { version = "0.13.3", path = "consensus/notify" }
+kash-consensus-wasm = { version = "0.13.3", path = "consensus/wasm" }
+kash-consensusmanager = { version = "0.13.3", path = "components/consensusmanager" }
+kash-core = { version = "0.13.3", path = "core" }
+kash-daemon = { version = "0.13.3", path = "daemon" }
+kash-database = { version = "0.13.3", path = "database" }
+kash-grpc-client = { version = "0.13.3", path = "rpc/grpc/client" }
+kash-grpc-core = { version = "0.13.3", path = "rpc/grpc/core" }
+kash-grpc-server = { version = "0.13.3", path = "rpc/grpc/server" }
+kash-hashes = { version = "0.13.3", path = "crypto/hashes" }
+kash-index-core = { version = "0.13.3", path = "indexes/core" }
+kash-index-processor = { version = "0.13.3", path = "indexes/processor" }
+kash-math = { version = "0.13.3", path = "math" }
+kash-merkle = { version = "0.13.3", path = "crypto/merkle" }
+kash-metrics-core = { version = "0.13.3", path = "metrics/core" }
+kash-mining = { version = "0.13.3", path = "mining" }
+kash-mining-errors = { version = "0.13.3", path = "mining/errors" }
+kash-muhash = { version = "0.13.3", path = "crypto/muhash" }
+kash-notify = { version = "0.13.3", path = "notify" }
+kash-os = { version = "0.13.3", path = "kash-os" }
+kash-p2p-flows = { version = "0.13.3", path = "protocol/flows" }
+kash-p2p-lib = { version = "0.13.3", path = "protocol/p2p" }
+kash-perf-monitor = { version = "0.13.3", path = "metrics/perf_monitor" }
+kash-pow = { version = "0.13.3", path = "consensus/pow" }
+kash-rpc-core = { version = "0.13.3", path = "rpc/core" }
+kash-rpc-macros = { version = "0.13.3", path = "rpc/macros" }
+kash-rpc-service = { version = "0.13.3", path = "rpc/service" }
+kash-txscript = { version = "0.13.3", path = "crypto/txscript" }
+kash-txscript-errors = { version = "0.13.3", path = "crypto/txscript/errors" }
+kash-utils = { version = "0.13.3", path = "utils" }
+kash-utils-tower = { version = "0.13.3", path = "utils/tower" }
+kash-utxoindex = { version = "0.13.3", path = "indexes/utxoindex" }
+kash-wallet = { version = "0.13.3", path = "wallet/native" }
+kash-wallet-cli-wasm = { version = "0.13.3", path = "wallet/wasm" }
+kash-wallet-core = { version = "0.13.3", path = "wallet/core" }
+kash-wallet-macros = { version = "0.13.3", path = "wallet/macros" }
+kash-wasm = { version = "0.13.3", path = "wasm" }
+kash-wrpc-client = { version = "0.13.3", path = "rpc/wrpc/client" }
+kash-wrpc-core = { version = "0.13.3", path = "rpc/wrpc/core" }
+kash-wrpc-proxy = { version = "0.13.3", path = "rpc/wrpc/proxy" }
+kash-wrpc-server = { version = "0.13.3", path = "rpc/wrpc/server" }
+kash-wrpc-wasm = { version = "0.13.3", path = "rpc/wrpc/wasm" }
+kashd = { version = "0.13.3", path = "kashd" }
+kash-alloc = { version = "0.13.3", path = "utils/alloc" }
 
 # external
 aes = "0.8.3"
