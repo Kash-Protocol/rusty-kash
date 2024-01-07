@@ -18,6 +18,7 @@ from!(item: &kash_rpc_core::RpcTransaction, protowire::RpcTransaction, {
         subnetwork_id: item.subnetwork_id.to_string(),
         gas: item.gas,
         payload: item.payload.to_rpc_hex(),
+        mass: item.mass,
         verbose_data: item.verbose_data.as_ref().map(|x| x.into()),
     }
 });
@@ -115,6 +116,7 @@ try_from!(item: &protowire::RpcTransaction, kash_rpc_core::RpcTransaction, {
         subnetwork_id: kash_rpc_core::RpcSubnetworkId::from_str(&item.subnetwork_id)?,
         gas: item.gas,
         payload: Vec::from_rpc_hex(&item.payload)?,
+        mass: item.mass,
         verbose_data: item.verbose_data.as_ref().map(kash_rpc_core::RpcTransactionVerboseData::try_from).transpose()?,
     }
 });

@@ -63,6 +63,7 @@ impl From<&Transaction> for RpcTransaction {
             subnetwork_id: inner.subnetwork_id.clone(),
             gas: inner.gas,
             payload: inner.payload.clone(),
+            mass: 0, // TODO: apply mass to all external APIs including wasm
             verbose_data: None,
         }
     }
@@ -81,6 +82,7 @@ impl From<SignableTransaction> for RpcTransaction {
             subnetwork_id: tx.subnetwork_id,
             gas: tx.gas,
             payload: tx.payload,
+            mass: 0, // TODO: apply mass to all external APIs including wasm
             verbose_data: None,
         }
     }

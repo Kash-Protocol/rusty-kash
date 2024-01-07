@@ -3,6 +3,7 @@ use itertools::Itertools;
 use kash_consensus::consensus::Consensus;
 use kash_consensus::model::stores::virtual_state::VirtualStateStoreReader;
 use kash_consensus::params::Params;
+use kash_consensus::processes::mass::MassCalculator;
 use kash_consensus_core::api::ConsensusApi;
 use kash_consensus_core::asset_type::AssetType;
 use kash_consensus_core::block::{Block, TemplateBuildMode, TemplateTransactionSelector};
@@ -75,6 +76,9 @@ pub struct Miner {
     target_txs_per_block: u64,
     target_blocks: Option<u64>,
     max_cached_outpoints: usize,
+
+    // Mass calculator
+    mass_calculator: MassCalculator,
 }
 
 impl Miner {
@@ -106,6 +110,12 @@ impl Miner {
             target_txs_per_block,
             target_blocks,
             max_cached_outpoints: 10_000,
+            mass_calculator: MassCalculator::new(
+                params.mass_per_tx_byte,
+                params.mass_per_script_pub_key_byte,
+                params.mass_per_sig_op,
+                params.storage_mass_parameter,
+            ),
         }
     }
 
@@ -144,7 +154,14 @@ impl Miner {
             .collect::<Vec<_>>()
             .into_par_iter()
             .map(|mutable_tx| {
-                let mut signed_tx = sign(mutable_tx, schnorr_key).tx;
+                let signed_tx = sign(mutable_tx, schnorr_key);
+                let mass = self
+                    .mass_calculator
+                    .calc_tx_storage_mass(&signed_tx.as_verifiable())
+                    .and_then(|v| v.checked_add(self.mass_calculator.calc_tx_compute_mass(&signed_tx.tx)))
+                    .unwrap();
+                signed_tx.tx.set_mass(mass);
+                let mut signed_tx = signed_tx.tx;
                 signed_tx.finalize();
                 signed_tx
             })

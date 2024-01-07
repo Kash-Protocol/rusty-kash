@@ -25,7 +25,7 @@ use kash_consensus_core::api::{BlockValidationFutures, ConsensusApi};
 use kash_consensus_core::block::Block;
 use kash_consensus_core::blockhash::new_unique;
 use kash_consensus_core::blockstatus::BlockStatus;
-use kash_consensus_core::constants::BLOCK_VERSION;
+use kash_consensus_core::constants::{BLOCK_VERSION, STORAGE_MASS_PARAMETER};
 use kash_consensus_core::errors::block::{BlockProcessResult, RuleError};
 use kash_consensus_core::header::Header;
 use kash_consensus_core::network::{NetworkId, NetworkType::Mainnet};
@@ -832,6 +832,8 @@ impl KashdGoParams {
             mass_per_script_pub_key_byte: self.MassPerScriptPubKeyByte,
             mass_per_sig_op: self.MassPerSigOp,
             max_block_mass: self.MaxBlockMass,
+            storage_mass_parameter: STORAGE_MASS_PARAMETER,
+            storage_mass_activation_daa_score: u64::MAX,
             deflationary_phase_daa_score: self.DeflationaryPhaseDaaScore,
             pre_deflationary_phase_base_subsidy: self.PreDeflationaryPhaseBaseSubsidy,
             coinbase_maturity: MAINNET_PARAMS.coinbase_maturity,
