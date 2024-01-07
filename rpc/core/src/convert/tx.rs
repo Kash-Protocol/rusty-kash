@@ -16,6 +16,7 @@ impl From<&Transaction> for RpcTransaction {
             subnetwork_id: item.subnetwork_id.clone(),
             gas: item.gas,
             payload: item.payload.clone(),
+            mass: item.mass(),
             // TODO: Implement a populating process inspired from kashd\app\rpc\rpccontext\verbosedata.go
             verbose_data: None,
         }
@@ -54,7 +55,7 @@ impl From<&TransactionInput> for RpcTransactionInput {
 impl TryFrom<&RpcTransaction> for Transaction {
     type Error = RpcError;
     fn try_from(item: &RpcTransaction) -> RpcResult<Self> {
-        Ok(Transaction::new(
+        let transaction = Transaction::new(
             item.version,
             item.inputs
                 .iter()
@@ -69,7 +70,9 @@ impl TryFrom<&RpcTransaction> for Transaction {
             item.subnetwork_id.clone(),
             item.gas,
             item.payload.clone(),
-        ))
+        );
+        transaction.set_mass(item.mass);
+        Ok(transaction)
     }
 }
 
