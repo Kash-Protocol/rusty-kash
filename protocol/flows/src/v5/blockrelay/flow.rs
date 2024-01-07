@@ -5,7 +5,7 @@ use crate::{
 };
 use kash_consensus_core::{api::BlockValidationFutures, block::Block, blockstatus::BlockStatus, errors::block::RuleError};
 use kash_consensusmanager::{BlockProcessingBatch, ConsensusProxy};
-use kash_core::{debug, info, warn};
+use kash_core::debug;
 use kash_hashes::Hash;
 use kash_p2p_lib::{
     common::ProtocolError,
@@ -172,9 +172,11 @@ impl HandleRelayInvsFlow {
 
                         match block_task_inner.await {
                             Ok(_) => match ancestor_batch.blocks.len() {
-                                0 => info!("Retried orphan block {} successfully", block.hash()),
-                                // Use warn in order to track this rare case more easily
-                                n => warn!("Unorphaned {} ancestors and retried orphan block {} successfully", n, block.hash()),
+                                0 => debug!("Retried orphan block {} successfully", block.hash()),
+                                n => {
+                                    self.ctx.log_block_event(BlockLogEvent::Unorphaned(ancestor_batch.blocks[0].hash(), n));
+                                    debug!("Unorphaned {} ancestors and retried orphan block {} successfully", n, block.hash())
+                                }
                             },
                             Err(rule_error) => return Err(rule_error.into()),
                         }
