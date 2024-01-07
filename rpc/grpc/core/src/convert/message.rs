@@ -382,7 +382,13 @@ from!(
 
 from!(&kash_rpc_core::GetCoinSupplyRequest, protowire::GetCoinSupplyRequestMessage);
 from!(item: RpcResult<&kash_rpc_core::GetCoinSupplyResponse>, protowire::GetCoinSupplyResponseMessage, {
-    Self { max_sompi: item.max_sompi, circulating_sompi: item.circulating_sompi, error: None }
+    Self {
+        max_sompi: item.max_sompi,
+        ksh_circulating_sompi: item.ksh_circulating_sompi,
+        kusd_circulating_sompi: item.kusd_circulating_sompi,
+        krv_circulating_sompi: item.krv_circulating_sompi,
+        error: None
+    }
 });
 
 from!(item: &kash_rpc_core::GetDaaScoreTimestampEstimateRequest, protowire::GetDaaScoreTimestampEstimateRequestMessage, {
@@ -779,7 +785,7 @@ try_from!(
 
 try_from!(&protowire::GetCoinSupplyRequestMessage, kash_rpc_core::GetCoinSupplyRequest);
 try_from!(item: &protowire::GetCoinSupplyResponseMessage, RpcResult<kash_rpc_core::GetCoinSupplyResponse>, {
-    Self { max_sompi: item.max_sompi, circulating_sompi: item.circulating_sompi }
+    Self { max_sompi: item.max_sompi, ksh_circulating_sompi: item.ksh_circulating_sompi, kusd_circulating_sompi: item.kusd_circulating_sompi, krv_circulating_sompi: item.krv_circulating_sompi }
 });
 
 try_from!(item: &protowire::GetDaaScoreTimestampEstimateRequestMessage, kash_rpc_core::GetDaaScoreTimestampEstimateRequest , {

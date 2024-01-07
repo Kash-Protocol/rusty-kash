@@ -662,12 +662,19 @@ pub struct GetCoinSupplyRequest {}
 #[serde(rename_all = "camelCase")]
 pub struct GetCoinSupplyResponse {
     pub max_sompi: u64,
-    pub circulating_sompi: u64,
+    pub ksh_circulating_sompi: u64,
+    pub kusd_circulating_sompi: u64,
+    pub krv_circulating_sompi: u64,
 }
 
 impl GetCoinSupplyResponse {
-    pub fn new(max_sompi: u64, circulating_sompi: u64) -> Self {
-        Self { max_sompi, circulating_sompi }
+    pub fn new(max_sompi: u64, circulating_ksh_sompi: u64, circulating_kusd_sompi: u64, circulating_krv_sompi: u64) -> Self {
+        Self {
+            max_sompi,
+            ksh_circulating_sompi: circulating_ksh_sompi,
+            kusd_circulating_sompi: circulating_kusd_sompi,
+            krv_circulating_sompi: circulating_krv_sompi,
+        }
     }
 }
 

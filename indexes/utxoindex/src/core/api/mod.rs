@@ -10,6 +10,7 @@ use kash_index_core::indexed_utxos::BalanceByScriptPublicKey;
 use parking_lot::RwLock;
 use std::{collections::HashSet, fmt::Debug, sync::Arc};
 
+use crate::model::AssetCirculatingSupply;
 use crate::{
     errors::UtxoIndexResult,
     model::{UtxoChanges, UtxoSetByScriptPublicKey},
@@ -20,7 +21,7 @@ pub trait UtxoIndexApi: Send + Sync + Debug {
     /// Retrieve circulating supply from the utxoindex db.
     ///
     /// Note: Use a read lock when accessing this method
-    fn get_circulating_supply(&self) -> StoreResult<u64>;
+    fn get_circulating_supply(&self) -> StoreResult<AssetCirculatingSupply>;
 
     /// Retrieve utxos by script public keys supply from the utxoindex db.
     ///
@@ -66,7 +67,7 @@ impl UtxoIndexProxy {
         Self { inner }
     }
 
-    pub async fn get_circulating_supply(self) -> StoreResult<u64> {
+    pub async fn get_circulating_supply(self) -> StoreResult<AssetCirculatingSupply> {
         spawn_blocking(move || self.inner.read().get_circulating_supply()).await.unwrap()
     }
 

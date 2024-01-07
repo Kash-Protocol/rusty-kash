@@ -742,8 +742,9 @@ message GetCoinSupplyRequestMessage{
 
 message GetCoinSupplyResponseMessage{
   uint64 maxSompi = 1; // note: this is a hard coded maxSupply, actual maxSupply is expected to deviate by upto -5%, but cannot be measured exactly.
-  uint64 circulatingSompi = 2;
-
+  uint64 ksh_circulating_sompi = 2;
+  uint64 kusd_circulating_sompi = 3;
+  uint64 krv_circulating_sompi = 4;
   RPCError error = 1000;
 }
 

@@ -542,7 +542,12 @@ impl RpcApi for RpcCoreService {
         }
         let circulating_sompi =
             self.utxoindex.clone().unwrap().get_circulating_supply().await.map_err(|e| RpcError::General(e.to_string()))?;
-        Ok(GetCoinSupplyResponse::new(MAX_SOMPI, circulating_sompi))
+        Ok(GetCoinSupplyResponse::new(
+            MAX_SOMPI,
+            circulating_sompi.ksh_supply,
+            circulating_sompi.kusd_supply,
+            circulating_sompi.krv_supply,
+        ))
     }
 
     async fn get_daa_score_timestamp_estimate_call(

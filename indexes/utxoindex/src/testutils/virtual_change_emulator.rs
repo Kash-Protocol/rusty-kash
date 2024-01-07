@@ -1,5 +1,6 @@
-use crate::model::{CirculatingSupply, CirculatingSupplyDiff};
+use crate::model::{AssetCirculatingSupply, AssetCirculatingSupplyDiffs};
 use kash_consensus::test_helpers::*;
+use kash_consensus_core::asset_type::AssetType;
 use kash_consensus_core::{
     tx::ScriptPublicKey,
     utxo::{utxo_collection::UtxoCollection, utxo_diff::UtxoDiff},
@@ -14,7 +15,7 @@ use std::sync::Arc;
 pub struct VirtualChangeEmulator {
     pub utxo_collection: UtxoCollection,
     pub tips: BlockHashSet,
-    pub circulating_supply: u64,
+    pub circulating_supply: AssetCirculatingSupply,
     pub accumulated_utxo_diff: Arc<UtxoDiff>,
     pub virtual_parents: Arc<Vec<Hash>>,
     pub selected_parent_blue_score: u64,
@@ -27,7 +28,7 @@ impl VirtualChangeEmulator {
         Self {
             utxo_collection: UtxoCollection::new(),
             tips: BlockHashSet::new(),
-            circulating_supply: 0,
+            circulating_supply: AssetCirculatingSupply::default(),
             accumulated_utxo_diff: Arc::new(UtxoDiff::default()),
             virtual_parents: Arc::new(vec![]),
             selected_parent_blue_score: 0,
@@ -41,7 +42,11 @@ impl VirtualChangeEmulator {
         self.script_public_key_pool.extend((0..script_public_key_pool_size).map(|_| generate_random_p2pk_script_public_key(rng)));
         self.utxo_collection = generate_random_utxos_from_script_public_key_pool(rng, amount, &self.script_public_key_pool);
         for (_, utxo_entry) in self.utxo_collection.clone() {
-            self.circulating_supply += utxo_entry.amount;
+            match utxo_entry.asset_type {
+                AssetType::KSH => self.circulating_supply.ksh_supply += utxo_entry.amount,
+                AssetType::KUSD => self.circulating_supply.kusd_supply += utxo_entry.amount,
+                AssetType::KRV => self.circulating_supply.krv_supply += utxo_entry.amount,
+            }
         }
         self.tips = BlockHashSet::from_iter(generate_random_hashes(rng, 1));
     }
@@ -49,18 +54,26 @@ impl VirtualChangeEmulator {
     pub fn change_virtual_state(&mut self, remove_amount: usize, add_amount: usize, tip_amount: usize) {
         let rng = &mut SmallRng::seed_from_u64(42);
 
-        let mut new_circulating_supply_diff: CirculatingSupplyDiff = 0;
+        let mut new_circulating_supply_diff = AssetCirculatingSupplyDiffs::default();
         self.accumulated_utxo_diff = Arc::new(UtxoDiff::new(
             UtxoCollection::from_iter(
                 generate_random_utxos_from_script_public_key_pool(rng, add_amount, &self.script_public_key_pool).into_iter().map(
                     |(k, v)| {
-                        new_circulating_supply_diff += v.amount as CirculatingSupplyDiff;
+                        match v.asset_type {
+                            AssetType::KSH => new_circulating_supply_diff.ksh_supply_diff += v.amount as i64,
+                            AssetType::KUSD => new_circulating_supply_diff.kusd_supply_diff += v.amount as i64,
+                            AssetType::KRV => new_circulating_supply_diff.krv_supply_diff += v.amount as i64,
+                        }
                         (k, v)
                     },
                 ),
             ),
             UtxoCollection::from_iter(self.utxo_collection.iter().take(remove_amount).map(|(k, v)| {
-                new_circulating_supply_diff -= v.amount as CirculatingSupplyDiff;
+                match v.asset_type {
+                    AssetType::KSH => new_circulating_supply_diff.ksh_supply_diff -= v.amount as i64,
+                    AssetType::KUSD => new_circulating_supply_diff.kusd_supply_diff -= v.amount as i64,
+                    AssetType::KRV => new_circulating_supply_diff.krv_supply_diff -= v.amount as i64,
+                }
                 (*k, v.clone())
             })),
         ));
@@ -73,10 +86,7 @@ impl VirtualChangeEmulator {
         self.virtual_parents = new_tips.clone();
         self.tips = BlockHashSet::from_iter(new_tips.iter().cloned());
 
-        // Force monotonic
-        if new_circulating_supply_diff > 0 {
-            self.circulating_supply += new_circulating_supply_diff as CirculatingSupply;
-        }
+        self.circulating_supply += new_circulating_supply_diff;
 
         self.selected_parent_blue_score = rng.gen();
         self.daa_score = rng.gen();
