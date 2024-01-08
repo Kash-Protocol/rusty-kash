@@ -1,11 +1,10 @@
+# Kash On Rust: The Future of Decentralized Stablecoin Payments
 
-<h1>Kash On Rust</h1>
+⚠️ IMPORTANT: Please note that Rusty Kash is currently in the development stage and not yet in Alpha. It may exhibit instability, and significant mining activities are advised against at this stage. We recommend joining our [Kash Discord Server](https://discord.gg/qKT4dAtxEc) for updates.
 
-Welcome to the Rust-based implementation of the Kash full-node and its ancillary libraries. This Alpha release serves as a drop-in replacement to the established <a href="https://github.com/Kash-Protocol/kashd">Golang node</a> (once the rust rewrite is completed), introducing developers to the possibilities of Rust in the Kash network's context.
+Welcome to the Rust-based implementation of the Kash full-node and its ancillary libraries. Rusty Kash, a groundbreaking cryptocurrency, is developed with a focus on establishing the purest form of decentralized stablecoin payments. We are proud that Rusty Kash is developed based on Rusty Kaspa, leveraging its advanced blockchain technology. Our project is in an active development phase, ensuring continuous alignment with Rusty Kaspa's updates to guarantee state-of-the-art features and security.
 
 We invite developers and blockchain enthusiasts to collaborate, test, and optimize our Rust implementation. Each line of code here is an opportunity to contribute to the open-source blockchain movement, shaping a platform designed for scalability and speed without compromising on decentralization.
-
-Your feedback, contributions, and issue reports will be integral to evolving this codebase from its Alpha phase into a mature and reliable node in the Kash network.
 
 ## Installation
   <details>
