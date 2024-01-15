@@ -82,6 +82,8 @@ impl Scan {
     }
 
     pub async fn scan_with_address_manager(&self, address_manager: &Arc<AddressManager>, utxo_context: &UtxoContext) -> Result<()> {
+        let params = utxo_context.processor().network_params()?;
+
         let window_size = self.window_size.unwrap_or(DEFAULT_WINDOW_SIZE) as u32;
         let extent = self.extent.expect("address manager requires an extent");
 
@@ -124,7 +126,7 @@ impl Scan {
 
                 // Process each UTXO reference and accumulate balances for each asset type
                 refs.iter().for_each(|utxo_ref| {
-                    let entry_balance = utxo_ref.balance(self.current_daa_score);
+                    let entry_balance = utxo_ref.balance(params, self.current_daa_score);
                     match utxo_ref.utxo.entry.asset_type {
                         AssetType::KSH => update_balance(&mut ksh_balance, entry_balance),
                         AssetType::KUSD => update_balance(&mut kusd_balance, entry_balance),
@@ -166,6 +168,7 @@ impl Scan {
     }
 
     pub async fn scan_with_address_set(&self, address_set: &HashSet<Address>, utxo_context: &UtxoContext) -> Result<()> {
+        let params = utxo_context.processor().network_params()?;
         let address_vec = address_set.iter().cloned().collect::<Vec<_>>();
 
         utxo_context.register_addresses(&address_vec).await?;
@@ -179,7 +182,7 @@ impl Scan {
 
         // Process each UTXO reference and accumulate balances for each asset type
         for r in refs.iter() {
-            let entry_balance = r.balance(self.current_daa_score);
+            let entry_balance = r.balance(params, self.current_daa_score);
             match r.utxo.entry.asset_type {
                 AssetType::KSH => update_balance(&mut ksh_total_balance, entry_balance),
                 AssetType::KUSD => update_balance(&mut kusd_total_balance, entry_balance),

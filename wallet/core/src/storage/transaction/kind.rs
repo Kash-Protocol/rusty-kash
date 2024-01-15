@@ -6,7 +6,7 @@ use crate::imports::*;
 pub use kash_consensus_core::tx::TransactionId;
 
 // Do not change the order of the variants in this enum.
-seal! { 0x93c6, {
+seal! { 0x598a, {
         #[derive(Debug, Clone, Serialize, Deserialize, BorshSerialize, BorshDeserialize, Eq, PartialEq)]
         #[serde(rename_all = "kebab-case")]
         pub enum TransactionKind {

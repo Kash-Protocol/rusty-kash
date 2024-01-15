@@ -10,7 +10,7 @@ use kash_consensus_core::tx::TransactionAction;
 
 #[tokio::test]
 async fn test_utxo_subsystem_bootstrap() -> Result<()> {
-    let network_id = NetworkId::with_suffix(NetworkType::Testnet, 0);
+    let network_id = NetworkId::with_suffix(NetworkType::Testnet, 10);
     let rpc_api_mock = Arc::new(RpcCoreMock::new());
     let processor = UtxoProcessor::new(Some(rpc_api_mock.clone().into()), Some(network_id), None, None);
     let _context = UtxoContext::new(&processor, UtxoContextBinding::default());
