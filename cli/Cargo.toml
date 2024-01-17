@@ -14,7 +14,6 @@ include = [
 ]
 
 [features]
-legacy-rpc = ["kash-wallet-core/legacy-rpc"]
 default = []
 
 [lib]

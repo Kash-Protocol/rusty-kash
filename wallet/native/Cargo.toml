@@ -8,7 +8,6 @@ include.workspace = true
 license.workspace = true
 
 [features]
-legacy-rpc = ["kash-cli/legacy-rpc"]
 default = []
 
 [dependencies]

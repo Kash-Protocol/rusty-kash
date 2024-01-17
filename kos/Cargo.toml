@@ -17,7 +17,6 @@ include = [
 
 [features]
 metrics = []
-legacy-rpc = ["kash-cli/legacy-rpc","kash-wallet-core/legacy-rpc"]
 default = ["metrics"]
 
 [lib]
