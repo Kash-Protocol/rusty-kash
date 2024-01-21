@@ -11,7 +11,6 @@ license.workspace = true
 kash-addresses.workspace = true
 kash-consensus-core.workspace = true
 kash-consensus-notify.workspace = true
-kash-consensus.workspace = true
 kash-consensusmanager.workspace = true
 kash-core.workspace = true
 kash-hashes.workspace = true

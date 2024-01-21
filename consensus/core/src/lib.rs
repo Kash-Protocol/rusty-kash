@@ -11,7 +11,6 @@ pub mod acceptance_data;
 pub mod api;
 pub mod asset_type;
 pub mod block;
-pub mod block_count;
 pub mod blockhash;
 pub mod blockstatus;
 pub mod coinbase;

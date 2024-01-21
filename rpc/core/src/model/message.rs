@@ -1,6 +1,6 @@
 use crate::model::*;
 use borsh::{BorshDeserialize, BorshSchema, BorshSerialize};
-use kash_consensus_core::block_count::BlockCount;
+use kash_consensus_core::api::stats::BlockCount;
 use kash_core::debug;
 use kash_notify::subscription::{single::UtxosChangedSubscription, Command};
 use serde::{Deserialize, Serialize};
