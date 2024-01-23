@@ -371,7 +371,7 @@ impl Generator {
         }
 
         let standard_change_output_mass =
-            mass_calculator.calc_mass_for_output(&TransactionOutput::new(0, pay_to_address_script(&change_address)));
+            mass_calculator.calc_mass_for_output(&TransactionOutput::new(0, pay_to_address_script(&change_address), KSH));
         let signature_mass_per_input = mass_calculator.calc_signature_mass(minimum_signatures);
         let final_transaction_outputs_compute_mass = mass_calculator.calc_mass_for_outputs(&final_transaction_outputs);
         let final_transaction_payload = final_transaction_payload.unwrap_or_default();

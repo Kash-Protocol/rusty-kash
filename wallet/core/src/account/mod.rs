@@ -27,11 +27,14 @@ use kash_consensus_core::tx::TransactionAction;
 use kash_consensus_wasm::UtxoEntryReference;
 use workflow_core::abortable::Abortable;
 
-pub const DEFAULT_AMOUNT_PADDING: usize = 19;
-
+/// Notification callback type used by [`Account::sweep`] and [`Account::send`].
+/// Allows tracking in-flight transactions during transaction generation.
 pub type GenerationNotifier = Arc<dyn Fn(&PendingTransaction) + Send + Sync>;
+/// Scan notification callback type used by [`Account::derivation_scan`].
+/// Provides derivation discovery scan progress information.
 pub type ScanNotifier = Arc<dyn Fn(usize, usize, u64, Option<TransactionId>) + Send + Sync>;
 
+/// General-purpose wrapper around [`AccountSettings`] (managed by [`Inner`]).
 pub struct Context {
     pub settings: AccountSettings,
 }
@@ -46,6 +49,7 @@ impl Context {
     }
 }
 
+/// Account `Inner` struct used by most account types.
 pub struct Inner {
     context: Mutex<Context>,
     id: AccountId,
@@ -75,6 +79,8 @@ impl Inner {
     }
 }
 
+/// Generic wallet [`Account`] trait implementation used
+/// by different types of accounts.
 #[async_trait]
 pub trait Account: AnySync + Send + Sync + 'static {
     fn inner(&self) -> &Arc<Inner>;
@@ -473,6 +479,7 @@ pub trait Account: AnySync + Send + Sync + 'static {
 
 downcast_sync!(dyn Account);
 
+/// Account trait used by legacy account types (BIP32 account types with the `'972` derivation path).
 #[async_trait]
 pub trait AsLegacyAccount: Account {
     async fn create_private_context(
@@ -485,6 +492,7 @@ pub trait AsLegacyAccount: Account {
     async fn clear_private_context(&self) -> Result<()>;
 }
 
+/// Account trait used by derivation capable account types (BIP32, MultiSig, etc.)
 #[async_trait]
 pub trait DerivationCapableAccount: Account {
     fn derivation(&self) -> Arc<dyn AddressDerivationManagerTrait>;
@@ -662,7 +670,7 @@ pub trait DerivationCapableAccount: Account {
 
 downcast_sync!(dyn DerivationCapableAccount);
 
-pub fn create_private_keys<'l>(
+pub(crate) fn create_private_keys<'l>(
     account_kind: &AccountKind,
     cosigner_index: u32,
     account_index: u64,

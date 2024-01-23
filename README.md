@@ -175,20 +175,6 @@ To build WASM on MacOS you need to install `llvm` from homebrew (at the time of 
   <details>
 
   <summary>
-  React Native
-  </summary>
-
-  ```bash
-  cd rusty-kash
-  cd wasm
-  ./build-react-native
-  ```
-
-  </details>
-
-  <details>
-
-  <summary>
   ES6
   </summary>
 
