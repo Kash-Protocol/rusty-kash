@@ -283,7 +283,7 @@ impl WalletApi for super::Wallet {
                 asset_type,
                 destination_account_id,
                 transfer_amount_sompi,
-                priority_fee_sompi.unwrap_or(Fees::SenderPaysAll(0)),
+                priority_fee_sompi.unwrap_or(Fees::SenderPays(0)),
                 wallet_secret,
                 payment_secret,
                 &abortable,

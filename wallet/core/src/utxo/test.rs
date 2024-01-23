@@ -24,15 +24,15 @@ async fn test_utxo_subsystem_bootstrap() -> Result<()> {
 
 #[test]
 fn test_utxo_generator_empty_utxo_noop() -> Result<()> {
-    let network_type = NetworkType::Testnet;
-    let output_address = output_address(network_type);
+    let network_id = NetworkId::with_suffix(NetworkType::Testnet, 11);
+    let output_address = output_address(network_id.into());
 
     let payment_output = PaymentOutput::new(output_address, kash_to_sompi(2.0), AssetType::KSH);
     let generator = make_generator(
-        network_type,
+        network_id,
         &[10.0],
         &[],
-        Fees::SenderPaysAll(0),
+        Fees::SenderPays(0),
         change_address,
         TransactionAction::TransferKSH,
         payment_output.into(),

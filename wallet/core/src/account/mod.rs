@@ -583,6 +583,7 @@ pub trait DerivationCapableAccount: Account {
                             index,
                             balance,
                             aggregate_utxo_count,
+                            self.wallet().network_id()?,
                         )
                         .await?;
                     }
@@ -726,6 +727,7 @@ async fn process_asset_utxos(
     index: usize,
     balance: u64,
     aggregate_utxo_count: usize,
+    network_id: NetworkId,
 ) -> Result<()> {
     // Verify that all UTXOs are of the correct asset type
     if let Some(mismatched_utxo_ref) = utxos.iter().find(|utxo_ref| utxo_ref.utxo.entry.asset_type != asset_type) {
@@ -741,6 +743,7 @@ async fn process_asset_utxos(
     // Check if there are any UTXOs to process
     if !utxos.is_empty() {
         let settings = GeneratorSettings::try_new_with_iterator(
+            network_id,
             Box::new(utxos.into_iter()),
             change_address.clone(),
             1,

@@ -89,6 +89,7 @@ impl Generator {
         let settings = GeneratorSettings::try_from(args)?;
 
         let GeneratorSettings {
+            network_id,
             source,
             multiplexer,
             final_transaction_action,
@@ -105,7 +106,11 @@ impl Generator {
                 let change_address = change_address
                     .ok_or_else(|| Error::custom("changeAddress is required for Generator constructor with UTXO entries"))?;
 
+                let network_id =
+                    network_id.ok_or_else(|| Error::custom("networkId is required for Generator constructor with UTXO entries"))?;
+
                 native::GeneratorSettings::try_new_with_iterator(
+                    network_id,
                     Box::new(utxo_entries.into_iter()),
                     change_address,
                     sig_op_count,
@@ -190,6 +195,7 @@ enum GeneratorSource {
 
 /// Converts [`GeneratorSettingsObject`] to a series of properties intended for use by the [`Generator`].
 struct GeneratorSettings {
+    pub network_id: Option<NetworkId>,
     pub source: GeneratorSource,
     pub multiplexer: Option<Multiplexer<Box<Events>>>,
     pub final_transaction_action: TransactionAction,
@@ -211,8 +217,9 @@ impl TryFrom<GeneratorSettingsObject> for GeneratorSettings {
                 return Err(Error::custom("Invalid transactionAction value"));
             }
         };
-        // lack of outputs results in a sweep transaction compounding utxos into the change address
+        let network_id = args.try_get::<NetworkId>("networkId")?;
 
+        // lack of outputs results in a sweep transaction compounding utxos into the change address
         let outputs = args.get_value("outputs")?;
         let final_transaction_destination: PaymentDestination =
             if outputs.is_undefined() { PaymentDestination::Change } else { PaymentOutputs::try_from(outputs)?.into() };
@@ -245,6 +252,7 @@ impl TryFrom<GeneratorSettingsObject> for GeneratorSettings {
         let payload = args.get_vec_u8("payload").ok();
 
         let settings = GeneratorSettings {
+            network_id,
             source: generator_source,
             multiplexer: None,
             final_transaction_action,
