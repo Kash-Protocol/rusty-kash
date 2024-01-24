@@ -56,6 +56,7 @@ use kash_database::prelude::{CachePolicy, ConnBuilder};
 use kash_index_processor::service::IndexService;
 use kash_math::Uint256;
 use kash_muhash::MuHash;
+use kash_oracle::pricing_record::PricingRecord;
 use kash_txscript::caches::TxScriptCacheCounters;
 use kash_utxoindex::api::{UtxoIndexApi, UtxoIndexProxy};
 use kash_utxoindex::UtxoIndex;
@@ -717,6 +718,7 @@ struct RPCBlockHeader {
     BlueScore: u64,
     BlueWork: String,
     PruningPoint: String,
+    PricingRecord: String,
 }
 
 #[allow(non_snake_case)]
@@ -1128,6 +1130,7 @@ fn rpc_header_to_header(rpc_header: &RPCBlockHeader) -> Header {
         BlueWorkType::from_hex(&rpc_header.BlueWork).unwrap(),
         rpc_header.BlueScore,
         Hash::from_str(&rpc_header.PruningPoint).unwrap(),
+        PricingRecord::from_str(&rpc_header.PricingRecord).unwrap(),
     )
 }
 
@@ -1457,6 +1460,7 @@ async fn difficulty_test() {
             blue_work: 0.into(),
             blue_score: 0,
             pruning_point: 0.into(),
+            pricing_record: PricingRecord::default(),
         };
 
         // Stage 0

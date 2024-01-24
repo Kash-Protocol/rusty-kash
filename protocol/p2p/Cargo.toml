@@ -24,6 +24,7 @@ kash-consensus-core.workspace = true
 kash-mining-errors.workspace = true
 kash-hashes.workspace = true
 kash-math.workspace = true
+kash-oracle.workspace = true
 kash-utils.workspace = true
 kash-utils-tower.workspace = true
 

@@ -48,6 +48,7 @@ pub trait ConsensusApi: Send + Sync {
         miner_data: MinerData,
         tx_selector: Box<dyn TemplateTransactionSelector>,
         build_mode: TemplateBuildMode,
+        target_block_time: u64,
     ) -> Result<BlockTemplate, RuleError> {
         unimplemented!()
     }

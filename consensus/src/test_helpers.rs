@@ -8,6 +8,7 @@ use kash_consensus_core::{
     utxo::utxo_collection::UtxoCollection,
 };
 use kash_hashes::{Hash, HASH_SIZE};
+use kash_oracle::pricing_record::create_random_pricing_record;
 use rand::{rngs::SmallRng, seq::SliceRandom, Rng};
 
 pub fn header_from_precomputed_hash(hash: Hash, parents: Vec<Hash>) -> Header {
@@ -112,6 +113,7 @@ pub fn generate_random_header(rng: &mut SmallRng, parent_amount: usize) -> Heade
         rng.gen::<u64>().into(),
         rng.gen(),
         generate_random_hash(rng),
+        create_random_pricing_record(rng),
     )
 }
 

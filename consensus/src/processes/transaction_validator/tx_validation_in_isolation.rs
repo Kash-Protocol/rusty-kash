@@ -1,4 +1,5 @@
 use crate::constants::{MAX_SOMPI, TX_VERSION};
+use kash_consensus_core::tx::asset_conversion::AssetConversionSerializer;
 use kash_consensus_core::tx::Transaction;
 use std::collections::HashSet;
 
@@ -107,9 +108,20 @@ fn check_gas(tx: &Transaction) -> TxResult<()> {
 }
 
 fn check_transaction_payload(tx: &Transaction) -> TxResult<()> {
-    // This should be revised if subnetworks are activated (along with other validations that weren't copied from kashd)
-    if !tx.is_coinbase() && !tx.payload.is_empty() {
-        return Err(TxRuleError::NonCoinbaseTxHasPayload);
+    if tx.action.is_transfer() {
+        if !tx.is_coinbase() && !tx.payload.is_empty() {
+            return Err(TxRuleError::NonCoinbaseTxHasPayload);
+        }
+    } else {
+        let details = AssetConversionSerializer::deserialize(&tx.payload);
+
+        let (expected_from, expected_to) = tx.action.asset_transfer_types();
+        if details.from_asset_type != expected_from || details.to_asset_type != expected_to {
+            return Err(TxRuleError::InvalidAssetConversionTypes);
+        }
+        if details.from_amount == 0 || details.to_amount == 0 {
+            return Err(TxRuleError::InvalidAssetConversionAmount);
+        }
     }
     Ok(())
 }

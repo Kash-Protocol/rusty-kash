@@ -10,6 +10,7 @@ use kash_consensus_core::block::{Block, TemplateBuildMode, TemplateTransactionSe
 use kash_consensus_core::coinbase::MinerData;
 use kash_consensus_core::sign::sign;
 use kash_consensus_core::subnets::SUBNETWORK_ID_NATIVE;
+use kash_consensus_core::tx::reserve_state::ReserveRatioState;
 use kash_consensus_core::tx::{
     MutableTransaction, ScriptPublicKey, ScriptVec, Transaction, TransactionAction, TransactionInput, TransactionOutpoint,
     TransactionOutput, UtxoEntry,
@@ -36,7 +37,7 @@ impl OnetimeTxSelector {
 }
 
 impl TemplateTransactionSelector for OnetimeTxSelector {
-    fn select_transactions(&mut self) -> Vec<Transaction> {
+    fn select_transactions(&mut self, _rs: ReserveRatioState) -> Vec<Transaction> {
         self.txs.take().unwrap()
     }
 
@@ -125,7 +126,12 @@ impl Miner {
         let session = self.consensus.acquire_session();
         let mut block_template = self
             .consensus
-            .build_block_template(self.miner_data.clone(), Box::new(OnetimeTxSelector::new(txs)), TemplateBuildMode::Standard)
+            .build_block_template(
+                self.miner_data.clone(),
+                Box::new(OnetimeTxSelector::new(txs)),
+                TemplateBuildMode::Standard,
+                timestamp,
+            )
             .expect("simulation txs are selected in sync with virtual state and are expected to be valid");
         drop(session);
         block_template.block.header.timestamp = timestamp; // Use simulation time rather than real time

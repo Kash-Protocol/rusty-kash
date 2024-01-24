@@ -8,6 +8,7 @@ use super::{
     model::tx::{CandidateList, SelectableTransaction, SelectableTransactions, TransactionIndex},
     policy::Policy,
 };
+use kash_consensus_core::tx::reserve_state::ReserveRatioState;
 use kash_consensus_core::{
     block::TemplateTransactionSelector,
     subnets::SubnetworkId,
@@ -57,7 +58,6 @@ impl TransactionsSelector {
         let _sw = Stopwatch::<100>::with_threshold("TransactionsSelector::new op");
         // Sort the transactions by subnetwork_id.
         transactions.sort_by(|a, b| a.tx.subnetwork_id.cmp(&b.tx.subnetwork_id));
-
         // Create the object without selectable transactions
         let mut selector = Self {
             policy,
@@ -103,7 +103,7 @@ impl TransactionsSelector {
     /// select_transactions loops over the candidate transactions
     /// and appends the ones that will be included in the next block into
     /// selected_txs.
-    pub(crate) fn select_transactions(&mut self) -> Vec<Transaction> {
+    pub(crate) fn select_transactions(&mut self, mut reserve_ratio_state: ReserveRatioState) -> Vec<Transaction> {
         let _sw = Stopwatch::<15>::with_threshold("select_transaction op");
         let mut rng = rand::thread_rng();
 
@@ -133,6 +133,11 @@ impl TransactionsSelector {
                 continue;
             }
             let selected_tx = &self.transactions[selected_candidate.index];
+
+            // Check if the transaction is valid to reserve_ratio_state
+            if let Err(_) = reserve_ratio_state.maybe_add_transaction(selected_tx.tx.clone()) {
+                continue;
+            }
 
             // Enforce maximum transaction mass per block.
             // Also check for overflow.
@@ -230,8 +235,8 @@ impl TransactionsSelector {
 }
 
 impl TemplateTransactionSelector for TransactionsSelector {
-    fn select_transactions(&mut self) -> Vec<Transaction> {
-        self.select_transactions()
+    fn select_transactions(&mut self, rs: ReserveRatioState) -> Vec<Transaction> {
+        self.select_transactions(rs)
     }
 
     fn reject_selection(&mut self, tx_id: TransactionId) {
@@ -288,7 +293,7 @@ mod tests {
         let (mut kept, mut rejected) = (HashSet::new(), HashSet::new());
         let mut reject_count = 32;
         for i in 0..10 {
-            let selected_txs = selector.select_transactions();
+            let selected_txs = selector.select_transactions(ReserveRatioState::new(10000, 2000, 2000, Default::default()));
             if i > 0 {
                 assert_eq!(
                     selected_txs.len(),

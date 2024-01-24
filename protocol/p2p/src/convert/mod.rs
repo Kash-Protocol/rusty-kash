@@ -7,6 +7,7 @@ pub mod messages;
 pub mod model;
 pub mod net_address;
 pub mod option;
+mod pricing_record;
 pub mod pruning;
 pub mod subnets;
 pub mod trusted;

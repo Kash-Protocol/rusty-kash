@@ -2,6 +2,7 @@ use crate::tx::TransactionAction;
 use crate::{block::Block, header::Header, subnets::SUBNETWORK_ID_COINBASE, tx::Transaction};
 use kash_hashes::{Hash, ZERO_HASH};
 use kash_muhash::EMPTY_MUHASH;
+use kash_oracle::pricing_record::PricingRecord;
 
 /// The constants uniquely representing the genesis block
 #[derive(Clone, Debug)]
@@ -47,6 +48,7 @@ impl From<&GenesisBlock> for Header {
             0.into(),
             0,
             ZERO_HASH,
+            PricingRecord::default(),
         )
     }
 }

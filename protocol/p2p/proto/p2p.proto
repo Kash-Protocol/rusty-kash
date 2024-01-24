@@ -78,6 +78,18 @@ message BlockHeader{
   bytes blueWork = 10;
   Hash pruningPoint = 14;
   uint64 blueScore = 13;
+  PricingRecord pricingRecord = 15;
+}
+
+message PricingRecord {
+  uint64 ksh = 1;
+  uint64 ksh_ma = 2;
+  uint64 kusd = 3;
+  uint64 kusd_ma = 4;
+  uint64 krv = 5;
+  uint64 krv_ma = 6;
+  uint64 timestamp = 7;
+  bytes signature = 8;
 }
 
 message BlockLevelParents {

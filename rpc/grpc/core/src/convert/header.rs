@@ -1,5 +1,6 @@
 use crate::protowire;
 use crate::{from, try_from};
+use kash_oracle::pricing_record::PricingRecord;
 use kash_rpc_core::{FromRpcHex, RpcError, RpcHash, RpcResult, ToRpcHex};
 use std::str::FromStr;
 
@@ -21,6 +22,7 @@ from!(item: &kash_rpc_core::RpcHeader, protowire::RpcBlockHeader, {
         blue_work: item.blue_work.to_rpc_hex(),
         blue_score: item.blue_score,
         pruning_point: item.pruning_point.to_string(),
+        pricing_record: item.pricing_record.to_string(),
     }
 });
 
@@ -45,6 +47,7 @@ try_from!(item: &protowire::RpcBlockHeader, kash_rpc_core::RpcHeader, {
         kash_rpc_core::RpcBlueWorkType::from_rpc_hex(&item.blue_work)?,
         item.blue_score,
         RpcHash::from_str(&item.pruning_point)?,
+        PricingRecord::from_str(&item.pricing_record)?,
     )
 });
 
@@ -119,6 +122,7 @@ mod tests {
             459912.into(),
             1928374,
             new_unique(),
+            Default::default(),
         );
         let p: protowire::RpcBlockHeader = (&r).into();
         let r2: RpcHeader = (&p).try_into().unwrap();

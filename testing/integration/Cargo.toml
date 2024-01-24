@@ -18,6 +18,7 @@ kash-core.workspace = true
 kash-grpc-client.workspace = true
 kash-grpc-core.workspace = true
 kash-hashes.workspace = true
+kash-oracle.workspace = true
 kash-math.workspace = true
 kash-merkle.workspace = true
 kash-notify.workspace = true

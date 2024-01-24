@@ -54,6 +54,7 @@ members = [
     "metrics/perf_monitor",
     "metrics/core",
     "utils/alloc",
+    "oracle",
 ]
 
 [workspace.package]
@@ -126,6 +127,7 @@ kash-wrpc-server = { version = "0.13.3", path = "rpc/wrpc/server" }
 kash-wrpc-wasm = { version = "0.13.3", path = "rpc/wrpc/wasm" }
 kashd = { version = "0.13.3", path = "kashd" }
 kash-alloc = { version = "0.13.3", path = "utils/alloc" }
+kash-oracle = { version = "0.13.3", path = "oracle" }
 
 # external
 aes = "0.8.3"

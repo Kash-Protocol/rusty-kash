@@ -70,7 +70,7 @@ use kash_consensus_notify::{
     root::ConsensusNotificationRoot,
 };
 use kash_consensusmanager::SessionLock;
-use kash_core::{debug, info, time::unix_now, trace, warn};
+use kash_core::{debug, info, trace, warn};
 use kash_database::prelude::{StoreError, StoreResultEmptyTuple, StoreResultExtensions};
 use kash_hashes::Hash;
 use kash_muhash::MuHash;
@@ -78,6 +78,8 @@ use kash_notify::{events::EventType, notifier::Notify};
 
 use crossbeam_channel::{Receiver as CrossbeamReceiver, Sender as CrossbeamSender};
 use itertools::Itertools;
+use kash_consensus_core::tx::reserve_state::ReserveRatioState;
+use kash_oracle::pricing_record::PricingRecord;
 use kash_utils::binary_heap::BinaryHeapExtensions;
 use parking_lot::{RwLock, RwLockUpgradableReadGuard};
 use rand::{seq::SliceRandom, Rng};
@@ -848,15 +850,24 @@ impl VirtualStateProcessor {
         miner_data: MinerData,
         mut tx_selector: Box<dyn TemplateTransactionSelector>,
         build_mode: TemplateBuildMode,
+        target_block_time: u64,
     ) -> Result<BlockTemplate, RuleError> {
         //
         // TODO: tests
         //
 
+        // TODO: Get coin supply from utxoindex
+        let ksh_supply = 0;
+        let kusd_supply = 0;
+        let ksh_price = 0;
+        let pr = PricingRecord::load_sync(target_block_time).unwrap();
+
+        let rs = ReserveRatioState::new(ksh_supply, kusd_supply, ksh_price, pr.clone());
+
         // We call for the initial tx batch before acquiring the virtual read lock,
         // optimizing for the common case where all txs are valid. Following selection calls
         // are called within the lock in order to preserve validness of already validated txs
-        let mut txs = tx_selector.select_transactions();
+        let mut txs = tx_selector.select_transactions(rs.clone());
 
         let virtual_read = self.virtual_stores.read();
         let virtual_state = virtual_read.state.get().unwrap();
@@ -878,7 +889,7 @@ impl VirtualStateProcessor {
 
         while has_rejections {
             has_rejections = false;
-            let next_batch = tx_selector.select_transactions(); // Note that once next_batch is empty the loop will exit
+            let next_batch = tx_selector.select_transactions(rs.clone()); // Note that once next_batch is empty the loop will exit
             let next_batch_results =
                 self.validate_block_template_transactions_in_parallel(&next_batch, &virtual_state, &virtual_utxo_view);
             for (tx, res) in next_batch.into_iter().zip(next_batch_results) {
@@ -904,7 +915,7 @@ impl VirtualStateProcessor {
         drop(virtual_read);
 
         // Build the template
-        self.build_block_template_from_virtual_state(virtual_state, miner_data, txs)
+        self.build_block_template_from_virtual_state(virtual_state, miner_data, txs, target_block_time, pr)
     }
 
     pub(crate) fn validate_block_template_transactions(
@@ -932,6 +943,8 @@ impl VirtualStateProcessor {
         virtual_state: Arc<VirtualState>,
         miner_data: MinerData,
         mut txs: Vec<Transaction>,
+        target_block_time: u64,
+        pr: PricingRecord,
     ) -> Result<BlockTemplate, RuleError> {
         // [`calc_block_parents`] can use deep blocks below the pruning point for this calculation, so we
         // need to hold the pruning lock.
@@ -959,21 +972,20 @@ impl VirtualStateProcessor {
 
         let accepted_id_merkle_root = kash_merkle::calc_merkle_root(virtual_state.accepted_tx_ids.iter().copied());
         let utxo_commitment = virtual_state.multiset.clone().finalize();
-        // Past median time is the exclusive lower bound for valid block time, so we increase by 1 to get the valid min
-        let min_block_time = virtual_state.past_median_time + 1;
         let header = Header::new_finalized(
             version,
             parents_by_level,
             hash_merkle_root,
             accepted_id_merkle_root,
             utxo_commitment,
-            u64::max(min_block_time, unix_now()),
+            target_block_time,
             virtual_state.bits,
             0,
             virtual_state.daa_score,
             virtual_state.ghostdag_data.blue_work,
             virtual_state.ghostdag_data.blue_score,
             header_pruning_point,
+            pr,
         );
         let selected_parent_hash = virtual_state.ghostdag_data.selected_parent;
         let selected_parent_timestamp = self.headers_store.get_timestamp(selected_parent_hash).unwrap();

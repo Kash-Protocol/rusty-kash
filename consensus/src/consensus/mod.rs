@@ -404,8 +404,9 @@ impl ConsensusApi for Consensus {
         miner_data: MinerData,
         tx_selector: Box<dyn TemplateTransactionSelector>,
         build_mode: TemplateBuildMode,
+        target_block_time: u64,
     ) -> Result<BlockTemplate, RuleError> {
-        self.virtual_processor.build_block_template(miner_data, tx_selector, build_mode)
+        self.virtual_processor.build_block_template(miner_data, tx_selector, build_mode, target_block_time)
     }
 
     fn validate_and_insert_block(&self, block: Block) -> BlockValidationFutures {

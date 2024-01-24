@@ -2,7 +2,11 @@ use crate::{hashing, BlueWorkType};
 use borsh::{BorshDeserialize, BorshSchema, BorshSerialize};
 use js_sys::{Array, Object};
 use kash_hashes::Hash;
+use kash_oracle::pricing_record::create_random_pricing_record;
+use kash_oracle::pricing_record::PricingRecord;
 use kash_utils::hex::ToHex;
+use rand::rngs::SmallRng;
+use rand::SeedableRng;
 use serde::{Deserialize, Serialize};
 use serde_wasm_bindgen::*;
 use wasm_bindgen::prelude::*;
@@ -34,6 +38,8 @@ pub struct Header {
     pub blue_score: u64,
     #[wasm_bindgen(skip)]
     pub pruning_point: Hash,
+    #[wasm_bindgen(skip)]
+    pub pricing_record: PricingRecord,
 }
 
 impl Header {
@@ -51,6 +57,7 @@ impl Header {
         blue_work: BlueWorkType,
         blue_score: u64,
         pruning_point: Hash,
+        pricing_record: PricingRecord,
     ) -> Self {
         let mut header = Self {
             hash: Default::default(), // Temp init before the finalize below
@@ -66,6 +73,7 @@ impl Header {
             blue_work,
             blue_score,
             pruning_point,
+            pricing_record,
         };
         header.finalize();
         header
@@ -100,6 +108,7 @@ impl Header {
             blue_work: 0.into(),
             blue_score: 0,
             pruning_point: Default::default(),
+            pricing_record: create_random_pricing_record(&mut SmallRng::seed_from_u64(0)),
         }
     }
 }
@@ -249,6 +258,9 @@ impl TryFrom<JsValue> for Header {
                 })
                 .collect::<std::result::Result<Vec<Vec<Hash>>, Error>>()?;
 
+            let pricing_record: PricingRecord =
+                object.get_value("pricingRecord")?.try_into().map_err(|err| Error::convert("pricingRecord", err))?;
+
             let header = Self {
                 hash: object.get_value("hash")?.try_into().unwrap_or_default(),
                 version: object.get_u16("version")?,
@@ -272,6 +284,7 @@ impl TryFrom<JsValue> for Header {
                 blue_work: object.get_value("blueWork")?.try_into().map_err(|err| Error::convert("blueWork", err))?,
                 blue_score: object.get_u64("blueScore")?,
                 pruning_point: object.get_value("pruningPoint")?.try_into().map_err(|err| Error::convert("pruningPoint", err))?,
+                pricing_record,
             };
 
             Ok(header)
@@ -302,6 +315,7 @@ mod tests {
             Uint192([0x1234567890abcfed, 0xc0dec0ffeec0ffee, 0x1234567890abcdef]),
             u64::MAX,
             Default::default(),
+            create_random_pricing_record(&mut SmallRng::seed_from_u64(0)),
         );
         let json = serde_json::to_string(&header).unwrap();
         println!("{}", json);

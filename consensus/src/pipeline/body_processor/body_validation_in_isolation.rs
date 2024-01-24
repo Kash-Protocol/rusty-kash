@@ -53,6 +53,7 @@ impl BlockBodyProcessor {
             if let Err(e) = self.transaction_validator.validate_tx_in_isolation(tx) {
                 return Err(RuleError::TxInIsolationValidationFailed(tx.id(), e));
             }
+            // TODO: Get coin supply and price Record to init reserve ratio state, and check with tx
         }
         Ok(())
     }
@@ -177,6 +178,7 @@ mod tests {
                 0,
                 0.into(),
                 9,
+                Default::default(),
                 Default::default(),
             ),
             vec![

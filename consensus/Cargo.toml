@@ -26,6 +26,7 @@ kash-math.workspace = true
 kash-merkle.workspace = true
 kash-muhash.workspace = true
 kash-notify.workspace = true
+kash-oracle.workspace = true
 kash-pow.workspace = true
 kash-txscript.workspace = true
 kash-utils.workspace = true

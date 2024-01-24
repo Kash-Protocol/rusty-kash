@@ -15,10 +15,11 @@ use kash_consensus_core::{
     tx::{MutableTransaction, Transaction, TransactionId, TransactionOutpoint, UtxoEntry},
     utxo::utxo_collection::UtxoCollection,
 };
-use kash_core::time::unix_now;
 use kash_hashes::ZERO_HASH;
 
 use kash_consensus_core::asset_type::AssetType::KSH;
+use kash_consensus_core::tx::reserve_state::ReserveRatioState;
+use kash_oracle::pricing_record::PricingRecord;
 use parking_lot::RwLock;
 use std::{collections::HashMap, sync::Arc};
 
@@ -78,12 +79,12 @@ impl ConsensusApi for ConsensusMock {
         miner_data: MinerData,
         mut tx_selector: Box<dyn TemplateTransactionSelector>,
         _build_mode: TemplateBuildMode,
+        target_block_time: u64,
     ) -> Result<BlockTemplate, RuleError> {
-        let mut txs = tx_selector.select_transactions();
+        let mut txs = tx_selector.select_transactions(ReserveRatioState::default());
         let coinbase_manager = CoinbaseManagerMock::new();
         let coinbase = coinbase_manager.expected_coinbase_transaction(miner_data.clone());
         txs.insert(0, coinbase.tx);
-        let now = unix_now();
         let hash_merkle_root = calc_hash_merkle_root(txs.iter());
         let header = Header::new_finalized(
             BLOCK_VERSION,
@@ -91,17 +92,18 @@ impl ConsensusApi for ConsensusMock {
             hash_merkle_root,
             ZERO_HASH,
             ZERO_HASH,
-            now,
+            target_block_time,
             123456789u32,
             0,
             0,
             0.into(),
             0,
             ZERO_HASH,
+            PricingRecord::default(),
         );
         let mutable_block = MutableBlock::new(header, txs);
 
-        Ok(BlockTemplate::new(mutable_block, miner_data, coinbase.has_red_reward, now, 0, ZERO_HASH))
+        Ok(BlockTemplate::new(mutable_block, miner_data, coinbase.has_red_reward, target_block_time, 0, ZERO_HASH))
     }
 
     fn validate_mempool_transaction(&self, mutable_tx: &mut MutableTransaction) -> TxResult<()> {

@@ -1,3 +1,5 @@
+pub mod asset_conversion;
+pub mod reserve_state;
 mod script_public_key;
 
 use borsh::{BorshDeserialize, BorshSchema, BorshSerialize};
@@ -146,8 +148,10 @@ pub enum TransactionAction {
     MintKUSD,
     /// Staking KSH to get KRV: KSH -> KRV
     StakeKSH,
+    /// Redeeming KSH using KUSD: KUSD -> KSH
+    RedeemViaKUSD,
     /// Redeeming KSH using KRV: KRV -> KSH
-    RedeemKSH,
+    RedeemViaKRV,
 }
 
 impl TransactionAction {
@@ -160,7 +164,17 @@ impl TransactionAction {
             TransactionAction::TransferKRV => (AssetType::KRV, AssetType::KRV),
             TransactionAction::MintKUSD => (AssetType::KSH, AssetType::KUSD),
             TransactionAction::StakeKSH => (AssetType::KSH, AssetType::KRV),
-            TransactionAction::RedeemKSH => (AssetType::KRV, AssetType::KSH),
+            TransactionAction::RedeemViaKUSD => (AssetType::KUSD, AssetType::KSH),
+            TransactionAction::RedeemViaKRV => (AssetType::KRV, AssetType::KSH),
+        }
+    }
+
+    pub fn is_transfer(&self) -> bool {
+        match self {
+            TransactionAction::TransferKSH => true,
+            TransactionAction::TransferKUSD => true,
+            TransactionAction::TransferKRV => true,
+            _ => false,
         }
     }
 }
@@ -174,7 +188,8 @@ impl From<TransactionAction> for u32 {
             TransactionAction::TransferKRV => 2,
             TransactionAction::MintKUSD => 3,
             TransactionAction::StakeKSH => 4,
-            TransactionAction::RedeemKSH => 5,
+            TransactionAction::RedeemViaKUSD => 5,
+            TransactionAction::RedeemViaKRV => 6,
         }
     }
 }
@@ -188,7 +203,8 @@ impl From<u32> for TransactionAction {
             2 => TransactionAction::TransferKRV,
             3 => TransactionAction::MintKUSD,
             4 => TransactionAction::StakeKSH,
-            5 => TransactionAction::RedeemKSH,
+            5 => TransactionAction::RedeemViaKUSD,
+            6 => TransactionAction::RedeemViaKRV,
             _ => TransactionAction::TransferKSH, // Handle unknown values gracefully
         }
     }
@@ -203,7 +219,8 @@ impl From<String> for TransactionAction {
             "TransferKRV" => TransactionAction::TransferKRV,
             "MintKUSD" => TransactionAction::MintKUSD,
             "StakeKSH" => TransactionAction::StakeKSH,
-            "RedeemKSH" => TransactionAction::RedeemKSH,
+            "RedeemViaKUSD" => TransactionAction::RedeemViaKUSD,
+            "RedeemViaKRV" => TransactionAction::RedeemViaKRV,
             _ => TransactionAction::TransferKSH, // Handle unknown values gracefully
         }
     }
@@ -219,7 +236,8 @@ impl TryFrom<&String> for TransactionAction {
             "TransferKRV" => Ok(TransactionAction::TransferKRV),
             "MintKUSD" => Ok(TransactionAction::MintKUSD),
             "StakeKSH" => Ok(TransactionAction::StakeKSH),
-            "RedeemKSH" => Ok(TransactionAction::RedeemKSH),
+            "RedeemViaKUSD" => Ok(TransactionAction::RedeemViaKUSD),
+            "RedeemViaKRV" => Ok(TransactionAction::RedeemViaKRV),
             _ => Err(TxRuleError::InvalidTransactionType(value.clone())),
         }
     }
@@ -237,7 +255,8 @@ impl TryFrom<JsValue> for TransactionAction {
                 2 => Ok(TransactionAction::TransferKRV),
                 3 => Ok(TransactionAction::MintKUSD),
                 4 => Ok(TransactionAction::StakeKSH),
-                5 => Ok(TransactionAction::RedeemKSH),
+                5 => Ok(TransactionAction::RedeemViaKUSD),
+                6 => Ok(TransactionAction::RedeemViaKRV),
                 _ => Err(JsValue::from_str("Invalid TransactionAction value")),
             }
         } else {

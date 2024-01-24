@@ -12,12 +12,14 @@ kash-addresses.workspace = true
 kash-consensus-core.workspace = true
 kash-consensusmanager.workspace = true
 kash-core.workspace = true
+kash-database.workspace = true
 kash-hashes.workspace = true
 kash-mining-errors.workspace = true
 kash-muhash.workspace = true
 kash-txscript.workspace = true
 kash-utils.workspace = true
-
+kash-utxoindex.workspace = true
+kash-oracle.workspace = true
 futures-util.workspace = true
 itertools.workspace = true
 log.workspace = true

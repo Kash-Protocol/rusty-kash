@@ -38,6 +38,7 @@ pub fn hash(header: &Header) -> Hash {
 mod tests {
     use super::*;
     use crate::{blockhash, BlueWorkType};
+    use kash_oracle::pricing_record::PricingRecord;
 
     #[test]
     fn test_header_hashing() {
@@ -54,6 +55,7 @@ mod tests {
             0.into(),
             0,
             Default::default(),
+            PricingRecord::default(),
         );
         assert_ne!(blockhash::NONE, header.hash);
     }

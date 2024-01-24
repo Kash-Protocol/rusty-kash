@@ -1,4 +1,5 @@
 use crate::{consensus::test_consensus::TestConsensus, model::services::reachability::ReachabilityService};
+use kash_consensus_core::tx::reserve_state::ReserveRatioState;
 use kash_consensus_core::{
     api::ConsensusApi,
     block::{Block, BlockTemplate, MutableBlock, TemplateBuildMode, TemplateTransactionSelector},
@@ -23,7 +24,7 @@ impl OnetimeTxSelector {
 }
 
 impl TemplateTransactionSelector for OnetimeTxSelector {
-    fn select_transactions(&mut self) -> Vec<Transaction> {
+    fn select_transactions(&mut self, _rs: ReserveRatioState) -> Vec<Transaction> {
         self.txs.take().unwrap()
     }
 
@@ -108,6 +109,7 @@ impl TestContext {
                 self.miner_data.clone(),
                 Box::new(OnetimeTxSelector::new(Default::default())),
                 TemplateBuildMode::Standard,
+                timestamp,
             )
             .unwrap();
         t.block.header.timestamp = timestamp;

@@ -17,6 +17,12 @@ pub enum TxRuleError {
     #[error("a non coinbase transaction has a payload")]
     NonCoinbaseTxHasPayload,
 
+    #[error("Invalid asset conversion types")]
+    InvalidAssetConversionTypes,
+
+    #[error("Invalid asset conversion amount")]
+    InvalidAssetConversionAmount,
+
     #[error("transaction version {0} is unknown")]
     UnknownTxVersion(u16),
 

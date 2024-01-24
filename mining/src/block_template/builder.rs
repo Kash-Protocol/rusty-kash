@@ -11,6 +11,7 @@ use kash_core::{
     debug,
     time::{unix_now, Stopwatch},
 };
+use std::cmp::max;
 
 pub(crate) struct BlockTemplateBuilder {
     policy: Policy,
@@ -94,8 +95,13 @@ impl BlockTemplateBuilder {
     ) -> BuilderResult<BlockTemplate> {
         let _sw = Stopwatch::<20>::with_threshold("build_block_template op");
         debug!("Considering {} transactions for a new block template", transactions.len());
+
+        // Past median time is the exclusive lower bound for valid block time, so we increase by 1 to get the valid min
+        let min_block_time = consensus.get_virtual_past_median_time() + 1;
+        let target_block_time = max(min_block_time, unix_now());
+
         let selector = Box::new(TransactionsSelector::new(self.policy.clone(), transactions));
-        Ok(consensus.build_block_template(miner_data.clone(), selector, build_mode)?)
+        Ok(consensus.build_block_template(miner_data.clone(), selector, build_mode, target_block_time)?)
     }
 
     /// modify_block_template clones an existing block template, modifies it to the requested coinbase data and updates the timestamp

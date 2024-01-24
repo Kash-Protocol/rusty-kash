@@ -17,6 +17,7 @@ pub mod pruning_utxoset;
 pub mod reachability;
 pub mod relations;
 pub mod statuses;
+pub mod supply;
 pub mod tips;
 pub mod utxo_diffs;
 pub mod utxo_multisets;

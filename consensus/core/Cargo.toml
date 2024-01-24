@@ -22,6 +22,7 @@ kash-hashes.workspace = true
 kash-math.workspace = true
 kash-merkle.workspace = true
 kash-muhash.workspace = true
+kash-oracle.workspace = true
 kash-txscript-errors.workspace = true
 kash-utils.workspace = true
 rand.workspace = true
@@ -35,6 +36,7 @@ wasm-bindgen.workspace = true
 workflow-core.workspace = true
 workflow-log.workspace = true
 workflow-wasm.workspace = true
+serde_cbor = "0.11.2"
 
 [dev-dependencies]
 criterion.workspace = true
